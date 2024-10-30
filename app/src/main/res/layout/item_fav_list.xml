@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:paddingHorizontal="15dp"
+    android:background="@drawable/most_shape"
+    android:layout_marginBottom="10dp"
+    android:paddingVertical="12dp"
+    android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:layout_centerVertical="true"
+                    android:id="@+id/iv_one"
+                    android:background="@mipmap/most_one"
+                    android:orientation="vertical"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp">
+                        <ImageView
+                            android:layout_centerInParent="true"
+                            android:src="@mipmap/play_most"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/collect_iv"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:padding="1dp"
+                    android:src="@mipmap/home_fav_un"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_marginStart="12dp"
+                    android:includeFontPadding="false"
+                    android:layout_marginTop="5dp"
+                    android:layout_alignTop="@id/iv_one"
+                    android:lines="1"
+                    android:id="@+id/music_name"
+                    android:ellipsize="end"
+                    android:layout_marginEnd="8dp"
+                    android:layout_toEndOf="@id/iv_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Back to he "
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="14sp"
+                    />
+
+        <TextView
+            android:includeFontPadding="false"
+            android:layout_alignLeft="@id/music_name"
+            android:layout_marginTop="4dp"
+            android:id="@+id/artist"
+            android:lines="1"
+            android:layout_below="@id/music_name"
+            android:ellipsize="end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back to he "
+            android:textColor="#ff808080"
+            android:textSize="12sp"
+            />
+</RelativeLayout>
+

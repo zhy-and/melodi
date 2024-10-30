@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Melodi Music</string>
+    <string name="permission_never_denyd">You have refused authorization, you need to enable permissions on the settings page</string>
+    <string name="permission_one_denyd">You have refused authorization, this function cannot be used</string>
+    <string name="uni_ky">ST3UTXWEYCQFTWGZ</string>
+    <string name="uni_id">87454557</string>
+    <string name="uni_y">https://ktza.melodimuic.com</string>
+    <string name="facebook_app_id">3810993515838020</string>
+</resources>

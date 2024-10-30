@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="@mipmap/home_bg"
+    android:fitsSystemWindows="true"
+    android:layout_height="match_parent">
+    <include android:id="@+id/title"
+        layout="@layout/main_include" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        app:layout_constraintTop_toBottomOf="@id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:background="@drawable/settings_shap"
+            android:id="@+id/scan_settings"
+            android:layout_marginTop="8dp"
+            android:layout_marginHorizontal="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:paddingHorizontal="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_height="48dp">
+
+
+            <TextView
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@id/scan_music"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Scan music"
+                android:textColor="#FFFFFFFF"
+                android:textSize="16sp"
+                />
+
+            <ImageView
+                android:id="@+id/more"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/scan_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:id="@+id/scan_music"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/scan_se"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:background="@drawable/settings_shap"
+            android:id="@+id/feed_settings"
+            android:layout_marginTop="8dp"
+            android:layout_marginHorizontal="16dp"
+            app:layout_constraintTop_toBottomOf="@id/scan_settings"
+            android:layout_width="match_parent"
+            android:paddingHorizontal="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_height="48dp">
+
+
+            <TextView
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@id/feed_back"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Feedback"
+                android:textColor="#FFFFFFFF"
+                android:textSize="16sp"
+                />
+
+            <ImageView
+                android:id="@+id/more1"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/scan_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:id="@+id/feed_back"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/scan_feed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:background="@drawable/settings_shap"
+            android:id="@+id/pri_settings"
+            android:layout_marginTop="8dp"
+            android:layout_marginHorizontal="16dp"
+            app:layout_constraintTop_toBottomOf="@id/feed_settings"
+            android:layout_width="match_parent"
+            android:paddingHorizontal="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_height="48dp">
+
+
+            <TextView
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@id/privacy"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Privacy Policy"
+                android:textColor="#FFFFFFFF"
+                android:textSize="16sp"
+                />
+
+            <ImageView
+                android:id="@+id/more3"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/scan_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:id="@+id/privacy"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/scan_pri"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/privacys"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Privacy settings"
+        android:textColor="#FFB3B3B3"
+        app:layout_constraintBottom_toTopOf="@id/version"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"
+        android:textSize="16sp"
+        />
+
+    <TextView
+        android:id="@+id/version"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
+        android:textColor="#FF808080"
+        android:textSize="16sp"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

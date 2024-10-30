@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/feed_shape"
+        android:paddingBottom="32dp"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="16dp"
+        android:layout_height="wrap_content">
+        <View
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/gra_shape"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"/>
+        <TextView
+            android:id="@+id/add_txt"
+            android:layout_marginTop="32dp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Local Music Added!"
+            android:textColor="#FF000000"
+            android:textSize="18sp"
+            />
+
+        <TextView
+            android:id="@+id/btn_feed"
+            android:layout_marginHorizontal="76dp"
+            android:layout_width="match_parent"
+            android:text="OK"
+            android:gravity="center"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/feed_btn_shape"
+            app:layout_constraintTop_toBottomOf="@id/add_txt"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_height="48dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

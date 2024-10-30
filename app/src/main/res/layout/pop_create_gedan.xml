@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingBottom="24dp"
+        android:background="@drawable/feed_shape"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="16dp"
+        android:layout_height="wrap_content">
+        <View
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/gra_shape"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"/>
+        <TextView
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center"
+            android:id="@+id/title_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="24dp"
+            android:text="New Playlist"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/edit"
+            android:layout_marginTop="24dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/editshape"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title_top"
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+            <EditText
+                android:singleLine="true"
+                android:paddingHorizontal="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/input_name"
+                android:textColor="#000000"
+                android:maxLength="40"
+                android:lines="1"
+                android:textColorHint="#222222"
+                app:layout_constraintEnd_toStartOf="@id/txt"
+                android:background="@null"
+                android:layout_width="0dp"
+                android:layout_height="48dp"/>
+            <TextView
+                android:id="@+id/txt"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_height="wrap_content"
+                android:text="0/40"
+                android:textColor="#FF808080"
+                android:textSize="16sp"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <TextView
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit"
+            android:id="@+id/child_cancel"
+            android:layout_width="0dp"
+            android:background="@drawable/gedan_cancel"
+            android:text="Cancel"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:textColor="#000000"
+            app:layout_constraintEnd_toStartOf="@+id/child_ok"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <TextView
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/feed_btn_shape"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit"
+            android:id="@+id/child_ok"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:text="Create"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:layout_marginStart="4dp"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/child_cancel"
+            />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

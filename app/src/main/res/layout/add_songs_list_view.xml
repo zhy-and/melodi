@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="@mipmap/home_bg"
+    android:fitsSystemWindows="true"
+    android:layout_height="match_parent">
+    <include android:id="@+id/include_titles"
+        layout="@layout/main_include" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            app:layout_constraintTop_toBottomOf="@id/include_titles"
+            app:layout_constraintBottom_toTopOf="@id/bottom_music"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:visibility="gone"
+                android:layout_marginHorizontal="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/no_content_pic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:id="@+id/empty_bg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/add_music"
+                    />
+                <TextView
+                    android:id="@+id/btn_feed"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginHorizontal="92dp"
+                    android:layout_width="match_parent"
+                    android:text="No music files"
+                    android:gravity="center"
+                    android:textColor="#808080"
+                    android:textSize="16sp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/empty_bg"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/home_content_ads"
+                android:layout_marginHorizontal="15dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.extraordinary.interstings.studios.goodads.CommonWeavesView
+                    android:layout_marginTop="25dp"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:id="@+id/home_bans"
+                    android:layout_width="match_parent"
+                    app:gnt_template_type="@layout/top_view_home_ban"
+                    android:layout_height="wrap_content"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="16dp"
+         app:layout_constraintTop_toBottomOf="@id/home_content_ads"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginBottom="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/recycle_hislist"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:paddingHorizontal="16dp"
+        android:background="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/bottom_music"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            >
+            <ImageView
+                android:layout_centerVertical="true"
+                android:id="@+id/select_bg"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@mipmap/ivg_un_select"
+                />
+            <TextView
+                android:padding="3dp"
+                android:layout_marginStart="13dp"
+                android:id="@+id/select_txt"
+                android:layout_toEndOf="@id/select_bg"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select all"
+                android:textColor="#FF26CC6A"
+                android:textSize="16sp"
+                />
+
+            <TextView
+                android:layout_marginStart="43dp"
+                android:layout_toEndOf="@id/select_txt"
+                android:layout_centerVertical="true"
+                android:id="@+id/btn_ok"
+                android:layout_width="match_parent"
+                android:text="OK"
+                android:gravity="center"
+                android:background="@drawable/feed_btn_shape"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_height="48dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

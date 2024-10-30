@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:name=".application.GlobalMusApp"
+        android:networkSecurityConfig="@xml/network_config"
+        android:requestLegacyExternalStorage="true"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/pro_logo"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/pro_logo"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.CommonTheme"
+        tools:targetApi="31">
+        <meta-data
+            android:name="ScopedStorage"
+            android:value="true" />
+        <activity
+            android:theme="@style/Theme.CommonTheme"
+            android:name=".AppStart"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".player.PlayerView" android:launchMode="singleTask"/>
+        <activity android:name=".HomeActivity" android:launchMode="singleTask"/>
+        <activity android:name=".detail.AppAlbumDetail"/>
+        <activity android:name=".albums.AppAlbumList"/>
+        <activity android:name=".lyric.AppLyricView"/>
+        <activity android:name=".playlist.AppPlayerList"/>
+        <activity android:name=".tracks.TrackList"/>
+        <activity android:name=".artist.AppArtistList"/>
+        <activity android:name=".view.AppMoreView"/>
+        <activity android:name=".search.AppSearch"/>
+        <activity android:name=".PrivacyPage"/>
+        <activity android:name=".scan.ScanPage"/>
+        <activity android:name=".FeedView"/>
+        <activity android:name=".detail.AppArtDetail"/>
+        <activity android:name=".detail.AppGeDanDetail"/>
+        <activity android:name=".AppAddList"/>
+        <activity android:name=".AppGeDanList"/>
+        <activity android:name=".AppStyleList"/>
+        <service
+            android:name=".service.MediaService"
+            android:process=":appmedia"
+            android:exported="true"
+            android:label="App Media">
+            <intent-filter>
+                <action android:name="com.extraordinary.weaves.tendency.ACTION_MEDIA_SERVICE" />
+            </intent-filter>
+        </service>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.file-provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7396923110931580~9197437042"/>
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
+    </application>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+</manifest>
+
+
+
+

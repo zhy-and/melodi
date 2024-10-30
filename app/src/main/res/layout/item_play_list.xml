@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:paddingHorizontal="16dp"
+    android:background="@drawable/most_shape"
+    android:layout_marginBottom="10dp"
+    android:paddingVertical="12dp"
+    android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/delete_iv"
+            android:layout_centerVertical="true"
+            android:padding="1dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
+        <TextView
+            android:id="@+id/text"
+            android:layout_marginStart="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/delete_iv"
+            android:layout_centerVertical="true"
+            android:text="Back To Her Men"
+            android:textColor="#FFFFFFFF"
+            android:textSize="14sp"
+            />
+</RelativeLayout>
+

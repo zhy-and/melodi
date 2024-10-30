@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "934372432589",
+    "project_id": "melodi-music-android",
+    "storage_bucket": "melodi-music-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:934372432589:android:d381d2ec8b4387c3d72784",
+        "android_client_info": {
+          "package_name": "com.extraordinary.weaves.tendency"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqbmYx80jMQMzXGBHgBF-Dhgdw7cnXuCM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/bg"
+        android:background="@mipmap/album_det_bg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        app:layout_constraintDimensionRatio="375:199"
+        android:layout_height="0dp"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/title"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+       >
+        <ImageView
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:id="@+id/back_btn"
+            android:src="@mipmap/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <TextView
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/title_content"
+            android:textStyle="bold"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <ImageView
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="20dp"
+            android:src="@mipmap/include_search_btn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/search_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/album_name"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFFFF"
+        android:textStyle="bold"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="15dp"
+        android:textSize="20sp"
+        />
+
+<!--    <TextView-->
+<!--        android:id="@+id/artist_name"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Demien Rice"-->
+<!--        android:textColor="#FFFFFFFF"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/album_name"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        android:layout_marginStart="15dp"-->
+<!--        android:textSize="14sp"-->
+<!--        />-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        app:layout_constraintTop_toTopOf="@id/album_name"
+        app:layout_constraintBottom_toTopOf="@id/bottom_music"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@mipmap/det_bg"
+            android:layout_marginTop="60dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_marginTop="46dp"
+                android:id="@+id/home_content_ads"
+                android:layout_marginHorizontal="15dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.extraordinary.interstings.studios.goodads.CommonWeavesView
+                    android:layout_marginBottom="15dp"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:id="@+id/home_bans"
+                    android:layout_width="match_parent"
+                    app:gnt_template_type="@layout/top_view_home_ban"
+                    android:layout_height="wrap_content"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:visibility="gone"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/home_content_ads"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/no_content_pic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:id="@+id/empty_bg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/add_music"
+                    />
+                <TextView
+                    android:id="@+id/btn_feed"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginHorizontal="92dp"
+                    android:layout_width="match_parent"
+                    android:text="No music files"
+                    android:gravity="center"
+                    android:textColor="#808080"
+                    android:textSize="16sp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/empty_bg"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginBottom="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/home_content_ads"
+                android:id="@+id/recycle_hislist"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="32dp"
+            android:id="@+id/play_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/play_det"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/bottom_music"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:background="#D9FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            >
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_marginStart="-20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/music"
+                android:layout_width="wrap_content"
+                app:lottie_imageAssetsFolder="images"
+                app:lottie_loop="true"
+                app:lottie_fileName="play.json"
+                android:layout_height="wrap_content"
+                />
+            <com.extraordinary.weaves.tendency.MarqueeTextView
+                android:layout_centerVertical="true"
+                android:layout_marginStart="-30dp"
+                android:layout_toEndOf="@id/music"
+                android:id="@+id/tv_home_bottom_music_name"
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:ellipsize="end"
+                android:text="@string/app_name"
+                android:layout_toStartOf="@id/fl_home_bottom_play_pause"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:textColor="@color/black" />
+
+            <ImageView
+                android:layout_marginEnd="24dp"
+                android:id="@+id/btn_home_bottom_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/ic_bottom_bar_playlist"
+                />
+
+
+
+            <RelativeLayout
+                android:padding="5dp"
+                android:id="@+id/fl_home_bottom_play_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="20dp"
+                android:layout_toStartOf="@id/btn_home_bottom_menu">
+
+                <ImageView
+                    android:visibility="gone"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/btn_home_bottom_pause"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_bottom_bar_pause"/>
+
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/btn_home_bottom_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_bottom_bar_play"
+                    />
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

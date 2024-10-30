@@ -1,0 +1,124 @@
+plugins {
+    id("com.android.application")
+    id("kotlin-android")
+    id ("com.bytedance.android.aabResGuard")
+    id("kotlin-kapt")
+    id("stringfog")
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
+import com.github.megatronking.stringfog.plugin.kg.RandomKeyGenerator
+import com.github.megatronking.stringfog.plugin.StringFogMode
+
+stringfog {
+    // 必要：加解密库的实现类路径，需和上面配置的加解密算法库一致。
+    implementation 'com.github.megatronking.stringfog.xor.StringFogImpl'
+    // 可选：StringFog会自动尝试获取packageName，如果遇到获取失败的情况，可以显式地指定。
+    packageName 'com.extraordinary.weaves.tendency'
+    // 可选：加密开关，默认开启。
+    enable true
+    kg new RandomKeyGenerator()
+    mode StringFogMode.base64
+}
+android {
+    namespace = "com.extraordinary.weaves.tendency"
+    compileSdk = 34
+
+    defaultConfig {
+        applicationId = "com.extraordinary.weaves.tendency"
+        minSdk = 24
+        targetSdk = 34
+        versionCode = 2
+        versionName = "1.0.1"
+        buildFeatures {
+            viewBinding = true
+            aidl = true
+            buildConfig = true
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+    compileOptions {
+        sourceCompatibility(JavaVersion.VERSION_19)
+        targetCompatibility(JavaVersion.VERSION_19)
+    }
+    kotlinOptions {
+        jvmTarget = "19"
+    }
+}
+
+kapt {
+    generateStubs = true
+    correctErrorTypes = true
+}
+
+
+kotlin {
+    jvmToolchain(19)
+}
+
+aabResGuard {
+    whiteList = [
+            "*.R.string.google_app_id",
+            "*.R.string.gcm_defaultSenderId",
+            "*.R.string.default_web_client_id",
+            "*.R.string.ga_trackingId",
+            "*.R.string.firebase_database_url",
+            "*.R.string.google_api_key",
+            "*.R.string.google_crash_reporting_api_key",
+            "*.R.string.google_storage_bucket",
+            "*.R.string.project_id",
+            "*crashlytics*"
+    ]
+    obfuscatedBundleFileName = "MelodiMusic_release.aab"
+    mergeDuplicatedRes = true
+    enableFilterFiles = true
+    filterList = [ // 文件过滤规则
+                   "META-INF/*"
+    ]
+    enableFilterStrings = false
+    languageWhiteList = ["en"]
+}
+
+dependencies {
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("com.google.android.material:material:1.5.0")
+    implementation("com.google.guava:guava:27.0.1-android")
+
+    // Dora全家桶
+    implementation("com.github.dora4:dcache-android:2.3.13")
+    implementation("com.github.dora4:dora:1.2.16")
+    implementation 'com.github.michaellee123:LiveEventBus:1.8.14'
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.15.0")
+
+    // AspectJ
+
+
+    // XXPermissions
+    implementation("com.github.getActivity:XXPermissions:20.0")
+    implementation 'com.airbnb.android:lottie:6.5.2'
+    implementation 'com.geyifeng.immersionbar:immersionbar:3.2.2'
+    implementation  'com.github.megatronking.stringfog:xor:5.0.0'
+
+    //ads config
+    implementation 'com.google.android.gms:play-services-ads:22.4.0'
+    implementation 'io.supercharge:shimmerlayout:2.1.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'org.greenrobot:eventbus:3.3.1'
+    implementation 'com.blankj:utilcodex:1.31.1'
+    implementation 'com.android.installreferrer:installreferrer:2.2'
+    implementation 'com.google.android.ump:user-messaging-platform:2.2.0'
+
+
+    //fb
+    implementation platform('com.google.firebase:firebase-bom:32.1.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.facebook.android:facebook-android-sdk:11.3.0'
+}

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/clis"
+        android:onClick="click"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/search_edit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clis"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"/>
+
+    <Button
+        android:id="@+id/se"
+        android:onClick="search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="search!"
+        app:layout_constraintTop_toBottomOf="@id/clis"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/se2"
+        android:onClick="search2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="searc2h!"
+        app:layout_constraintTop_toBottomOf="@id/se"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+ />
+    <LinearLayout
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_edit"
+        android:id="@+id/ll_home_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+        <ProgressBar
+            android:id="@+id/sb_home_bottom_playback"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:maxHeight="2dp"
+            android:minHeight="2dp"/>
+
+        <RelativeLayout
+            android:onClick="topage"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/iv_home_bottom_album"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_launcher_background" />
+
+            <ImageButton
+                android:onClick="list"
+                android:id="@+id/btn_home_bottom_menu"
+                android:layout_width="45dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:background="@color/white"
+                android:padding="6dp"
+                android:src="@mipmap/ic_bottom_bar_playlist"
+                app:tint="@color/black" />
+
+            <View
+                android:id="@+id/view_home_bottom_divider"
+                android:layout_width="1.5dp"
+                android:layout_height="64dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_toLeftOf="@id/btn_home_bottom_menu"
+                android:background="#77ffffff" />
+
+            <ImageButton
+                android:onClick="next"
+                android:id="@+id/btn_home_bottom_next"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/view_home_bottom_divider"
+                android:padding="6dp"
+                app:tint="@color/black"
+                android:background="@color/white"
+              />
+
+            <FrameLayout
+                android:id="@+id/fl_home_bottom_play_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="12dp"
+                android:layout_toLeftOf="@id/btn_home_bottom_next">
+
+                <ImageButton
+                    android:onClick="pause"
+                    android:id="@+id/btn_home_bottom_pause"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="6dp"
+                    app:tint="@color/black"
+                    android:background="@color/white"
+                    android:src="@mipmap/ic_bottom_bar_pause"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/btn_home_bottom_play"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:onClick="play"
+                    android:padding="6dp"
+                    android:src="@mipmap/ic_bottom_bar_play"
+                    app:tint="@color/black" />
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="6dp"
+                android:layout_toLeftOf="@id/fl_home_bottom_play_pause"
+                android:layout_toRightOf="@id/iv_home_bottom_album"
+                android:orientation="vertical">
+
+
+                <com.extraordinary.weaves.tendency.MarqueeTextView
+                    android:id="@+id/tv_home_bottom_music_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:textColor="@color/black" />
+
+                <com.extraordinary.weaves.tendency.MarqueeTextView
+                    android:id="@+id/tv_home_bottom_artist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_home_bottom_music_name"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:text="想听就听"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_home_bottom_artist"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_home_bottom_position"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:gravity="center_horizontal"
+                        android:text="00:00"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" - "
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tv_home_bottom_duration"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="00:00"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
