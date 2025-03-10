@@ -39,6 +39,15 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import com.tencent.mmkv.MMKV
 import dora.db.dao.DaoFactory
 import com.blankj.utilcode.util.LogUtils
+import com.extraordinary.interstings.studios.utils.albumListInter
+import com.extraordinary.interstings.studios.utils.artistListInter
+import com.extraordinary.interstings.studios.utils.finishPageInterOne
+import com.extraordinary.interstings.studios.utils.geDanDetInter
+import com.extraordinary.interstings.studios.utils.geDanListInter
+import com.extraordinary.interstings.studios.utils.playViewsInter
+import com.extraordinary.interstings.studios.utils.queueInter
+import com.extraordinary.interstings.studios.utils.searchInter
+import com.extraordinary.interstings.studios.utils.styleListInter
 import com.extraordinary.interstings.studios.utils.trackListBanner
 import com.extraordinary.interstings.studios.utils.trackListInter
 import dora.util.ToastUtils
@@ -67,8 +76,7 @@ class TrackList : baseActivity() {
             titleContent.text = "Tracks"
             searchBtn.visibility = View.VISIBLE
             searchBtn.setOnClickListener {
-                startActivity(Intent(this@TrackList, AppSearch::class.java))
-//                finish()
+                startInterActivity(Intent(this@TrackList, AppSearch::class.java), searchInter())
             }
         }
 
@@ -95,23 +103,19 @@ class TrackList : baseActivity() {
             initRecyleList()
         }
         trackListViewBinding.rlTrack.setOnClickListener {
-            startActivity(Intent(this, TrackList::class.java))
-//            finish()
+            startInterActivity(Intent(this, TrackList::class.java),trackListInter())
         }
         trackListViewBinding.rlAlbums.setOnClickListener {
-            startActivity(Intent(this, AppAlbumList::class.java))
-//            finish()
+            startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter())
         }
         trackListViewBinding.rlArtist.setOnClickListener {
-            startActivity(Intent(this, AppArtistList::class.java))
-//            finish()
+            startInterActivity(Intent(this, AppArtistList::class.java), artistListInter())
         }
         trackListViewBinding.rlPlayList.setOnClickListener {
-            startActivity(Intent(this, AppGeDanList::class.java))
+            startInterActivity(Intent(this, AppGeDanList::class.java), geDanListInter())
         }
         trackListViewBinding.rlStyles.setOnClickListener {
-            startActivity(Intent(this, AppStyleList::class.java))
-//            finish()
+            startInterActivity(Intent(this, AppStyleList::class.java), styleListInter())
         }
         trackListViewBinding.scan.setOnClickListener {
             initPermission()
@@ -125,31 +129,27 @@ class TrackList : baseActivity() {
             mediaManager?.pause()
         }
         trackListViewBinding.btnHomeBottomMenu.setOnClickListener {
-            startActivity(Intent(this, AppPlayerList::class.java))
-//            finish()
+            startInterActivity(Intent(this, AppPlayerList::class.java), queueInter())
         }
         trackListViewBinding.bottomMusic.setOnClickListener {
-            startActivity(Intent(this, PlayerView::class.java))
-//            finish()
+            startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
         }
         trackListViewBinding.albumsOne.setOnClickListener {
-            startActivity(Intent(this@TrackList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@TrackList, AppGeDanDetail::class.java).apply {
                 putExtra("style",9)
-            })
+            }, geDanDetInter())
         }
 
 
         trackListViewBinding.albumsTw.setOnClickListener {
-            startActivity(Intent(this@TrackList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@TrackList, AppGeDanDetail::class.java).apply {
                 putExtra("style",8)
-
-            })
+            }, geDanDetInter())
         }
         trackListViewBinding.albumsThr.setOnClickListener {
-            startActivity(Intent(this@TrackList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@TrackList, AppGeDanDetail::class.java).apply {
                 putExtra("style",11)
-
-            })
+            }, geDanDetInter())
         }
         checkEmpty()
     }

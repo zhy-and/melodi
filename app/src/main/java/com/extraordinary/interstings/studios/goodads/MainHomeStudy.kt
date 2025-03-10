@@ -1,6 +1,8 @@
 package com.extraordinary.interstings.studios.goodads
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
@@ -35,6 +37,8 @@ import com.extraordinary.interstings.studios.utils.artistDetInter
 import com.extraordinary.interstings.studios.utils.artistListBanner
 import com.extraordinary.interstings.studios.utils.artistListInter
 import com.extraordinary.interstings.studios.utils.feedBacksInter
+import com.extraordinary.interstings.studios.utils.finishPageInterOne
+import com.extraordinary.interstings.studios.utils.finishPageInterTwo
 import com.extraordinary.interstings.studios.utils.geDanDetBanner
 import com.extraordinary.interstings.studios.utils.geDanDetInter
 import com.extraordinary.interstings.studios.utils.geDanListBanner
@@ -263,9 +267,9 @@ class MainHomeStudy {
 
     private fun musWeavesTimesToLoadConfig() {
         musWeavesLoadNatives()
-        if (CommonStudyUtils.interIsCanLoad()) {
-            createInter(trackListInter())
-        }
+//        if (CommonStudyUtils.interIsCanLoad()) {
+//            createInter(trackListInter())
+//        }
     }
     private fun notifyCySts(sts: Boolean) {
         interStatus = sts
@@ -308,7 +312,7 @@ class MainHomeStudy {
                     StartWeavesTools.weavesTools.loadStartAds(baseTrans, object :
                         StartUpListener {
                         override fun loadSuc() {
-                            initLoadInter(baseTrans)
+//                            initLoadInter(baseTrans)
                             if (baseTrans == null || baseTrans.isDestroyed || baseTrans.isFinishing) {
                                 return
                             }
@@ -317,13 +321,13 @@ class MainHomeStudy {
                         }
 
                         override fun LoadedError() {
-                            initLoadInter(baseTrans)
+//                            initLoadInter(baseTrans)
                             //to load inter
 
                         }
                     })
                 } else {
-                    initLoadInter(baseTrans)
+//                    initLoadInter(baseTrans)
                     // has ad -> show
                     showStartWeaves(baseTrans)
                     //to load inter
@@ -422,10 +426,10 @@ class MainHomeStudy {
                 // Called when ad is shown.
                 interWeavesIsShowing = true
                 CommonStudyUtils.showCountAdd(pos)
-                ThreadUtils.runOnUiThreadDelayed({
-                    LogUtils.e(CommonStudyUtils.basicInfoLog(pos) + "load a new cy ad")
-                    createInter(pos)
-                }, 1500)
+//                ThreadUtils.runOnUiThreadDelayed({
+//                    LogUtils.e(CommonStudyUtils.basicInfoLog(pos) + "load a new cy ad")
+//                    createInter(pos)
+//                }, 1500)
             }
         }
         interstitialAd?.setOnPaidEventListener {
@@ -496,7 +500,7 @@ class MainHomeStudy {
                    searchInter(), settingsInter(), scansInter(),
                    feedBacksInter(),  privacysInter(), trackListInter(), styleListInter(), styleDetInter(),
                    albumListInter(),  albumDetInter(), artistListInter(), artistDetInter(), geDanListInter(),
-                   geDanDetInter(),  addSongsInter(), playViewsInter(), lyricInter(), queueInter()
+                   geDanDetInter(),  addSongsInter(), playViewsInter(), lyricInter(), queueInter(), finishPageInterOne(), finishPageInterTwo()
                    -> {
                        if (!TextUtils.isEmpty(it.fayiiebmhdhz)) {
 
@@ -521,7 +525,7 @@ class MainHomeStudy {
                 return
             }
             if (!CommonStudyUtils.weavesIsCanLoadStart()){
-                initLoadInter(activity) // can't load kp to load inter
+//                initLoadInter(activity) // can't load kp to load inter
             }
             musWeavesLoadNatives()
         } catch (e: Exception) {
@@ -639,6 +643,7 @@ class MainHomeStudy {
     }
 
 
+
     private fun showStartWeaves(activity: baseActivity?) {
         StartWeavesTools.weavesTools.showStartAds(activity,
             object : ShowListener {
@@ -674,6 +679,9 @@ class MainHomeStudy {
         }
         return false
     }
+
+
+
 
 
     fun getShowCyAds(recAds: Long, context: Activity) {
@@ -720,10 +728,6 @@ class MainHomeStudy {
 
 
     fun showCachedInter(recAds: Long, context: Activity) {
-        if (CommonStudyUtils.posIsCanShow(recAds)) {
-            LogUtils.e("inter flag limit ------" + CommonStudyUtils.basicInfoLog(recAds))
-            return
-        }
         if (uniqueInter != null) {
             if (CommonStudyUtils.checkTimes(interWeavesTimes)) {
                 LogUtils.e("inter flag limit ------" + CommonStudyUtils.basicInfoLog(recAds))

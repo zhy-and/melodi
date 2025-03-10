@@ -14,6 +14,13 @@ import com.extraordinary.interstings.studios.services.NativeWeavesListener
 import com.extraordinary.interstings.studios.utils.CommonStudyUtils
 import com.extraordinary.interstings.studios.utils.MESSAGE_MSG_CODE
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFRESH
+import com.extraordinary.interstings.studios.utils.albumListInter
+import com.extraordinary.interstings.studios.utils.artistListInter
+import com.extraordinary.interstings.studios.utils.geDanDetInter
+import com.extraordinary.interstings.studios.utils.geDanListInter
+import com.extraordinary.interstings.studios.utils.playViewsInter
+import com.extraordinary.interstings.studios.utils.queueInter
+import com.extraordinary.interstings.studios.utils.searchInter
 import com.extraordinary.interstings.studios.utils.styleListBanner
 import com.extraordinary.interstings.studios.utils.styleListInter
 import com.extraordinary.interstings.studios.utils.trackListInter
@@ -179,50 +186,58 @@ class AppStyleList : baseActivity(){
             titleContent.text = "Styles"
             searchBtn.visibility = View.VISIBLE
             searchBtn.setOnClickListener {
-                startActivity(Intent(this@AppStyleList, AppSearch::class.java))
-                finish()
+                startInterActivity(Intent(this@AppStyleList, AppSearch::class.java), searchInter())
+//                finish()
             }
         }
         binding.ranks.setOnClickListener {
-            startActivity(Intent(this@AppStyleList, TrackList::class.java).apply {
-            })
+            startInterActivity(Intent(this, TrackList::class.java),trackListInter())
+
+//            finish()
         }
         binding.pops.setOnClickListener {
-            startActivity(Intent(this@AppStyleList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@AppStyleList, AppGeDanDetail::class.java).apply {
                 putExtra("style",1)
-            })
+            }, geDanDetInter())
+//            finish()
+
         }
 
 
         binding.rocks.setOnClickListener {
-            startActivity(Intent(this@AppStyleList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@AppStyleList, AppGeDanDetail::class.java).apply {
                 putExtra("style",2)
+            }, geDanDetInter())
+//            finish()
 
-            })
         }
         binding.countrys.setOnClickListener {
-            startActivity(Intent(this@AppStyleList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@AppStyleList, AppGeDanDetail::class.java).apply {
                 putExtra("style",3)
+            }, geDanDetInter())
+//            finish()
 
-            })
         }
         binding.jazzs.setOnClickListener {
-            startActivity(Intent(this@AppStyleList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@AppStyleList, AppGeDanDetail::class.java).apply {
                 putExtra("style",4)
+            }, geDanDetInter())
+//            finish()
 
-            })
         }
         binding.classic.setOnClickListener {
-            startActivity(Intent(this@AppStyleList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@AppStyleList, AppGeDanDetail::class.java).apply {
                 putExtra("style",5)
+            }, geDanDetInter())
+//            finish()
 
-            })
         }
         binding.elec.setOnClickListener {
-            startActivity(Intent(this@AppStyleList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@AppStyleList, AppGeDanDetail::class.java).apply {
                 putExtra("style",6)
+            }, geDanDetInter())
+//            finish()
 
-            })
         }
         if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
             checkPermission()
@@ -247,19 +262,19 @@ class AppStyleList : baseActivity(){
         }
         checkEmpty()
         binding.rlTrack.setOnClickListener {
-            startActivity(Intent(this, TrackList::class.java))
+            startInterActivity(Intent(this, TrackList::class.java),trackListInter())
 //            finish()
         }
         binding.rlPlayList.setOnClickListener {
-            startActivity(Intent(this, AppGeDanList::class.java))
+            startInterActivity(Intent(this, AppGeDanList::class.java), geDanListInter())
 //            finish()
         }
         binding.rlAlbums.setOnClickListener {
-            startActivity(Intent(this, AppAlbumList::class.java))
+            startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter())
 //            finish()
         }
         binding.rlStyles.setOnClickListener {
-            startActivity(Intent(this, AppArtistList::class.java))
+            startInterActivity(Intent(this, AppArtistList::class.java), artistListInter())
 //            finish()
         }
         binding.btnHomeBottomPlay.setOnClickListener {
@@ -271,11 +286,11 @@ class AppStyleList : baseActivity(){
             mediaManager?.pause()
         }
         binding.btnHomeBottomMenu.setOnClickListener {
-            startActivity(Intent(this, AppPlayerList::class.java))
+            startInterActivity(Intent(this, AppPlayerList::class.java), queueInter())
 //            finish()
         }
         binding.bottomMusic.setOnClickListener {
-            startActivity(Intent(this, PlayerView::class.java))
+            startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
 //            finish()
         }
 

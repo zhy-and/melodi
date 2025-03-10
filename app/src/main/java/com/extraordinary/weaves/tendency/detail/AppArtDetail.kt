@@ -17,6 +17,8 @@ import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFRESH
 import com.extraordinary.interstings.studios.utils.artistDetBanner
 import com.extraordinary.interstings.studios.utils.artistDetInter
 import com.extraordinary.interstings.studios.utils.artistListInter
+import com.extraordinary.interstings.studios.utils.playViewsInter
+import com.extraordinary.interstings.studios.utils.queueInter
 import com.extraordinary.weaves.tendency.R
 import com.extraordinary.weaves.tendency.application.GlobalMusApp
 import com.extraordinary.weaves.tendency.baseActivity
@@ -139,23 +141,25 @@ class AppArtDetail : baseActivity(){
             mediaManager?.pause()
         }
         binding.btnHomeBottomMenu.setOnClickListener {
-            startActivity(Intent(this, AppPlayerList::class.java))
-//            finish()
+            startInterActivity(Intent(this, AppPlayerList::class.java), queueInter())
         }
         binding.bottomMusic.setOnClickListener {
-            startActivity(Intent(this, PlayerView::class.java))
-//            finish()
+            startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
         }
 
         binding.playBtn.setOnClickListener {
-            GlobalMusApp.instance?.mediaManager?.also {
-                if (musicArrayList.isNotEmpty()){
-                    it.refreshPlaylist(musicArrayList)
-                    it.playById(musicArrayList[0].songId)
+            try {
+                GlobalMusApp.instance?.mediaManager?.also {
+                    if (musicArrayList.isNotEmpty()){
+                        it.refreshPlaylist(musicArrayList)
+                        it.playById(musicArrayList[0].songId)
+                    }
                 }
+            }catch (e : Exception){
+                e.printStackTrace()
             }
-            startActivity(Intent(this, PlayerView::class.java))
-//            finish()
+
+            startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
         }
 
     }

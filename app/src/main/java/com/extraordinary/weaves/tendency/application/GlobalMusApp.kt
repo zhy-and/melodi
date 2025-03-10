@@ -99,7 +99,7 @@ class GlobalMusApp : BaseApplication(), AppConfig {
         MMKV.initialize(this)
         initDb()    // 初始化SQLite数据库的表
         initMedia() // 初始化媒体管理器
-        LogUtils.getConfig().isLogSwitch = BuildConfig.DEBUG
+        LogUtils.getConfig().isLogSwitch = false
         initManager()
     }
 

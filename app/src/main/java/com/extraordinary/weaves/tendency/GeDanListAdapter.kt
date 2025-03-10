@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.extraordinary.interstings.studios.utils.geDanDetInter
 import com.extraordinary.weaves.tendency.bean.GeDanData
 import com.extraordinary.weaves.tendency.detail.AppGeDanDetail
 
@@ -55,10 +56,10 @@ class GeDanListAdapter(
         val createBean = musicArrayList[position]
         holder.musicName.text = createBean.geDanName
         holder.itemView.setOnClickListener {
-            ctx?.startActivity(Intent(ctx, AppGeDanDetail::class.java).apply {
+            ctx?.startInterActivity(Intent(ctx, AppGeDanDetail::class.java).apply {
                 putExtra("det_type",1)
                 putExtra("gedan_id",createBean.geDanId)
-            })
+            }, geDanDetInter())
         }
     }
 

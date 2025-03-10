@@ -1,5 +1,8 @@
 package com.extraordinary.weaves.tendency
 
+import android.app.AlertDialog
+import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -7,7 +10,9 @@ import android.os.PersistableBundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ThreadUtils
 import com.extraordinary.interstings.studios.goodads.MainHomeStudy
+import com.extraordinary.interstings.studios.utils.CommonStudyUtils
 import com.extraordinary.interstings.studios.utils.finishPageInterOne
 import com.extraordinary.interstings.studios.utils.finishPageInterTwo
 import com.extraordinary.weaves.tendency.core.MusicTimer
@@ -20,7 +25,24 @@ open class baseActivity : AppCompatActivity() {
     }
     open fun receiverMsgCallBack(message: Message) {
     }
-
+    fun startInterActivity(intent: Intent, pos : Long,isFinish : Boolean = true){
+        if (!CommonStudyUtils.posIsCanShow(pos) && MainHomeStudy.homeStudy.uniqueInter == null){
+            MainHomeStudy.homeStudy.createInter(pos)
+            showLoadingBar()
+            dora.util.ThreadUtils.runOnUiThreadDelayed({
+                cancelLoadingBar()
+                startActivity(intent)
+                if (isFinish){
+                    finish()
+                }
+            },3000)
+        }else{
+            startActivity(intent)
+            if (isFinish){
+                finish()
+            }
+        }
+    }
 
      fun speFinish() {
         if (checkPageOne()){
@@ -33,6 +55,50 @@ open class baseActivity : AppCompatActivity() {
         super.finish()
     }
 
+    @JvmField
+    var loadingStart: AlertDialog? = null
+    open fun showLoadingBar() {
+        ThreadUtils.runOnUiThread {
+            try {
+                if (loadingStart == null){
+                    loadingStart = AlertDialog.Builder(this).create()
+                    loadingStart!!.window!!.setBackgroundDrawable(ColorDrawable())
+                    loadingStart!!.setCancelable(false)
+                    loadingStart!!.setOnKeyListener { _, keyCode, event -> keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_BACK }
+                }
+//                if (null != commonDialog && commonDialog!!.isShowing && !isFinishing && !isDestroyed) {
+//                    commonDialog!!.dismiss()
+//                }
+                if (null != loadingStart && !loadingStart!!.isShowing && !isFinishing && !isDestroyed) {
+                    loadingStart!!.show()
+                    loadingStart!!.setContentView(R.layout.loadings)
+                    loadingStart!!.setCanceledOnTouchOutside(false)
+                }
+
+            }catch (e : Exception){
+                e.printStackTrace()
+            }
+        }
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (null != loadingStart && loadingStart!!.isShowing && !isFinishing && !isDestroyed) {
+            loadingStart!!.dismiss()
+        }
+    }
+    open fun cancelLoadingBar() {
+        ThreadUtils.runOnUiThread {
+            try {
+                if (null != loadingStart && loadingStart!!.isShowing && !isFinishing && !isDestroyed) {
+                    loadingStart!!.dismiss()
+                }
+            }catch (e : Exception){
+                e.printStackTrace()
+            }
+        }
+    }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK && checkPageOne()){

@@ -8,6 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.extraordinary.interstings.studios.utils.albumDetInter
+import com.extraordinary.interstings.studios.utils.artistDetInter
+import com.extraordinary.interstings.studios.utils.playViewsInter
 import com.extraordinary.weaves.tendency.R
 import com.extraordinary.weaves.tendency.application.GlobalMusApp
 import com.extraordinary.weaves.tendency.baseActivity
@@ -69,58 +72,68 @@ class AlbumListAdapter(
                 return@setOnClickListener
             }
             if (checkFinish()) return@setOnClickListener
-            showComDialog(ctx, R.layout.item_popup_feed).apply {
-                findViewById<View>(R.id.play_album)?.visibility = View.GONE
-                findViewById<View>(R.id.play_delete)?.visibility = View.GONE
-                findViewById<View>(R.id.play_art)?.setOnClickListener {
-                    disDialog(this,ctx)
-                    musicDao.select(
-                        QueryBuilder.create().where(
-                            WhereBuilder.create().addWhereEqualTo("album_id",createBean.album_id)
-                        )
-                    ).also {
-                        if (it.isNotEmpty()){
-                            ctx?.startActivity(Intent(ctx, AppArtDetail::class.java).apply {
-                                putExtra("artist", it[0].artist)
-                            })
+            try {
+                showComDialog(ctx, R.layout.item_popup_feed).apply {
+                    findViewById<View>(R.id.play_album)?.visibility = View.GONE
+                    findViewById<View>(R.id.play_delete)?.visibility = View.GONE
+                    findViewById<View>(R.id.play_art)?.setOnClickListener {
+                        disDialog(this,ctx)
+                        musicDao.select(
+                            QueryBuilder.create().where(
+                                WhereBuilder.create().addWhereEqualTo("album_id",createBean.album_id)
+                            )
+                        ).also {
+                            if (it.isNotEmpty()){
+                                ctx?.startInterActivity(Intent(ctx, AppArtDetail::class.java).apply {
+                                    putExtra("artist", it[0].artist)
+                                }, artistDetInter())
 //                            ctx?.finish()
+                            }
+
                         }
-
                     }
-                }
-                findViewById<View>(R.id.play_now)?.setOnClickListener {
-                    disDialog(this, ctx)
+                    findViewById<View>(R.id.play_now)?.setOnClickListener {
+                        disDialog(this, ctx)
 
-                    musicDao.select(
-                        QueryBuilder.create().where(
-                            WhereBuilder.create().addWhereEqualTo("album_id",createBean.album_id)
-                        )
-                    ).apply {
-                        GlobalMusApp.instance?.mediaManager?.also {
-                            if (isNotEmpty()){
-                                it.refreshPlaylist(this as MutableList)
-                                it.playById(this[0].songId)
+                        musicDao.select(
+                            QueryBuilder.create().where(
+                                WhereBuilder.create().addWhereEqualTo("album_id",createBean.album_id)
+                            )
+                        ).apply {
+                            try {
+                                GlobalMusApp.instance?.mediaManager?.also {
+                                    if (isNotEmpty()){
+                                        it.refreshPlaylist(this as MutableList)
+                                        it.playById(this[0].songId)
+                                    }
+                                }
+                            }catch (e : Exception){
+                                e.printStackTrace()
                             }
                         }
-                    }
-                    ctx?.startActivity(Intent(ctx, PlayerView::class.java))
-//                    ctx?.finish()
-                }
-                findViewById<View>(R.id.play_fav)?.setOnClickListener {
-                    disDialog(this, ctx)
+                        ctx?.startInterActivity(Intent(ctx, PlayerView::class.java), playViewsInter())
 
-                    musicDao.select(
-                        QueryBuilder.create().where(
-                            WhereBuilder.create().addWhereEqualTo("album_id",createBean.album_id)
-                        )
-                    ).apply {
-                        for (i in this){
-                            saveFavorite(i,1)
-                        }
+//                    ctx?.finish()
                     }
-                    ToastUtils.showShort("Collect successful！")
+                    findViewById<View>(R.id.play_fav)?.setOnClickListener {
+                        disDialog(this, ctx)
+
+                        musicDao.select(
+                            QueryBuilder.create().where(
+                                WhereBuilder.create().addWhereEqualTo("album_id",createBean.album_id)
+                            )
+                        ).apply {
+                            for (i in this){
+                                saveFavorite(i,1)
+                            }
+                        }
+                        ToastUtils.showShort("Collect successful！")
+                    }
                 }
+            }catch (e : Exception){
+                e.printStackTrace()
             }
+
         }
 
 
@@ -151,10 +164,10 @@ class AlbumListAdapter(
     }
 
     private fun goAlbumDet(createBean: Album) {
-        ctx?.startActivity(Intent(ctx, AppAlbumDetail::class.java).apply {
+        ctx?.startInterActivity(Intent(ctx, AppAlbumDetail::class.java).apply {
             putExtra("album_id", createBean.album_id)
 //            putExtra("album_name", createBean.album_name)
-        })
+        }, albumDetInter())
 //        ctx?.finish()
     }
 

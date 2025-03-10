@@ -8,6 +8,9 @@ import androidx.activity.enableEdgeToEdge
 import com.blankj.utilcode.util.AppUtils
 import com.extraordinary.interstings.studios.goodads.GoogleMobileAdsConsentManager
 import com.extraordinary.interstings.studios.goodads.MainHomeStudy
+import com.extraordinary.interstings.studios.utils.feedBacksInter
+import com.extraordinary.interstings.studios.utils.privacysInter
+import com.extraordinary.interstings.studios.utils.scansInter
 import com.extraordinary.interstings.studios.utils.searchInter
 import com.extraordinary.interstings.studios.utils.settingsInter
 import com.extraordinary.weaves.tendency.FeedView
@@ -48,18 +51,19 @@ class AppMoreView : baseActivity() {
             }
         }
         binding.scanSettings.setOnClickListener {
-            startActivity(Intent(this, ScanPage::class.java))
+            startInterActivity(Intent(this, ScanPage::class.java), scansInter())
 //            finish()
         }
         binding.feedSettings.setOnClickListener {
-            startActivity(Intent(this, FeedView::class.java))
+            startInterActivity(Intent(this, FeedView::class.java), feedBacksInter())
 //            finish()
 
         }
         binding.version.text = "V "+AppUtils.getAppVersionName()
 
         binding.priSettings.setOnClickListener {
-            startActivity(Intent(this, PrivacyPage::class.java))
+            startInterActivity(Intent(this, PrivacyPage::class.java), privacysInter())
+
 //            finish()
         }
     }

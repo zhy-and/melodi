@@ -12,29 +12,6 @@ import android.os.Message
 import android.view.KeyEvent
 import android.view.View
 import android.widget.SeekBar
-import com.extraordinary.weaves.tendency.detail.AppAlbumDetail
-import com.extraordinary.weaves.tendency.detail.AppArtDetail
-import com.extraordinary.weaves.tendency.global.AppConfig
-import com.extraordinary.weaves.tendency.global.AppConfig.Companion.MPS_PAUSE
-import com.extraordinary.weaves.tendency.global.AppConfig.Companion.MPS_PLAYING
-import com.extraordinary.weaves.tendency.event.AppEvent
-import com.extraordinary.weaves.tendency.application.GlobalMusApp
-import com.extraordinary.weaves.tendency.manager.MediaManager
-import com.extraordinary.weaves.tendency.receiver.MusicPlayReceiver
-import com.extraordinary.weaves.tendency.CommonMessageHandler
-import com.extraordinary.weaves.tendency.core.PlayModeControl
-import com.extraordinary.weaves.tendency.R
-import com.extraordinary.weaves.tendency.scan.ScanPage
-import com.extraordinary.weaves.tendency.baseActivity
-import com.extraordinary.weaves.tendency.bean.Music
-import com.extraordinary.weaves.tendency.databinding.PlayerMainBinding
-import com.extraordinary.weaves.tendency.lyric.AppLyricView
-import com.extraordinary.weaves.tendency.playlist.AppPlayerList
-import com.gyf.immersionbar.ImmersionBar
-import com.jeremyliao.liveeventbus.LiveEventBus
-import dora.db.builder.WhereBuilder
-import dora.db.dao.DaoFactory
-import dora.db.dao.OrmDao
 import com.blankj.utilcode.util.LogUtils
 import com.extraordinary.interstings.studios.goodads.CommonWeavesStyle
 import com.extraordinary.interstings.studios.goodads.MainHomeStudy
@@ -42,10 +19,38 @@ import com.extraordinary.interstings.studios.services.NativeWeavesListener
 import com.extraordinary.interstings.studios.utils.CommonStudyUtils
 import com.extraordinary.interstings.studios.utils.MESSAGE_MSG_CODE
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFRESH
+import com.extraordinary.interstings.studios.utils.albumDetInter
+import com.extraordinary.interstings.studios.utils.artistDetInter
+import com.extraordinary.interstings.studios.utils.lyricInter
 import com.extraordinary.interstings.studios.utils.playViewBanner
 import com.extraordinary.interstings.studios.utils.playViewsInter
+import com.extraordinary.interstings.studios.utils.queueInter
+import com.extraordinary.interstings.studios.utils.scansInter
+import com.extraordinary.weaves.tendency.CommonMessageHandler
+import com.extraordinary.weaves.tendency.R
+import com.extraordinary.weaves.tendency.application.GlobalMusApp
+import com.extraordinary.weaves.tendency.baseActivity
+import com.extraordinary.weaves.tendency.bean.Music
+import com.extraordinary.weaves.tendency.core.PlayModeControl
+import com.extraordinary.weaves.tendency.databinding.PlayerMainBinding
+import com.extraordinary.weaves.tendency.detail.AppAlbumDetail
+import com.extraordinary.weaves.tendency.detail.AppArtDetail
+import com.extraordinary.weaves.tendency.event.AppEvent
+import com.extraordinary.weaves.tendency.global.AppConfig
+import com.extraordinary.weaves.tendency.global.AppConfig.Companion.MPS_PAUSE
+import com.extraordinary.weaves.tendency.global.AppConfig.Companion.MPS_PLAYING
+import com.extraordinary.weaves.tendency.lyric.AppLyricView
+import com.extraordinary.weaves.tendency.manager.MediaManager
+import com.extraordinary.weaves.tendency.playlist.AppPlayerList
+import com.extraordinary.weaves.tendency.receiver.MusicPlayReceiver
+import com.extraordinary.weaves.tendency.scan.ScanPage
 import com.google.android.gms.ads.nativead.NativeAd
+import com.gyf.immersionbar.ImmersionBar
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.tencent.mmkv.MMKV
+import dora.db.builder.WhereBuilder
+import dora.db.dao.DaoFactory
+import dora.db.dao.OrmDao
 
 class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClickListener {
     private var mPanHandle : Handler = CommonMessageHandler(this)
@@ -101,7 +106,6 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
         LiveEventBus
             .get(AppEvent.REFRESH_MUSIC_HOME_MPS_INVALID, String::class.java)
             .observe(this) {
-                LogUtils.e("aaaaaaae11")
                 timer?.stopTimer()
                 val music = mediaManager?.curMusic
                 refreshUI(0, music!!.duration, music)
@@ -111,7 +115,6 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
         LiveEventBus
             .get(AppEvent.REFRESH_MUSIC_HOME_MPS_PAUSE, String::class.java)
             .observe(this) {
-                LogUtils.e("aaaaaaae2")
                 val music = mediaManager?.curMusic
                 timer?.stopTimer()
                 //todo playauto
@@ -128,7 +131,6 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
         LiveEventBus
             .get(AppEvent.REFRESH_MUSIC_HOME_MPS_PLAYING, String::class.java)
             .observe(this) {
-                LogUtils.e("aaaaaaae3")
                 val music = mediaManager?.curMusic
                 mediaManager?.let {
                     refreshUI(it.position(), music!!.duration, music)
@@ -140,7 +142,6 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
         LiveEventBus
             .get(AppEvent.REFRESH_MUSIC_HOME_MPS_PREPARE, String::class.java)
             .observe(this) {
-                LogUtils.e("aaaaaaae4")
                 timer?.stopTimer()
                 val music = mediaManager?.curMusic
                 refreshUI(0, music!!.duration, music)
@@ -155,7 +156,6 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
         }else{
             registerReceiver(receviver, filter)
         }
-        LogUtils.e("111111"+mediaManager?.playState)
         if (mediaManager?.playState == MPS_PLAYING){
             val music = mediaManager?.curMusic
             mediaManager?.let {
@@ -229,7 +229,7 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
         binding.btnMusicPlayFavorite.setOnClickListener(this)
         binding.sbMusicPlayPlayback.setOnSeekBarChangeListener(this)
         binding.lyric.setOnClickListener {
-            startActivity(Intent(this, AppLyricView::class.java))
+            startInterActivity(Intent(this, AppLyricView::class.java), lyricInter(),false)
             finishBack()
         }
 
@@ -238,7 +238,7 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
                 toScan()
                 return@setOnClickListener
             }
-            startActivity(Intent(this, AppPlayerList::class.java))
+            startInterActivity(Intent(this, AppPlayerList::class.java), queueInter(),false)
             finishBack()
         }
         binding.lock.setOnClickListener {
@@ -248,9 +248,9 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
                     return@setOnClickListener
                 }
                 mediaManager?.curMusic?.albumId?.let {
-                    startActivity(Intent(this@PlayerView, AppAlbumDetail::class.java).apply {
+                    startInterActivity(Intent(this@PlayerView, AppAlbumDetail::class.java).apply {
                         putExtra("album_id",it)
-                    })
+                    }, albumDetInter(),false)
                     finishBack()
                 }
             }catch (e : Exception){
@@ -265,9 +265,9 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
                 toScan()
                 return@setOnClickListener
             }
-            startActivity(Intent(this@PlayerView, AppArtDetail::class.java).apply {
+            startInterActivity(Intent(this@PlayerView, AppArtDetail::class.java).apply {
                 putExtra("artist",binding.musicSinger.text.toString())
-            })
+            }, artistDetInter(),false)
         }
         binding.backBtn.setOnClickListener { speFinish() }
     }
@@ -385,38 +385,64 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
         when (v.id) {
             //上一首
             R.id.btn_music_play_prev -> {
-                if (curMusic == null) {
+                try {
+                    if (curMusic == null) {
+                        toScan()
+                        return
+                    }
+                    mediaManager!!.prev()
+                }catch (e : Exception){
                     toScan()
-                    return
+                    e.printStackTrace()
                 }
-                mediaManager!!.prev()
+
             }
             //播放
             R.id.btn_music_play_play -> {
-                if (curMusic == null) {
+                try {
+                    if (curMusic == null) {
+                        toScan()
+                        return
+                    }
+                    mediaManager!!.replay()
+                }catch (e : Exception){
                     toScan()
-                    return
+                    e.printStackTrace()
                 }
-                mediaManager!!.replay()
+
             }
             //下一首
             R.id.btn_music_play_next -> {
-                if (curMusic == null) {
+                try {
+                    if (curMusic == null) {
+                        toScan()
+                        return
+                    }
+                    mediaManager!!.next()
+                }catch (e : Exception){
                     toScan()
-                    return
+                    e.printStackTrace()
                 }
-                mediaManager!!.next()
+
             }
             //暂停
-            R.id.btn_music_play_pause -> mediaManager!!.pause()
+            R.id.btn_music_play_pause ->
+                try {
+                    mediaManager!!.pause()
+                }catch (e : Exception){e.printStackTrace()}
             //音量
             //播放模式
             R.id.btn_music_play_mode -> {
-                if (curMusic == null) {
-                    toScan()
-                    return
+                try {
+                    if (curMusic == null) {
+                        toScan()
+                        return
+                    }
+                    playModeControl.changePlayMode(binding.btnMusicPlayMode)
+                }catch (e : Exception){
+                    e.printStackTrace()
                 }
-                playModeControl.changePlayMode(binding.btnMusicPlayMode)
+
             }
             //喜爱
             R.id.btn_music_play_favorite -> {
@@ -431,8 +457,8 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
                     } else {
                         refreshFavorite(0)
                     }
-                }catch (_: Exception){
-
+                }catch (e: Exception){
+                    e.printStackTrace()
                 }
 
             }
@@ -440,7 +466,7 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
     }
 
     private fun toScan() {
-        startActivity(Intent(this, ScanPage::class.java))
+        startInterActivity(Intent(this, ScanPage::class.java), scansInter(),false)
         finishBack()
     }
 

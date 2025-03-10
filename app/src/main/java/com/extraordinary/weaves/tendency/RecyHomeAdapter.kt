@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.extraordinary.interstings.studios.utils.playViewsInter
 import com.extraordinary.weaves.tendency.player.PlayerView
 
 
@@ -33,9 +34,9 @@ class RecyHomeAdapter(
     override fun onBindViewHolder(holder: AreaGeneViewH, position: Int) {
             Glide.with(ctx).load(musicArrayList[position]).into(holder.logo)
         holder.itemView.setOnClickListener {
-            ctx?.startActivity(Intent(ctx, PlayerView::class.java).apply {
+            ctx?.startInterActivity(Intent(ctx, PlayerView::class.java).apply {
                 putExtra("play",true)
-            })
+            }, playViewsInter())
         }
     }
 

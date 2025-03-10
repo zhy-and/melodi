@@ -2,9 +2,14 @@ package com.extraordinary.interstings.studios.utils;
 import static com.extraordinary.interstings.studios.services.ApiStudios.commonUniIds;
 import static com.extraordinary.interstings.studios.services.ApiStudios.commonKys;
 import static com.extraordinary.interstings.studios.utils.NativeKt.MUSIC_CONSTANT_APP_REFER_INFO;
+import static com.extraordinary.interstings.studios.utils.NativeKt.MMKV_COEFS;
+import static com.extraordinary.interstings.studios.utils.NativeKt.MMKV_SYS;
+import static com.extraordinary.interstings.studios.utils.NativeKt.MMKV_LINES;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.extraordinary.interstings.studios.services.ApiStudios;
 import com.extraordinary.weaves.tendency.application.GlobalMusApp;
+import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.ads.AdValue;
 import com.tencent.mmkv.MMKV;
@@ -98,14 +103,34 @@ public class CommonTools {
         }
     }
 
-    public static void rossCallBack(String purchase, String currencyCode) {
-        AppEventsLogger logger =  AppEventsLogger.newLogger(GlobalMusApp.Companion.getInstance());
-        logger.logPurchase(new BigDecimal(purchase).divide(new BigDecimal(1000000.0)), Currency.getInstance(currencyCode));
-    }
+//    public static void rossCallBack(String purchase, String currencyCode) {
+//
+//        AppEventsLogger logger =  AppEventsLogger.newLogger(GlobalMusApp.Companion.getInstance());
+//        logger.logPurchase(new BigDecimal(purchase).divide(new BigDecimal(1000000.0)), Currency.getInstance(currencyCode));
+//    }
 
     public static void valueUpload(AdValue adValue, String adType, String adId) {
-        rossCallBack(String.valueOf(adValue.getValueMicros()),adValue.getCurrencyCode());
-        ApiStudios.Companion.handleValues(adId,adType,adValue);
+        try {
+            double configValues = 0;
+            long distanceTimes = Long.parseLong(MMKV.defaultMMKV().getString(MMKV_SYS,"100"));
+            if (System.currentTimeMillis() -  CommonStudyUtils.INSTANCE.getInstallSys() <=  (distanceTimes * 60 * 60 * 1000)) {
+                BigDecimal value = new BigDecimal(String.valueOf(adValue.getValueMicros())).divide(new BigDecimal(1000000.0));
+                double lines = Double.parseDouble((MMKV.defaultMMKV().getString(MMKV_LINES,"0")));
+                if (value.doubleValue() >= lines){
+                    double coef = Double.parseDouble((MMKV.defaultMMKV().getString(MMKV_COEFS,"1")));
+                    AppEventsLogger logger =  AppEventsLogger.newLogger(GlobalMusApp.Companion.getInstance());
+                    logger.logPurchase(new BigDecimal(coef*value.doubleValue()), Currency.getInstance(adValue.getCurrencyCode()));
+                    configValues = new BigDecimal(coef*value.doubleValue()).doubleValue();
+
+                }else {
+                }
+            } else {
+            }
+            ApiStudios.Companion.handleValues(adId,adType,adValue,configValues);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 

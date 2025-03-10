@@ -174,6 +174,9 @@ const val MUSIC_CONSTANT_APP_REFRESH = "weaves_mus_refresh"
 const val MUSIC_CONSTANT_APP_REFER_INFO = "weaves_mus_re_infos"
 const val MUSIC_CONSTANT_APP_AD_DATA = "weaves_mus_ads_data"
 const val MUSIC_CONSTANT_APP_IS_AUTO_PLAY = "weaves_mus_is_auto_play"
+const val MMKV_LINES = "lines"
+const val MMKV_COEFS = "coefs"
+const val MMKV_SYS = "sys_tm"
 
 const val MESSAGE_MSG_CODE = 0x100
 

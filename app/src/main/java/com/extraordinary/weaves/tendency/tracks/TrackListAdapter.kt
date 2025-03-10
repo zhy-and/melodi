@@ -23,6 +23,9 @@ import dora.db.builder.QueryBuilder
 import dora.db.builder.WhereBuilder
 import dora.db.dao.DaoFactory
 import com.blankj.utilcode.util.LogUtils
+import com.extraordinary.interstings.studios.utils.albumDetInter
+import com.extraordinary.interstings.studios.utils.artistDetInter
+import com.extraordinary.interstings.studios.utils.playViewsInter
 import dora.util.ToastUtils
 
 //5 gedan 4 playlist 3 search 2 normal
@@ -60,107 +63,119 @@ class TrackListAdapter(
             }
             holder.menu.setOnClickListener {
                 if (type == 3){
-                    GlobalMusApp.instance?.mediaManager?.apply {
-                        playById(createBean.songId)
+                    try {
+                        GlobalMusApp.instance?.mediaManager?.apply {
+                            playById(createBean.songId)
+                        }
+                    }catch (e : Exception){
+                        e.printStackTrace()
                     }
-                    base?.startActivity(Intent(base, PlayerView::class.java))
+
+                    base?.startInterActivity(Intent(base, PlayerView::class.java), playViewsInter())
 //                base?.finish()
                     return@setOnClickListener
                 }
                 if (base.isDestroyed || base.isFinishing){
                     return@setOnClickListener
                 }
-                showComDialog(base, R.layout.item_popup_feed).apply {
-                    if (type != 4){
-                        findViewById<View>(R.id.play_delete)?.visibility = View.GONE
-                    }
-                    if (type == 5 && geDanId != -1L){
-                        findViewById<View>(R.id.play_delete)?.visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.pop_txt)?.text = "Remove from this playlist"
-                    }
-                    findViewById<View>(R.id.play_art)?.setOnClickListener {
-                        disDialog(this,base)
-                        musicDao.select(
-                            QueryBuilder.create().where(
-                                WhereBuilder.create().addWhereEqualTo("album_id",createBean.albumId)
-                            )
-                        ).also {
-                            if (it.isNotEmpty()){
-                                base?.startActivity(Intent(base, AppArtDetail::class.java).apply {
-                                    putExtra("artist", it[0].artist)
-                                })
-//                            base?.finish()
-                            }
+                try {
+                    showComDialog(base, R.layout.item_popup_feed).apply {
+                        if (type != 4){
+                            findViewById<View>(R.id.play_delete)?.visibility = View.GONE
                         }
-                    }
-                    if (base != null && !base.isFinishing && !base.isDestroyed){
-                        if (base.localClassName.contains("AppArtDetail")){
-                            findViewById<View>(R.id.play_art)?.visibility = View.GONE
+                        if (type == 5 && geDanId != -1L){
+                            findViewById<View>(R.id.play_delete)?.visibility = View.VISIBLE
+                            findViewById<TextView>(R.id.pop_txt)?.text = "Remove from this playlist"
                         }
-                        if (base.localClassName.contains("AppAlbumDetail")){
-                            findViewById<View>(R.id.play_album)?.visibility = View.GONE
-                        }
-                    }
-                    findViewById<View>(R.id.play_album)?.setOnClickListener {
-                        disDialog(this,base)
-                        musicDao.select(
-                            QueryBuilder.create().where(
-                                WhereBuilder.create().addWhereEqualTo("artist",createBean.artist)
-                            )
-                        ).also {
-                            if (it.isNotEmpty()){
-                                for (i in it){
-                                    LogUtils.e("name -----"+i.musicName)
-                                }
-                                base?.startActivity(Intent(base, AppAlbumDetail::class.java).apply {
-                                    putExtra("album_id", it[0].albumId)
-                                })
-//                            base?.finish()
-                            }
-
-                        }
-                    }
-                    findViewById<View>(R.id.play_now)?.setOnClickListener {
-                        disDialog(this,base)
-                        GlobalMusApp.instance?.mediaManager?.also {
-                            if (createBean != null){
-                                it.refreshPlaylist(musicArrayList)
-                                it.playById(createBean.songId)
-                            }
-                        }
-                        base?.startActivity(Intent(base, PlayerView::class.java))
-//                 base?.finish()
-                    }
-                    findViewById<View>(R.id.play_fav)?.setOnClickListener {
-                        disDialog(this,base)
-                        saveFavorite(musicArrayList[position],1)
-                        ToastUtils.showShort("Collect successful!")
-                    }
-
-                    findViewById<View>(R.id.play_delete)?.setOnClickListener {
-                        try {
+                        findViewById<View>(R.id.play_art)?.setOnClickListener {
                             disDialog(this,base)
-                            ToastUtils.showShort("Remove successful!")
-                            musicArrayList.remove(createBean)
-                            notifyDataSetChanged()
-                            if(type == 5){
-                                if (musicArrayList.isEmpty()){
-                                    callback?.refresh()
+                            musicDao.select(
+                                QueryBuilder.create().where(
+                                    WhereBuilder.create().addWhereEqualTo("album_id",createBean.albumId)
+                                )
+                            ).also {
+                                if (it.isNotEmpty()){
+                                    base?.startInterActivity(Intent(base, AppArtDetail::class.java).apply {
+                                        putExtra("artist", it[0].artist)
+                                    }, artistDetInter())
+//                            base?.finish()
                                 }
-                                var oldGeDanListData = loadGeDanData(GeDanData())
-                                for (index in oldGeDanListData.indices){
-                                    if (oldGeDanListData[index].geDanId == geDanId){
-                                        oldGeDanListData[index].musicList = musicArrayList
-                                        break
+                            }
+                        }
+                        if (base != null && !base.isFinishing && !base.isDestroyed){
+                            if (base.localClassName.contains("AppArtDetail")){
+                                findViewById<View>(R.id.play_art)?.visibility = View.GONE
+                            }
+                            if (base.localClassName.contains("AppAlbumDetail")){
+                                findViewById<View>(R.id.play_album)?.visibility = View.GONE
+                            }
+                        }
+                        findViewById<View>(R.id.play_album)?.setOnClickListener {
+                            disDialog(this,base)
+                            musicDao.select(
+                                QueryBuilder.create().where(
+                                    WhereBuilder.create().addWhereEqualTo("artist",createBean.artist)
+                                )
+                            ).also {
+                                if (it.isNotEmpty()){
+                                    for (i in it){
+                                        LogUtils.e("name -----"+i.musicName)
+                                    }
+                                    base?.startInterActivity(Intent(base, AppAlbumDetail::class.java).apply {
+                                        putExtra("album_id", it[0].albumId)
+                                    }, albumDetInter())
+                                    base?.finish()
+                                }
+
+                            }
+                        }
+                        findViewById<View>(R.id.play_now)?.setOnClickListener {
+                            disDialog(this,base)
+                            try {
+                                GlobalMusApp.instance?.mediaManager?.also {
+                                    if (createBean != null){
+                                        it.refreshPlaylist(musicArrayList)
+                                        it.playById(createBean.songId)
                                     }
                                 }
-                                createGeDanData(oldGeDanListData)
-                                return@setOnClickListener
+                            }catch (e : Exception){
+                                e.printStackTrace()
                             }
 
-                        }catch (e : Exception){
-                            e.printStackTrace()
+                            base?.startInterActivity(Intent(base, PlayerView::class.java), playViewsInter())
+                            base?.finish()
+//                 base?.finish()
                         }
+                        findViewById<View>(R.id.play_fav)?.setOnClickListener {
+                            disDialog(this,base)
+                            saveFavorite(musicArrayList[position],1)
+                            ToastUtils.showShort("Collect successful!")
+                        }
+
+                        findViewById<View>(R.id.play_delete)?.setOnClickListener {
+                            try {
+                                disDialog(this,base)
+                                ToastUtils.showShort("Remove successful!")
+                                musicArrayList.remove(createBean)
+                                notifyDataSetChanged()
+                                if(type == 5){
+                                    if (musicArrayList.isEmpty()){
+                                        callback?.refresh()
+                                    }
+                                    var oldGeDanListData = loadGeDanData(GeDanData())
+                                    for (index in oldGeDanListData.indices){
+                                        if (oldGeDanListData[index].geDanId == geDanId){
+                                            oldGeDanListData[index].musicList = musicArrayList
+                                            break
+                                        }
+                                    }
+                                    createGeDanData(oldGeDanListData)
+                                    return@setOnClickListener
+                                }
+
+                            }catch (e : Exception){
+                                e.printStackTrace()
+                            }
 
 //                    GlobalMusApp.instance?.mediaManager?.apply {
 //                        refreshPlaylist(musicArrayList)
@@ -171,15 +186,25 @@ class TrackListAdapter(
 //                        }
 //
 //                    }
+                        }
                     }
+
+                }catch (e : Exception){
+                    e.printStackTrace()
                 }
             }
             holder.itemView.setOnClickListener {
-                GlobalMusApp.instance?.mediaManager?.apply {
-                    refreshPlaylist(musicArrayList)
-                    playById(createBean.songId)
+                try {
+                    GlobalMusApp.instance?.mediaManager?.apply {
+                        refreshPlaylist(musicArrayList)
+                        playById(createBean.songId)
+                    }
+                }catch (e : Exception){
+                    e.printStackTrace()
                 }
-                base?.startActivity(Intent(base, PlayerView::class.java))
+
+                base?.startInterActivity(Intent(base, PlayerView::class.java), playViewsInter())
+                base?.finish()
 //            base?.finish()
 
             }

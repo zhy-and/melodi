@@ -16,6 +16,7 @@ import com.extraordinary.interstings.studios.utils.MESSAGE_MSG_CODE
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFRESH
 import com.extraordinary.interstings.studios.utils.addSongsBanner
 import com.extraordinary.interstings.studios.utils.addSongsInter
+import com.extraordinary.interstings.studios.utils.geDanDetInter
 import com.extraordinary.weaves.tendency.application.GlobalMusApp
 import com.extraordinary.weaves.tendency.bean.GeDanData
 import com.extraordinary.weaves.tendency.bean.Music
@@ -100,11 +101,11 @@ class AppAddList : baseActivity(), TrackListAdapter.RefreshPlayView,
                             }
                         }
                         createGeDanData(oldGeDanListData)
-                        startActivity(Intent(this@AppAddList, AppGeDanDetail::class.java).apply {
+
+                        startInterActivity(Intent(this@AppAddList, AppGeDanDetail::class.java).apply {
                             putExtra("det_type",1)
                             putExtra("gedan_id",gedanId)
-                        })
-                        finish()
+                        }, geDanDetInter())
                     }
                 }
                 return@setOnClickListener
@@ -126,12 +127,12 @@ class AppAddList : baseActivity(), TrackListAdapter.RefreshPlayView,
                                         }
                                     }
                                     createGeDanData(oldGeDanListData)
-            startActivity(Intent(this@AppAddList, AppGeDanDetail::class.java).apply {
-                putExtra("det_type",1)
+                    startInterActivity(Intent(this@AppAddList, AppGeDanDetail::class.java).apply {
+                        putExtra("det_type",1)
 //                putExtra("create",true)
-                putExtra("gedan_id",gedanId)
-            })
-            finish()
+                        putExtra("gedan_id",gedanId)
+                    }, geDanDetInter())
+
             }
         }
         }

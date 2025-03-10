@@ -40,9 +40,14 @@ import com.extraordinary.interstings.studios.services.NativeWeavesListener
 import com.extraordinary.interstings.studios.utils.CommonStudyUtils
 import com.extraordinary.interstings.studios.utils.MESSAGE_MSG_CODE
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFRESH
+import com.extraordinary.interstings.studios.utils.albumListInter
+import com.extraordinary.interstings.studios.utils.artistListInter
+import com.extraordinary.interstings.studios.utils.finishPageInterOne
+import com.extraordinary.interstings.studios.utils.geDanListInter
 import com.extraordinary.interstings.studios.utils.searchInter
 import com.extraordinary.interstings.studios.utils.searchResultBanner
 import com.extraordinary.interstings.studios.utils.searchResultBanner
+import com.extraordinary.interstings.studios.utils.styleListInter
 import com.extraordinary.interstings.studios.utils.trackListInter
 import com.google.android.gms.ads.nativead.NativeAd
 import dora.util.TextUtils
@@ -144,22 +149,20 @@ class AppSearch : baseActivity(){
             initView()
         }
         binding.rlTrack.setOnClickListener {
-            startActivity(Intent(this, TrackList::class.java))
+            startInterActivity(Intent(this, TrackList::class.java),trackListInter())
         }
         binding.rlAlbums.setOnClickListener {
-            startActivity(Intent(this, AppAlbumList::class.java))
+            startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter())
         }
         binding.rlArtist.setOnClickListener {
-            startActivity(Intent(this, AppArtistList::class.java))
+            startInterActivity(Intent(this, AppArtistList::class.java), artistListInter())
         }
         binding.rlStyles.setOnClickListener {
-            startActivity(Intent(this, AppStyleList::class.java))
-//            finish()
+            startInterActivity(Intent(this, AppStyleList::class.java), styleListInter())
         }
 
         binding.rlPlayList.setOnClickListener {
-            startActivity(Intent(this, AppGeDanList::class.java))
-//            finish()
+            startInterActivity(Intent(this, AppGeDanList::class.java), geDanListInter())
         }
         binding.searchBtns.setOnClickListener {
             if (KeyboardUtils.isSoftInputVisible(this)) {

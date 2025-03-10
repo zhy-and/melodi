@@ -31,6 +31,7 @@ class FeedView : baseActivity() {
                 speFinish()
             }
             titleContent.text = "FeedBack"
+            finish()
         }
         binding.btnFeed.setOnClickListener {
             if (TextUtils.isEmpty(binding.searchEdit.text.toString())){

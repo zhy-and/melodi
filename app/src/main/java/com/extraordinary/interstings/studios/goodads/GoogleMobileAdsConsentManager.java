@@ -65,7 +65,6 @@ public class GoogleMobileAdsConsentManager {
             //098DA41AD15EBA3D9AD991988316D76C
         // "Use new ConsentDebugSettings.Builder().addTestDeviceHashedId("ABCDEF012345")" to use
         // the debug functionality.
-//        .addTestDeviceHashedId("9661BAE90ED3592F158D6676C0189A32")
         .build();
 
     ConsentRequestParameters params = new ConsentRequestParameters.Builder()

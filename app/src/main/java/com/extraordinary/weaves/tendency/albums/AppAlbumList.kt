@@ -16,6 +16,13 @@ import com.extraordinary.interstings.studios.utils.MESSAGE_MSG_CODE
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFRESH
 import com.extraordinary.interstings.studios.utils.albumListBanner
 import com.extraordinary.interstings.studios.utils.albumListInter
+import com.extraordinary.interstings.studios.utils.artistListInter
+import com.extraordinary.interstings.studios.utils.geDanDetInter
+import com.extraordinary.interstings.studios.utils.geDanListInter
+import com.extraordinary.interstings.studios.utils.playViewsInter
+import com.extraordinary.interstings.studios.utils.queueInter
+import com.extraordinary.interstings.studios.utils.searchInter
+import com.extraordinary.interstings.studios.utils.styleListInter
 import com.extraordinary.interstings.studios.utils.trackListInter
 import com.extraordinary.weaves.tendency.AppGeDanList
 import com.extraordinary.weaves.tendency.AppStyleList
@@ -177,8 +184,8 @@ class AppAlbumList : baseActivity(){
             titleContent.text = "Albums"
             searchBtn.visibility = View.VISIBLE
             searchBtn.setOnClickListener {
-                startActivity(Intent(this@AppAlbumList, AppSearch::class.java))
-                finish()
+                startInterActivity(Intent(this@AppAlbumList, AppSearch::class.java), searchInter())
+//                finish()
             }
         }
         if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
@@ -205,12 +212,12 @@ class AppAlbumList : baseActivity(){
         }
         checkEmpty()
         binding.rlTrack.setOnClickListener {
-            startActivity(Intent(this, TrackList::class.java))
+            startInterActivity(Intent(this, TrackList::class.java),trackListInter())
 //            finish()
         }
 
         binding.rlArtist.setOnClickListener {
-            startActivity(Intent(this, AppArtistList::class.java))
+            startInterActivity(Intent(this, AppArtistList::class.java), artistListInter())
 //            finish()
         }
         binding.btnHomeBottomPlay.setOnClickListener {
@@ -222,39 +229,41 @@ class AppAlbumList : baseActivity(){
             mediaManager?.pause()
         }
         binding.btnHomeBottomMenu.setOnClickListener {
-            startActivity(Intent(this, AppPlayerList::class.java))
+            startInterActivity(Intent(this, AppPlayerList::class.java), queueInter())
 //            finish()
         }
         binding.bottomMusic.setOnClickListener {
-            startActivity(Intent(this, PlayerView::class.java))
+            startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
 //            finish()
         }
         binding.rlPlayList.setOnClickListener {
-            startActivity(Intent(this, AppGeDanList::class.java))
+            startInterActivity(Intent(this, AppGeDanList::class.java), geDanListInter())
+//            finish()
         }
         binding.rlStyles.setOnClickListener {
-            startActivity(Intent(this, AppStyleList::class.java))
+            startInterActivity(Intent(this, AppStyleList::class.java), styleListInter())
 //            finish()
         }
 
         binding.pops.setOnClickListener {
-            startActivity(Intent(this@AppAlbumList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@AppAlbumList, AppGeDanDetail::class.java).apply {
                 putExtra("style",1)
-            })
+            }, geDanDetInter())
+//            finish()
         }
 
 
         binding.rocks.setOnClickListener {
-            startActivity(Intent(this@AppAlbumList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@AppAlbumList, AppGeDanDetail::class.java).apply {
                 putExtra("style",2)
-
-            })
+            }, geDanDetInter())
+//            finish()
         }
         binding.jazz.setOnClickListener {
-            startActivity(Intent(this@AppAlbumList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@AppAlbumList, AppGeDanDetail::class.java).apply {
                 putExtra("style",4)
-
-            })
+            }, geDanDetInter())
+//            finish()
         }
 
 

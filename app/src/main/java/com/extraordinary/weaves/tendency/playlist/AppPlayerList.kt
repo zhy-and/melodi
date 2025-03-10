@@ -33,6 +33,7 @@ import com.extraordinary.interstings.studios.utils.CommonStudyUtils
 import com.extraordinary.interstings.studios.utils.MESSAGE_MSG_CODE
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFRESH
 import com.extraordinary.interstings.studios.utils.lyricInter
+import com.extraordinary.interstings.studios.utils.playViewsInter
 import com.extraordinary.interstings.studios.utils.queueInter
 import com.extraordinary.interstings.studios.utils.queueListBanner
 import com.google.android.gms.ads.nativead.NativeAd
@@ -70,11 +71,11 @@ class AppPlayerList : baseActivity(), TrackListAdapter.RefreshPlayView {
             mediaManager?.pause()
         }
         playListBinding.btnHomeBottomMenu.setOnClickListener {
-            startActivity(Intent(this, AppPlayerList::class.java))
+            startInterActivity(Intent(this, AppPlayerList::class.java), queueInter())
 //            finish()
         }
         playListBinding.bottomMusic.setOnClickListener {
-            startActivity(Intent(this, PlayerView::class.java))
+            startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
 //            finish()
         }
         if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
@@ -221,6 +222,7 @@ class AppPlayerList : baseActivity(), TrackListAdapter.RefreshPlayView {
                 MainHomeStudy.homeStudy.loadButtons(it)
                 if(!CommonStudyUtils.posIsCanShow(queueListBanner())){
                     val cts = MMKV.defaultMMKV().getInt(MUSIC_CONSTANT_APP_REFRESH, 0)
+
                     if (cts != 0){
                         handler.removeMessages(MESSAGE_MSG_CODE)
                         handler.sendEmptyMessageDelayed(MESSAGE_MSG_CODE,(cts * 1000).toLong())

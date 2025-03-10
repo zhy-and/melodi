@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.extraordinary.interstings.studios.utils.playViewsInter
 import com.extraordinary.weaves.tendency.application.GlobalMusApp
 import com.extraordinary.weaves.tendency.bean.Music
 import com.extraordinary.weaves.tendency.player.PlayerView
@@ -29,13 +30,7 @@ class FavAdapter(
             LayoutInflater.from(parent.context).inflate(R.layout.item_fav_list, parent, false)
         return AreaGeneViewH(itemView)
     }
-    fun upCreateData(createBeansList: ArrayList<Music>?) {
-        if (createBeansList != null) {
-            musicArrayList.clear()
-            musicArrayList.addAll(createBeansList)
-            notifyDataSetChanged()
-        }
-    }
+
     override fun getItemCount(): Int = musicArrayList.size
 
     class AreaGeneViewH(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -58,11 +53,17 @@ class FavAdapter(
             holder.back.setBackgroundResource(string[position])
         }
         holder.itemView.setOnClickListener {
-            GlobalMusApp.instance?.mediaManager?.apply {
-                refreshPlaylist(musicArrayList)
-                playById(createBean.songId)
+            try {
+                GlobalMusApp.instance?.mediaManager?.apply {
+                    refreshPlaylist(musicArrayList)
+                    playById(createBean.songId)
+                }
+                ctx?.startInterActivity(Intent(ctx, PlayerView::class.java), playViewsInter(),false)
+            }catch (e : Exception){
+                ctx?.startInterActivity(Intent(ctx, PlayerView::class.java), playViewsInter(),false)
+                e.printStackTrace()
             }
-            ctx?.startActivity(Intent(ctx, PlayerView::class.java))
+
         }
     }
 

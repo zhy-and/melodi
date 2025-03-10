@@ -44,8 +44,11 @@ import com.extraordinary.interstings.studios.services.NativeWeavesListener
 import com.extraordinary.interstings.studios.utils.CommonStudyUtils
 import com.extraordinary.interstings.studios.utils.MESSAGE_MSG_CODE
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFRESH
+import com.extraordinary.interstings.studios.utils.addSongsInter
 import com.extraordinary.interstings.studios.utils.geDanDetBanner
 import com.extraordinary.interstings.studios.utils.geDanDetInter
+import com.extraordinary.interstings.studios.utils.playViewsInter
+import com.extraordinary.interstings.studios.utils.queueInter
 import com.extraordinary.interstings.studios.utils.styleDetBanner
 import com.extraordinary.interstings.studios.utils.styleDetInter
 import com.google.android.gms.ads.nativead.NativeAd
@@ -168,7 +171,7 @@ class AppGeDanDetail : baseActivity(){
         }
 
     }
-    var gedanId = -1L
+    private var gedanId = -1L
     private var bannerPos = geDanDetBanner()
    private var interPos = geDanDetInter()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -189,7 +192,7 @@ class AppGeDanDetail : baseActivity(){
             try {
                     if (create){
                         val oldGeDanListData = loadGeDanData(GeDanData())
-                        var id =    System.currentTimeMillis()
+                        val id =    System.currentTimeMillis()
                         gedanId = id
                        handler?.post {
                             val dialog =   showComDialog(this, R.layout.pop_create_gedan,false, Gravity.CENTER)
@@ -352,11 +355,10 @@ class AppGeDanDetail : baseActivity(){
             binding.deleteBtn.visibility = View.VISIBLE
             binding.addBtn.visibility = View.VISIBLE
             binding.addBtn.setOnClickListener {
-                startActivity(Intent(this@AppGeDanDetail, AppAddList::class.java).apply {
+                startInterActivity(Intent(this@AppGeDanDetail, AppAddList::class.java).apply {
                     putExtra("gedan_id",gedanId)
                     putExtra("add",true)
-                })
-                finish()
+                }, addSongsInter())
             }
 
             binding.deleteBtn.setOnClickListener {
@@ -367,7 +369,7 @@ class AppGeDanDetail : baseActivity(){
                                 if (gedanId == -1L){
                                     return@setOnClickListener
                                 }
-                                var oldGeDanListData = loadGeDanData(GeDanData())
+                                val oldGeDanListData = loadGeDanData(GeDanData())
                                 for (index in oldGeDanListData.indices){
                                     if (oldGeDanListData[index].geDanId == gedanId){
                                         oldGeDanListData.removeAt(index)
@@ -506,31 +508,32 @@ class AppGeDanDetail : baseActivity(){
             mediaManager?.pause()
         }
         binding.btnHomeBottomMenu.setOnClickListener {
-            startActivity(Intent(this, AppPlayerList::class.java))
-//            finish()
+            startInterActivity(Intent(this, AppPlayerList::class.java), queueInter())
 
         }
         binding.bottomMusic.setOnClickListener {
-            startActivity(Intent(this, PlayerView::class.java))
-//            finish()
+            startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
         }
         binding.addPic.setOnClickListener {
-            startActivity(Intent(this, AppAddList::class.java)
+            startInterActivity(Intent(this, AppAddList::class.java)
                 .apply {
                     putExtra("gedan_id",gedanId)
-                })
-            finish()
+                }, addSongsInter())
         }
 
         binding.playBtn.setOnClickListener {
-            GlobalMusApp.instance?.mediaManager?.also {
-                if (musicArrayList.isNotEmpty()){
-                    it.refreshPlaylist(musicArrayList)
-                    it.playById(musicArrayList[0].songId)
+            try {
+                GlobalMusApp.instance?.mediaManager?.also {
+                    if (musicArrayList.isNotEmpty()){
+                        it.refreshPlaylist(musicArrayList)
+                        it.playById(musicArrayList[0].songId)
+                    }
                 }
+                startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
+            }catch (e : Exception){
+                e.printStackTrace()
             }
-            startActivity(Intent(this, PlayerView::class.java))
-//            finish()
+
         }
 
     }

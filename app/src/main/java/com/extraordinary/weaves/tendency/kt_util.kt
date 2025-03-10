@@ -1,11 +1,11 @@
 package com.extraordinary.weaves.tendency
 
-import com.extraordinary.weaves.tendency.event.AppEvent.Companion.REFRESH_NAME
+import com.blankj.utilcode.util.LogUtils
 import com.extraordinary.weaves.tendency.application.GlobalMusApp
 import com.extraordinary.weaves.tendency.bean.Music
 import com.extraordinary.weaves.tendency.core.MusicScanner
+import com.extraordinary.weaves.tendency.event.AppEvent.Companion.REFRESH_NAME
 import com.jeremyliao.liveeventbus.LiveEventBus
-import com.blankj.utilcode.util.LogUtils
 import java.util.concurrent.Executors
 
 fun performScanMusic() {

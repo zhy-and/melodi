@@ -1,8 +1,6 @@
 package com.extraordinary.interstings.studios.services
 
 import android.content.Intent
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.os.Build
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
@@ -13,6 +11,7 @@ import com.extraordinary.interstings.studios.beans.ProductBean
 import com.extraordinary.interstings.studios.goodads.GoogleMobileAdsConsentManager
 import com.extraordinary.interstings.studios.goodads.MainHomeStudy
 import com.extraordinary.interstings.studios.utils.CommonStudyUtils
+import com.extraordinary.interstings.studios.utils.CommonStudyUtils.getInstallSys
 import com.extraordinary.interstings.studios.utils.CommonTools.getCountryInfo
 import com.extraordinary.interstings.studios.utils.CommonTools.loadIds
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_AD_CACHE_TM
@@ -21,6 +20,9 @@ import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_APP_CACHE_
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_IS_AUTO_PLAY
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFER_INFO
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFRESH
+import com.extraordinary.interstings.studios.utils.MMKV_COEFS
+import com.extraordinary.interstings.studios.utils.MMKV_SYS
+import com.extraordinary.interstings.studios.utils.MMKV_LINES
 import com.extraordinary.interstings.studios.workmanager.CommonRequestTools
 import com.extraordinary.interstings.studios.workmanager.TransSpesInters
 import com.extraordinary.weaves.tendency.AppStart.Companion.ouUserIsCallBack
@@ -48,19 +50,6 @@ class ApiStudios {
                 )
             }&fkossfbtweikm=${commonUniIds()}"
 
-        fun loadInsTimes(): Long {
-            try {
-                val context = GlobalMusApp.instance ?: return 0
-                val packageManager = context.packageManager
-                val packageInfo: PackageInfo =
-                    packageManager.getPackageInfo(AppUtils.getAppPackageName(), 0)
-                //应用装时间
-                return packageInfo.firstInstallTime
-            } catch (e: PackageManager.NameNotFoundException) {
-                e.printStackTrace()
-            }
-            return 0
-        }
         var value_info =
             "${commonConfig()}/shard/ground/weblogic/edc/logBook/saving"
 
@@ -141,11 +130,12 @@ class ApiStudios {
                 }
             }
             getProductInfos()
+            installEventsUpload()
         }
 
 
 
-        private fun jsonInfo(value: AdValue, adId: String, adsType: String): String? {
+        private fun jsonInfo(value: AdValue, adId: String, adsType: String, fbIpValue: Double): String? {
             val catPa: HashMap<String, String> = java.util.HashMap()
             try {
                 catPa["ukpftne"] = adId.replace("/","-")
@@ -158,6 +148,10 @@ class ApiStudios {
                 catPa["myxntynkf"] =  getCountryInfo(
                     GlobalMusApp.instance
                 ).lowercase()
+                catPa["musicFInstall"] =  getInstallSys().toString()
+                catPa["musicFValue"] = fbIpValue.toString()
+                catPa["musicFOpens"] = MMKV.defaultMMKV().getLong("first_open",0L).toString()
+                catPa["musicPastTm"] = ((System.currentTimeMillis() - getInstallSys()) / 1000).toString()
                 return catPa.toString()
             }catch (e : Exception){
                 e.printStackTrace()
@@ -166,10 +160,10 @@ class ApiStudios {
             return catPa.toString()
         }
 
-        fun handleValues(adsId: String, type: String, value: AdValue){
+        fun handleValues(adsId: String, type: String, value: AdValue, fbIpValue: Double){
             try {
                 CommonRequestTools.get().upValues(
-                    stringHashMap(adsId, type, value),
+                    stringHashMap(adsId, type, value, fbIpValue),
                     value_info,
                     object : TransSpesInters.BasicRequestListener {
 
@@ -190,10 +184,37 @@ class ApiStudios {
             }
 
         }
+
+
+        private fun installEventsUpload(){
+            try {
+                if (!MMKV.defaultMMKV().getBoolean("install_event",false)){
+                    CommonRequestTools.get().upValues(
+                        installEvents(),
+                        value_info,
+                        object : TransSpesInters.BasicRequestListener {
+
+                            override fun loadFailed(message: String) {
+
+                            }
+
+                            override fun loadSuccessConfig(configInfo: String) {
+                                MMKV.defaultMMKV().putBoolean("install_event",true)
+                            }
+
+
+                        })
+                }
+
+            }catch (e : Exception){
+                e.printStackTrace()
+            }
+
+        }
         private fun stringHashMap(
             adsId: String,
             adsType: String,
-            value: AdValue
+            value: AdValue, fbIpValue: Double
         ): HashMap<String, String> {
             val stringStringHashMap: HashMap<String, String> = java.util.HashMap()
             try {
@@ -205,7 +226,41 @@ class ApiStudios {
                 stringStringHashMap["dvgifjyicaj"] = ""+System.currentTimeMillis()
                 stringStringHashMap["dunlda"] = ActivityUtils.getTopActivity().localClassName
                 stringStringHashMap["lrrlox"] = MMKV.defaultMMKV().getString(MUSIC_CONSTANT_APP_REFER_INFO,"")+""
-                stringStringHashMap["tjlgkz"] =  JsonUtils.formatJson(jsonInfo(value,adsId,adsType))
+                stringStringHashMap["tjlgkz"] =  JsonUtils.formatJson(jsonInfo(
+                    value,
+                    adsId,
+                    adsType,
+                    fbIpValue
+                ))
+                stringStringHashMap["znddwtnxae"] = commonUniIds()
+                stringStringHashMap["vmafwyxxq"] = "" +   loadIds(
+                    GlobalMusApp.instance
+                )
+                stringStringHashMap["njnfqva"] = Build.VERSION.RELEASE
+                stringStringHashMap["pzhdjs"] = Build.MODEL
+                stringStringHashMap["cywuhlkmm"] = AppUtils.getAppVersionName()
+                LogUtils.e(stringStringHashMap.toString())
+                return stringStringHashMap
+            }catch (e : Exception){
+                e.printStackTrace()
+            }
+            return stringStringHashMap
+        }
+
+
+        private fun installEvents(
+
+        ): HashMap<String, String> {
+            val stringStringHashMap: HashMap<String, String> = java.util.HashMap()
+            try {
+                stringStringHashMap["dppkptxndmx"] = AppUtils.getAppName()
+                stringStringHashMap["sikrappt"] = "Android"
+                stringStringHashMap["trwzbv"] = Build.MODEL
+                stringStringHashMap["tkrexyg"] = "10003"
+                stringStringHashMap["ezepfefmz"] = ""+System.currentTimeMillis()
+                stringStringHashMap["dvgifjyicaj"] = ""+System.currentTimeMillis()
+                stringStringHashMap["dunlda"] = ActivityUtils.getTopActivity().localClassName
+                stringStringHashMap["lrrlox"] = MMKV.defaultMMKV().getString(MUSIC_CONSTANT_APP_REFER_INFO,"")+""
                 stringStringHashMap["znddwtnxae"] = commonUniIds()
                 stringStringHashMap["vmafwyxxq"] = "" +   loadIds(
                     GlobalMusApp.instance
@@ -359,6 +414,18 @@ class ApiStudios {
                                                         MMKV.defaultMMKV()
                                                             .putBoolean(
                                                                 MUSIC_CONSTANT_APP_IS_AUTO_PLAY, i.boifrtru == "1")
+                                                    }
+                                                    if ("standard_line" == i.lddmfgjtn){
+                                                        MMKV.defaultMMKV()
+                                                            .putString(MMKV_LINES, i.boifrtru)
+                                                    }
+                                                    if ("upload_coef" == i.lddmfgjtn){
+                                                        MMKV.defaultMMKV()
+                                                            .putString(MMKV_COEFS, i.boifrtru)
+                                                    }
+                                                    if ("window_period_time" == i.lddmfgjtn){
+                                                        MMKV.defaultMMKV()
+                                                            .putString(MMKV_SYS, i.boifrtru)
                                                     }
                                                 }
                                             }

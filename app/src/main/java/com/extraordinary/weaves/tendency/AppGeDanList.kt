@@ -15,8 +15,17 @@ import com.extraordinary.interstings.studios.services.NativeWeavesListener
 import com.extraordinary.interstings.studios.utils.CommonStudyUtils
 import com.extraordinary.interstings.studios.utils.MESSAGE_MSG_CODE
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFRESH
+import com.extraordinary.interstings.studios.utils.albumListInter
+import com.extraordinary.interstings.studios.utils.artistDetInter
+import com.extraordinary.interstings.studios.utils.artistListInter
+import com.extraordinary.interstings.studios.utils.geDanDetInter
 import com.extraordinary.interstings.studios.utils.geDanListBanner
 import com.extraordinary.interstings.studios.utils.geDanListInter
+import com.extraordinary.interstings.studios.utils.playViewsInter
+import com.extraordinary.interstings.studios.utils.queueInter
+import com.extraordinary.interstings.studios.utils.searchInter
+import com.extraordinary.interstings.studios.utils.styleListInter
+import com.extraordinary.interstings.studios.utils.trackListInter
 import com.extraordinary.weaves.tendency.albums.AppAlbumList
 import com.extraordinary.weaves.tendency.application.GlobalMusApp
 import com.extraordinary.weaves.tendency.artist.AppArtistList
@@ -109,30 +118,40 @@ class AppGeDanList : baseActivity(){
             titleContent.text = "Playlists"
             searchBtn.visibility = View.VISIBLE
             searchBtn.setOnClickListener {
-                startActivity(Intent(this@AppGeDanList, AppSearch::class.java))
-                finish()
+                startInterActivity(Intent(this@AppGeDanList, AppSearch::class.java), searchInter())
+//                finish()
             }
         }
 
         binding.rlAl1.setOnClickListener {
-            startActivity(Intent(this@AppGeDanList, AppArtDetail::class.java).apply {
+            startInterActivity(Intent(this@AppGeDanList, AppArtDetail::class.java).apply {
                 putExtra("artist",binding.al1Txt.text.toString())
-            })
+            }, artistDetInter())
+  
+//            finish()
         }
         binding.rlAl2.setOnClickListener {
-            startActivity(Intent(this@AppGeDanList, AppArtDetail::class.java).apply {
+
+            startInterActivity(Intent(this@AppGeDanList, AppArtDetail::class.java).apply {
                 putExtra("artist",binding.al2Txt.text.toString())
-            })
+            }, artistDetInter())
+          
+//            finish()
+
         }
         binding.rlAl3.setOnClickListener {
-            startActivity(Intent(this@AppGeDanList, AppArtDetail::class.java).apply {
+            startInterActivity(Intent(this@AppGeDanList, AppArtDetail::class.java).apply {
                 putExtra("artist",binding.al3Txt.text.toString())
-            })
+            }, artistDetInter())
+//            finish()
+
         }
         binding.rlAl4.setOnClickListener {
-            startActivity(Intent(this@AppGeDanList, AppArtDetail::class.java).apply {
+            startInterActivity(Intent(this@AppGeDanList, AppArtDetail::class.java).apply {
                 putExtra("artist",binding.al4Txt.text.toString())
-            })
+            }, artistDetInter())
+//            finish()
+
         }
         if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
             checkPermission()
@@ -156,20 +175,20 @@ class AppGeDanList : baseActivity(){
         }
         checkEmpty()
         binding.rlTrack.setOnClickListener {
-            startActivity(Intent(this, TrackList::class.java))
+            startInterActivity(Intent(this, TrackList::class.java),trackListInter())
 //            finish()
         }
 
         binding.rlArtList.setOnClickListener {
-            startActivity(Intent(this, AppArtistList::class.java))
+            startInterActivity(Intent(this, AppArtistList::class.java), artistListInter())
 //            finish()
         }
         binding.rlAlbums.setOnClickListener {
-            startActivity(Intent(this, AppAlbumList::class.java))
+            startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter())
 //            finish()
         }
         binding.rlStyles.setOnClickListener {
-            startActivity(Intent(this, AppStyleList::class.java))
+            startInterActivity(Intent(this, AppStyleList::class.java), styleListInter())
 //            finish()
         }
         binding.btnHomeBottomPlay.setOnClickListener {
@@ -181,57 +200,60 @@ class AppGeDanList : baseActivity(){
             mediaManager?.pause()
         }
         binding.btnHomeBottomMenu.setOnClickListener {
-            startActivity(Intent(this, AppPlayerList::class.java))
+            startInterActivity(Intent(this, AppPlayerList::class.java), queueInter())
 //            finish()
         }
         binding.bottomMusic.setOnClickListener {
-            startActivity(Intent(this, PlayerView::class.java))
+            startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
 //            finish()
         }
 
         binding.mostPlayed.setOnClickListener {
-            startActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
+
+            startInterActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
                 putExtra("style",7)
-            })
+            }, geDanDetInter())
+//            finish()
         }
 
 
         binding.golden.setOnClickListener {
-            startActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
                 putExtra("style",8)
-
-            })
+            }, geDanDetInter())
+//            finish()
         }
         binding.lost.setOnClickListener {
-            startActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
                 putExtra("style",9)
-
-            })
+            }, geDanDetInter())
+//            finish()
         }
         binding.fav.setOnClickListener {
             //collect
-            startActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
                 putExtra("style",10)
-
-            })
+            }, geDanDetInter())
+//            finish()
         }
         binding.moon.setOnClickListener {
-            startActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
                 putExtra("style",11)
-
-            })
+            }, geDanDetInter())
+//            finish()
         }
         binding.vibes.setOnClickListener {
-            startActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
                 putExtra("style",12)
-
-            })
+            }, geDanDetInter())
+//            finish()
         }
 
         binding.topCreateGedan.setOnClickListener {
-            startActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
+            startInterActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
                 putExtra("create",true)
-            })
+            }, geDanDetInter())
+//            finish()
         }
 
     }

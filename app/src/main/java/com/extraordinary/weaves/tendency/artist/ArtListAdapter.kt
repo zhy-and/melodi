@@ -22,6 +22,9 @@ import dora.db.builder.QueryBuilder
 import dora.db.builder.WhereBuilder
 import dora.db.dao.DaoFactory
 import com.blankj.utilcode.util.LogUtils
+import com.extraordinary.interstings.studios.utils.albumDetInter
+import com.extraordinary.interstings.studios.utils.artistDetInter
+import com.extraordinary.interstings.studios.utils.playViewsInter
 import dora.util.ToastUtils
 
 
@@ -73,62 +76,73 @@ class ArtListAdapter(
             if (ctx.isFinishing || ctx.isDestroyed){
                 return@setOnClickListener
             }
-           showComDialog(ctx, R.layout.item_popup_feed).apply {
-                findViewById<View>(R.id.play_art)?.visibility = View.GONE
-                findViewById<View>(R.id.play_delete)?.visibility = View.GONE
-                findViewById<View>(R.id.play_album)?.setOnClickListener {
-                    disDialog(this,ctx)
-                    musicDao.select(
-                        QueryBuilder.create().where(
-                            WhereBuilder.create().addWhereEqualTo("artist",createBean.name)
-                        )
-                    ).also {
-                        if (it.isNotEmpty()){
-                            for (i in it){
-                                LogUtils.e("name -----"+i.musicName)
-                            }
-                            ctx?.startActivity(Intent(ctx, AppAlbumDetail::class.java).apply {
-                                putExtra("album_id", it[0].albumId)
-                            })
+            try {
+                showComDialog(ctx, R.layout.item_popup_feed).apply {
+                    findViewById<View>(R.id.play_art)?.visibility = View.GONE
+                    findViewById<View>(R.id.play_delete)?.visibility = View.GONE
+                    findViewById<View>(R.id.play_album)?.setOnClickListener {
+                        disDialog(this,ctx)
+                        musicDao.select(
+                            QueryBuilder.create().where(
+                                WhereBuilder.create().addWhereEqualTo("artist",createBean.name)
+                            )
+                        ).also {
+                            if (it.isNotEmpty()){
+                                for (i in it){
+                                    LogUtils.e("name -----"+i.musicName)
+                                }
+                                ctx?.startInterActivity(Intent(ctx, AppAlbumDetail::class.java).apply {
+                                    putExtra("album_id", it[0].albumId)
+                                }, albumDetInter())
 //                            ctx?.finish()
+                            }
+
                         }
 
                     }
+                    findViewById<View>(R.id.play_now)?.setOnClickListener {
+                        disDialog(this,ctx)
 
-                }
-                findViewById<View>(R.id.play_now)?.setOnClickListener {
-                    disDialog(this,ctx)
+                        musicDao.select(
+                            QueryBuilder.create().where(
+                                WhereBuilder.create().addWhereEqualTo("artist",createBean.name)
+                            )
+                        ).apply {
+                            try {
+                                GlobalMusApp.instance?.mediaManager?.also {
+                                    if (isNotEmpty()){
+                                        it.refreshPlaylist(this as MutableList)
+                                        it.playById(this[0].songId)
+                                    }
+                                }
+                            }catch (e : Exception){
+                                e.printStackTrace()
+                            }
 
-                    musicDao.select(
-                        QueryBuilder.create().where(
-                            WhereBuilder.create().addWhereEqualTo("artist",createBean.name)
-                        )
-                    ).apply {
-                        GlobalMusApp.instance?.mediaManager?.also {
-                            if (isNotEmpty()){
-                                it.refreshPlaylist(this as MutableList)
-                                it.playById(this[0].songId)
+                        }
+                        ctx?.startInterActivity(Intent(ctx, PlayerView::class.java), playViewsInter())
+
+//                    ctx?.finish()
+                    }
+                    findViewById<View>(R.id.play_fav)?.setOnClickListener {
+                        disDialog(this,ctx)
+
+                        musicDao.select(
+                            QueryBuilder.create().where(
+                                WhereBuilder.create().addWhereEqualTo("artist",createBean.name)
+                            )
+                        ).apply {
+                            for (i in this){
+                                saveFavorite(i,1)
                             }
                         }
-                    }
-                    ctx?.startActivity(Intent(ctx, PlayerView::class.java))
-//                    ctx?.finish()
-                }
-                findViewById<View>(R.id.play_fav)?.setOnClickListener {
-                    disDialog(this,ctx)
+                        ToastUtils.showShort("Collect successful!")
 
-                    musicDao.select(
-                        QueryBuilder.create().where(
-                            WhereBuilder.create().addWhereEqualTo("artist",createBean.name)
-                        )
-                    ).apply {
-                        for (i in this){
-                            saveFavorite(i,1)
-                        }
                     }
-                    ToastUtils.showShort("Collect successful!")
-
                 }
+
+            }catch (e : Exception){
+                e.printStackTrace()
             }
         }
         holder.itemView.setOnClickListener {
@@ -152,9 +166,9 @@ class ArtListAdapter(
     }
 
     private fun goArtDet(createBean: Artist) {
-        ctx?.startActivity(Intent(ctx, AppArtDetail::class.java).apply {
+        ctx?.startInterActivity(Intent(ctx, AppArtDetail::class.java).apply {
             putExtra("artist", createBean.name)
-        })
+        }, artistDetInter())
 //        ctx?.finish()
     }
 

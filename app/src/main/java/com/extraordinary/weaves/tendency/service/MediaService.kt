@@ -261,7 +261,7 @@ class MediaService : Service(){
     }
 
     companion object {
-        private const val NOTIFICATION_ID = 0x1
+        private const val NOTIFICATION_ID = 0x100
         private const val NOTIFICATION_TITLE = "notification_title"
         private const val NOTIFICATION_NAME = "notification_name"
     }

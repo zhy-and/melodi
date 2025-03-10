@@ -1,27 +1,46 @@
 package com.extraordinary.weaves.tendency
 
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.text.TextUtils
+import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
+import android.widget.RatingBar
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.LogUtils
-import com.bumptech.glide.Glide
-import com.extraordinary.interstings.studios.beans.SpecialModels
 import com.extraordinary.interstings.studios.beans.bannerEvent
 import com.extraordinary.interstings.studios.goodads.CommonWeavesStyle
 import com.extraordinary.interstings.studios.goodads.MainHomeStudy
 import com.extraordinary.interstings.studios.services.ApiStudios.Companion.referInfoLoads
 import com.extraordinary.interstings.studios.services.NativeWeavesListener
 import com.extraordinary.interstings.studios.utils.CommonStudyUtils
+import com.extraordinary.interstings.studios.utils.CommonStudyUtils.getInstallSys
 import com.extraordinary.interstings.studios.utils.MESSAGE_MSG_CODE
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_IS_AUTO_PLAY
+import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFER_INFO
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFRESH
+import com.extraordinary.interstings.studios.utils.albumDetInter
+import com.extraordinary.interstings.studios.utils.albumListInter
+import com.extraordinary.interstings.studios.utils.artistDetInter
+import com.extraordinary.interstings.studios.utils.artistListInter
+import com.extraordinary.interstings.studios.utils.feedBacksInter
 import com.extraordinary.interstings.studios.utils.finishPageInterOne
+import com.extraordinary.interstings.studios.utils.geDanDetInter
+import com.extraordinary.interstings.studios.utils.geDanListInter
 import com.extraordinary.interstings.studios.utils.homeBanner
+import com.extraordinary.interstings.studios.utils.playViewsInter
+import com.extraordinary.interstings.studios.utils.scansInter
+import com.extraordinary.interstings.studios.utils.searchInter
+import com.extraordinary.interstings.studios.utils.settingsInter
+import com.extraordinary.interstings.studios.utils.styleListInter
+import com.extraordinary.interstings.studios.utils.trackListInter
 import com.extraordinary.weaves.tendency.albums.AppAlbumList
 import com.extraordinary.weaves.tendency.application.GlobalMusApp
 import com.extraordinary.weaves.tendency.artist.AppArtistList
@@ -35,10 +54,10 @@ import com.extraordinary.weaves.tendency.databinding.HomeMainBinding
 import com.extraordinary.weaves.tendency.detail.AppAlbumDetail
 import com.extraordinary.weaves.tendency.detail.AppArtDetail
 import com.extraordinary.weaves.tendency.detail.AppGeDanDetail
+import com.extraordinary.weaves.tendency.dialog.showComDialog
 import com.extraordinary.weaves.tendency.global.AppConfig
 import com.extraordinary.weaves.tendency.manager.MediaManager
 import com.extraordinary.weaves.tendency.player.PlayerView
-import com.extraordinary.weaves.tendency.playlist.AppPlayerList
 import com.extraordinary.weaves.tendency.scan.ScanPage
 import com.extraordinary.weaves.tendency.search.AppSearch
 import com.extraordinary.weaves.tendency.tracks.TrackList
@@ -59,12 +78,16 @@ import java.util.concurrent.Executors
 
 
 class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
+    private var isCanShow = false
     private  var playlist: MutableList<Music> ?= null
     private  var favAdapter: FavAdapter ?= null
 //    private var mPanHandle : Handler = CommonMessageHandler(this)
     var string = arrayListOf(R.mipmap.banner_one,R.mipmap.banner_tw,R.mipmap.banner_th,
         R.mipmap.banner_fo, R.mipmap.banner_fv)
     private lateinit var  binding : HomeMainBinding
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ImmersionBar.with(this)
@@ -89,151 +112,194 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
         }
 
         binding.settings.setOnClickListener {
-            startActivity(Intent(this, AppMoreView::class.java))
+            isCanShow = true
+            startInterActivity(Intent(this, AppMoreView::class.java), settingsInter(),false)
         }
         binding.rlTrack.setOnClickListener {
-            startActivity(Intent(this, TrackList::class.java))
+            isCanShow = true
+            startInterActivity(Intent(this, TrackList::class.java),trackListInter(),false)
         }
 
+
+
+
         binding.rlAlbums.setOnClickListener {
-            startActivity(Intent(this, AppAlbumList::class.java))
+            isCanShow = true
+
+//            startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter())
+            startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter(),false)
+
         }
         binding.rlArtist.setOnClickListener {
-            startActivity(Intent(this, AppArtistList::class.java))
+            isCanShow = true
+            startInterActivity(Intent(this, AppArtistList::class.java), artistListInter(),false)
         }
         binding.settings.setOnClickListener {
-            startActivity(Intent(this, AppMoreView::class.java))
+            isCanShow = true
+            startInterActivity(Intent(this, AppMoreView::class.java), settingsInter(),false)
         }
         binding.search.setOnClickListener {
-            startActivity(Intent(this, AppSearch::class.java))
+            isCanShow = true
+            startInterActivity(Intent(this, AppSearch::class.java), searchInter(),false)
         }
         binding.artistTitle.setOnClickListener {
-            startActivity(Intent(this, AppArtistList::class.java))
+            isCanShow = true
+
+            startInterActivity(Intent(this, AppArtistList::class.java), artistListInter(),false)
         }
         binding.stylesTitle.setOnClickListener {
-            startActivity(Intent(this, AppStyleList::class.java))
+            isCanShow = true
+            startInterActivity(Intent(this, AppStyleList::class.java), styleListInter(),false)
         }
         binding.playlistTitle.setOnClickListener {
-            startActivity(Intent(this, AppGeDanList::class.java))
+            isCanShow = true
+
+            startInterActivity(Intent(this, AppGeDanList::class.java), geDanListInter(),false)
         }
-        binding.btnHomeBottomPlay.setOnClickListener {
-            if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
-                startActivity(Intent(this,PlayerView::class.java))
-                return@setOnClickListener
-            }
-            showPlay(false)
-            mediaManager?.replay()
-        }
-        binding.btnHomeBottomPause.setOnClickListener {
-            showPlay(true)
-            mediaManager?.pause()
-        }
-        binding.btnHomeBottomMenu.setOnClickListener {
-            startActivity(Intent(this, AppPlayerList::class.java))
-        }
+
         binding.bottomMusic.setOnClickListener {
-            startActivity(Intent(this, PlayerView::class.java))
+            isCanShow = true
+
+            startInterActivity(Intent(this, PlayerView::class.java), playViewsInter(),false)
         }
         binding.playMode.setOnClickListener {
-            startActivity(Intent(this, PlayerView::class.java).apply {
+            isCanShow = true
+            startInterActivity(Intent(this, PlayerView::class.java).apply {
                 putExtra("play",true)
-            })
+            }, playViewsInter(),false)
         }
         binding.playSong.setOnClickListener {
-            startActivity(Intent(this, PlayerView::class.java).apply {
+            isCanShow = true
+            startInterActivity(Intent(this, PlayerView::class.java).apply {
                 putExtra("play",true)
-            })
+            }, playViewsInter(),false)
         }
         binding.scan.setOnClickListener {
-            startActivity(Intent(this, ScanPage::class.java))
+            isCanShow = true
+            
+
+            startInterActivity(Intent(this, ScanPage::class.java), scansInter(),false)
 
         }
         binding.feed.setOnClickListener {
-            startActivity(Intent(this,FeedView::class.java))
+            isCanShow = true
+            startInterActivity(Intent(this, FeedView::class.java), feedBacksInter(),false)
 
         }
         binding.albumsTitle.setOnClickListener {
-            startActivity(Intent(this, AppAlbumList::class.java))
+            isCanShow = true
+
+            startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter(),false)
         }
 
         binding.rlStyles.setOnClickListener {
-            startActivity(Intent(this, AppStyleList::class.java))
+            isCanShow = true
+
+            startInterActivity(Intent(this, AppStyleList::class.java), styleListInter(),false)
         }
         binding.rlPlayList.setOnClickListener {
-            startActivity(Intent(this, AppGeDanList::class.java))
+            isCanShow = true
+
+            startInterActivity(Intent(this, AppGeDanList::class.java), geDanListInter(),false)
         }
 
         binding.albumsTitle.setOnClickListener {
-            startActivity(Intent(this, AppAlbumList::class.java))
+            isCanShow = true
+
+            startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter(),false)
         }
 
         binding.mostPlayedTitle.setOnClickListener {
-            startActivity(Intent(this, TrackList::class.java))
+            isCanShow = true
+
+            startInterActivity(Intent(this, TrackList::class.java),trackListInter(),false)
         }
         binding.albumsOne.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppAlbumDetail::class.java).apply {
+            isCanShow = true
+            
+            startInterActivity(Intent(this@HomeActivity, AppAlbumDetail::class.java).apply {
                 putExtra("album_id",binding.al1Txt.tag.toString().toInt())
-            })
+            }, albumDetInter(),false)
         }
         binding.albumsTw.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppAlbumDetail::class.java).apply {
+            isCanShow = true
+            startInterActivity(Intent(this@HomeActivity, AppAlbumDetail::class.java).apply {
                 putExtra("album_id",binding.al2Txt.tag.toString().toInt())
-            })
+            }, albumDetInter(),false)
+
+       
         }
         binding.albumsThr.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppAlbumDetail::class.java).apply {
+            isCanShow = true
+            startInterActivity(Intent(this@HomeActivity, AppAlbumDetail::class.java).apply {
                 putExtra("album_id",binding.al3Txt.tag.toString().toInt())
-            })
+            }, albumDetInter(),false)
+          
         }
         binding.albumsFor.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppAlbumDetail::class.java).apply {
+            isCanShow = true
+
+            startInterActivity(Intent(this@HomeActivity, AppAlbumDetail::class.java).apply {
                 putExtra("album_id",binding.al4Txt.tag.toString().toInt())
-            })
+            }, albumDetInter(),false)
         }
        binding.artistOne.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppArtDetail::class.java).apply {
-                putExtra("artist",binding.art1Txt.text.toString())
-            })
+           isCanShow = true
+
+           startInterActivity(Intent(this@HomeActivity, AppArtDetail::class.java).apply {
+               putExtra("artist",binding.art1Txt.text.toString())
+           }, artistDetInter(),false)
         }
         binding.artistTw.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppArtDetail::class.java).apply {
+            isCanShow = true
+
+            startInterActivity(Intent(this@HomeActivity, AppArtDetail::class.java).apply {
                 putExtra("artist",binding.art2Txt.text.toString())
-            })
+            }, artistDetInter(),false)
         }
         binding.artistTh.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppArtDetail::class.java).apply {
+            isCanShow = true
+
+            startInterActivity(Intent(this@HomeActivity, AppArtDetail::class.java).apply {
                 putExtra("artist",binding.art3Txt.text.toString())
-            })
+            }, artistDetInter(),false)
         }
         binding.pops.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
+            isCanShow = true
+            
+            startInterActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
                 putExtra("style",1)
-            })
+            }, geDanDetInter(),false)
         }
 
 
         binding.rocks.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
+            isCanShow = true
+            startInterActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
                 putExtra("style",2)
-
-            })
+            }, geDanDetInter(),false)
+          
         }
         binding.countrys.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
-                putExtra("style",3)
+            isCanShow = true
 
-            })
+            startInterActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
+                putExtra("style",3)
+            }, geDanDetInter(),false)
         }
         binding.jazzs.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
-                putExtra("style",4)
+            isCanShow = true
 
-            })
+            startInterActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
+                putExtra("style",4)
+            }, geDanDetInter(),false)
         }
         binding.artistFor.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppArtDetail::class.java).apply {
+            isCanShow = true
+
+            startInterActivity(Intent(this@HomeActivity, AppArtDetail::class.java).apply {
                 putExtra("artist",binding.art4Txt.text.toString())
-            })
+            }, artistDetInter(),false)
         }
          binding.playOne.setOnClickListener {
              clickPlay(0)
@@ -256,42 +322,47 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
 
 
         binding.listOne.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
+            isCanShow = true
+            startInterActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
                 putExtra("style",8)
-            })
+            }, geDanDetInter(),false)
         }
 
 
         binding.listTw.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
+            isCanShow = true
+            startInterActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
                 putExtra("style",9)
-
-            })
+            }, geDanDetInter(),false)
         }
         binding.listThr.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
-                putExtra("style",11)
+            isCanShow = true
 
-            })
+            startInterActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
+                putExtra("style",11)
+            }, geDanDetInter(),false)
         }
         binding.listFor.setOnClickListener {
-            //collect
-            startActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
-                putExtra("style",12)
+            isCanShow = true
 
-            })
+            //collect
+            startInterActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
+                putExtra("style",12)
+            }, geDanDetInter(),false)
         }
         binding.listFv.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
-                putExtra("style",7)
+            isCanShow = true
 
-            })
+            startInterActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
+                putExtra("style",7)
+            }, geDanDetInter(),false)
         }
         binding.listSix.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
-                putExtra("style",10)
+            isCanShow = true
 
-            })
+            startInterActivity(Intent(this@HomeActivity, AppGeDanDetail::class.java).apply {
+                putExtra("style",10)
+            }, geDanDetInter(),false)
         }
         initPic()
     }
@@ -305,12 +376,18 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
     private val musicDao = DaoFactory.getDao(Music::class.java)
 
     private fun clickPlay(postion: Int) {
-        musicDao.selectAll()?.also {
+        try {
+            musicDao.selectAll()?.also {
                 if (it.isNotEmpty() && postion < it.size){
                     mediaManager?.playById(it[postion].songId)
                 }
+            }
+            isCanShow = true
+            startInterActivity(Intent(this, PlayerView::class.java), playViewsInter(),false)
+        }catch (e : Exception){
+            e.printStackTrace()
         }
-        startActivity(Intent(this@HomeActivity, PlayerView::class.java))
+
     }
     var ms1 = Music().apply {
         musicName = "Back To Her Men"
@@ -399,13 +476,16 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
         if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
             XXPermissions.with(this).permission(Permission.READ_MEDIA_AUDIO)
                 .request(object :OnPermissionCallback{
+
                     override fun onGranted(permissions: MutableList<String>, allGranted: Boolean) {
+                        checkPostPermission()
                         if (allGranted) {
                             MMKV.defaultMMKV().putBoolean("is_first_auth",true)
                             scanMusic1()
                         }
                     }
                     override fun onDenied(permissions: MutableList<String>, doNotAskAgain: Boolean) {
+                        checkPostPermission()
                         if (doNotAskAgain) {
                             ToastUtils.showLong(R.string.permission_never_denyd)
 //                        toast("被永久拒绝授权，请手动授予录音和日历权限")
@@ -417,8 +497,17 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
                         }
                     }
                 })
+        }else{
+            checkPostPermission()
         }
     }
+
+    private fun checkPostPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !XXPermissions.isGranted(this,Permission.POST_NOTIFICATIONS)) {
+            XXPermissions.with(this@HomeActivity).permission(Permission.POST_NOTIFICATIONS).request(null)
+        }
+    }
+
     private var isLoaded = false
     override fun onDestroy() {
         super.onDestroy()
@@ -435,6 +524,10 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
             referInfoLoads(this,true)
             initHomeBan()
             updateCollectItem()
+            if (!MMKV.defaultMMKV().getBoolean("showSuc",false)
+                && (System.currentTimeMillis() - getInstallSys() > 6 * 60 * 60 * 1000)  && isCanShow) {
+                starRate()
+            }
             if (mediaManager?.playState == AppConfig.MPS_PLAYING){
                 showPlay(false)
             }else{
@@ -446,10 +539,53 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
             mediaManager?.curMusic?.apply {
                 binding.tvHomeBottomMusicName.text = musicName
             }
+
         }catch (e : Exception){
             e.printStackTrace()
         }
 
+    }
+    private fun starRate() {
+        try {
+            val dialog =   showComDialog(this, R.layout.pop_start,false, Gravity.CENTER)
+            dialog.show()
+            val ratingBar = dialog.findViewById<RatingBar>(R.id.rating_bar)
+            ratingBar?.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
+                ThreadUtils.runOnUiThreadDelayed({
+                    dialog.dismiss()
+                    MMKV.defaultMMKV().putBoolean("showSuc",true)
+                    if (rating == 5f) {
+                        try {
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            intent.data =
+                                Uri.parse("market://details?id=" + AppUtils.getAppPackageName()) //跳转到应用市场，非Google Play市场一般情况也实现了这个接口
+                            //存在手机里没安装应用市场的情况，跳转会包异常，做一个接收判断
+                            if (intent.resolveActivity(packageManager) != null) { //可以接收
+                                startActivity(intent)
+                            } else { //没有应用市场，我们通过浏览器跳转到Google Play
+                                intent.data =
+                                    Uri.parse("https://play.google.com/store/apps/details?id=" + AppUtils.getAppPackageName())
+                                //这里存在一个极端情况就是有些用户浏览器也没有，再判断一次
+                                if (intent.resolveActivity(packageManager) == null) { //有浏览器
+                                    startActivity(intent)
+                                } else { //
+                                    ToastUtils.showShort(
+                                        "You don't have an app market installed, not even a browser!",
+                                    )
+                                }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                },1000)
+
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 
@@ -673,9 +809,7 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK){
-            if (MainHomeStudy.homeStudy.uniqueInter != null && !CommonStudyUtils.posIsCanShow(
-                    finishPageInterOne()
-                )){
+            if (MainHomeStudy.homeStudy.uniqueInter != null){
                 MainHomeStudy.homeStudy.showCachedInter(finishPageInterOne(),this)
                 return true
             }
@@ -760,16 +894,32 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
                 binding?.recentTw?.post {
                     binding.tvHomeBottomMusicName.text = musics[0].musicName
                 }
-                if (MMKV.defaultMMKV().getBoolean(MUSIC_CONSTANT_APP_IS_AUTO_PLAY, false) && mediaManager?.playState !=  AppConfig.MPS_PLAYING) {
-                    mediaManager?.playById(musics[0].songId)
-                    messages.post {
-                        showPlay(false)
+
+                if (MMKV.defaultMMKV().getBoolean(MUSIC_CONSTANT_APP_IS_AUTO_PLAY, false) && mediaManager?.playState !=  AppConfig.MPS_PLAYING
+                    && !checkRefer()
+                    ) {
+                    try {
+                        mediaManager?.playById(musics[0].songId)
+                        messages.post {
+                            showPlay(false)
+                        }
+                    }catch (e : Exception){
+                        e.printStackTrace()
                     }
+
                 }
             }
         }catch (e : Exception){
             e.printStackTrace()
         }
+    }
+
+    private fun checkRefer(): Boolean {
+        val str = MMKV.defaultMMKV().getString(MUSIC_CONSTANT_APP_REFER_INFO, "") ?: ""
+        if (!TextUtils.isEmpty(str) && str.contains("google-play")){
+                return true
+        }
+        return  false
     }
 
     private  var mediaManager: MediaManager?= null

@@ -14,9 +14,16 @@ import com.extraordinary.interstings.studios.services.NativeWeavesListener
 import com.extraordinary.interstings.studios.utils.CommonStudyUtils
 import com.extraordinary.interstings.studios.utils.MESSAGE_MSG_CODE
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFRESH
+import com.extraordinary.interstings.studios.utils.albumDetInter
 import com.extraordinary.interstings.studios.utils.albumListInter
 import com.extraordinary.interstings.studios.utils.artistListBanner
 import com.extraordinary.interstings.studios.utils.artistListInter
+import com.extraordinary.interstings.studios.utils.geDanListInter
+import com.extraordinary.interstings.studios.utils.playViewsInter
+import com.extraordinary.interstings.studios.utils.queueInter
+import com.extraordinary.interstings.studios.utils.searchInter
+import com.extraordinary.interstings.studios.utils.styleListInter
+import com.extraordinary.interstings.studios.utils.trackListInter
 import com.extraordinary.weaves.tendency.AppGeDanList
 import com.extraordinary.weaves.tendency.AppStyleList
 import com.extraordinary.weaves.tendency.detail.AppAlbumDetail
@@ -233,13 +240,13 @@ class AppArtistList : baseActivity(){
         }
         checkEmpty()
         binding.rlTrack.setOnClickListener {
-            startActivity(Intent(this, TrackList::class.java))
-            finish()
+            startInterActivity(Intent(this, TrackList::class.java),trackListInter())
+//            finish()
         }
 
         binding.rlAlbums.setOnClickListener {
-            startActivity(Intent(this, AppAlbumList::class.java))
-            finish()
+            startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter())
+//            finish()
         }
 
         binding.includeTitles.apply {
@@ -249,8 +256,8 @@ class AppArtistList : baseActivity(){
             titleContent.text = "Artists"
             searchBtn.visibility = View.VISIBLE
             searchBtn.setOnClickListener {
-                startActivity(Intent(this@AppArtistList, AppSearch::class.java))
-                finish()
+                startInterActivity(Intent(this@AppArtistList, AppSearch::class.java), searchInter())
+//                finish()
             }
         }
         binding.btnHomeBottomPlay.setOnClickListener {
@@ -262,36 +269,38 @@ class AppArtistList : baseActivity(){
             mediaManager?.pause()
         }
         binding.btnHomeBottomMenu.setOnClickListener {
-            startActivity(Intent(this, AppPlayerList::class.java))
+            startInterActivity(Intent(this, AppPlayerList::class.java), queueInter())
 //            finish()
         }
         binding.bottomMusic.setOnClickListener {
-            startActivity(Intent(this, PlayerView::class.java))
+            startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
 //            finish()
         }
         binding.rlAl1.setOnClickListener {
-            startActivity(Intent(this@AppArtistList, AppAlbumDetail::class.java).apply {
+            startInterActivity(Intent(this@AppArtistList, AppAlbumDetail::class.java).apply {
                 putExtra("album_id",binding.al1Txt.tag.toString().toInt())
-            })
+            }, albumDetInter())
+
 //            finish()
         }
         binding.rlAl2.setOnClickListener {
-            startActivity(Intent(this@AppArtistList, AppAlbumDetail::class.java).apply {
+            startInterActivity(Intent(this@AppArtistList, AppAlbumDetail::class.java).apply {
                 putExtra("album_id",binding.al2Txt.tag.toString().toInt())
-            })
+            }, albumDetInter())
 //            finish()
         }
         binding.rlAl3.setOnClickListener {
-            startActivity(Intent(this@AppArtistList, AppAlbumDetail::class.java).apply {
+            startInterActivity(Intent(this@AppArtistList, AppAlbumDetail::class.java).apply {
                 putExtra("album_id",binding.al3Txt.tag.toString().toInt())
-            })
+            }, albumDetInter())
 //            finish()
         }
         binding.rlPlayList.setOnClickListener {
-            startActivity(Intent(this, AppGeDanList::class.java))
+            startInterActivity(Intent(this, AppGeDanList::class.java), geDanListInter())
+//            finish()
         }
         binding.rlStyles.setOnClickListener {
-            startActivity(Intent(this, AppStyleList::class.java))
+            startInterActivity(Intent(this, AppStyleList::class.java), styleListInter())
 //            finish()
         }
 

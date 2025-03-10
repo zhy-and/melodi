@@ -1,6 +1,10 @@
 package com.extraordinary.interstings.studios.utils
 
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.LogUtils
+import com.extraordinary.weaves.tendency.application.GlobalMusApp
 import com.tencent.mmkv.MMKV
 import java.util.Calendar
 
@@ -33,7 +37,19 @@ object CommonStudyUtils  {
         return false
     }
 
-
+    fun getInstallSys(): Long {
+        try {
+            val context = GlobalMusApp.instance ?: return 0
+            val packageManager = context.packageManager
+            val packageInfo: PackageInfo =
+                packageManager.getPackageInfo(AppUtils.getAppPackageName(), 0)
+            //应用装时间
+            return packageInfo.firstInstallTime
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+        return 0
+    }
     private fun mmkvShowRules(postion: Long): MMKV? {
         val mmkv = MMKV.mmkvWithID("txt_translate_mmkv_sp_show$postion")
         var net_show_unit =  MMKV.mmkvWithID("mmkv_music_app").getString("$MUSIC_CONSTANT_JK_SHOW_UNIT-${postion}","day")

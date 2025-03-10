@@ -38,7 +38,7 @@ interface AppConfig {
         const val MPM_SINGLE_LOOP_PLAY = 3 // 单曲循环
 
         // 扫描器过滤器
-        const val SCANNER_FILTER_SIZE = 1024 * 1024 // 1MB
-        const val SCANNER_FILTER_DURATION = 60 * 1000 // 1分钟
+        const val SCANNER_FILTER_SIZE = 10 * 1024 // 10kB
+        const val SCANNER_FILTER_DURATION = 10 * 1000 // 10seconds
     }
 }
