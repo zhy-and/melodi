@@ -18,6 +18,11 @@ import com.extraordinary.weaves.tendency.PrivacyPage
 import com.extraordinary.weaves.tendency.application.GlobalMusApp
 import com.extraordinary.weaves.tendency.baseActivity
 import com.extraordinary.weaves.tendency.databinding.MoreViewBinding
+import com.extraordinary.weaves.tendency.dialog.event_two_feedback_setting
+import com.extraordinary.weaves.tendency.dialog.event_two_privacy_policy_setting
+import com.extraordinary.weaves.tendency.dialog.event_two_scan_setting
+import com.extraordinary.weaves.tendency.dialog.event_two_search_ok
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.extraordinary.weaves.tendency.scan.ScanPage
 import com.gyf.immersionbar.ImmersionBar
 
@@ -51,10 +56,14 @@ class AppMoreView : baseActivity() {
             }
         }
         binding.scanSettings.setOnClickListener {
+            logMusicEvents(event_two_scan_setting)
+
             startInterActivity(Intent(this, ScanPage::class.java), scansInter())
 //            finish()
         }
         binding.feedSettings.setOnClickListener {
+            logMusicEvents(event_two_feedback_setting)
+
             startInterActivity(Intent(this, FeedView::class.java), feedBacksInter())
 //            finish()
 
@@ -62,6 +71,8 @@ class AppMoreView : baseActivity() {
         binding.version.text = "V "+AppUtils.getAppVersionName()
 
         binding.priSettings.setOnClickListener {
+            logMusicEvents(event_two_privacy_policy_setting)
+
             startInterActivity(Intent(this, PrivacyPage::class.java), privacysInter())
 
 //            finish()

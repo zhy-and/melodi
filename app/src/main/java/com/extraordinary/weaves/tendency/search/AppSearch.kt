@@ -49,6 +49,15 @@ import com.extraordinary.interstings.studios.utils.searchResultBanner
 import com.extraordinary.interstings.studios.utils.searchResultBanner
 import com.extraordinary.interstings.studios.utils.styleListInter
 import com.extraordinary.interstings.studios.utils.trackListInter
+import com.extraordinary.weaves.tendency.dialog.event_one_re_album
+import com.extraordinary.weaves.tendency.dialog.event_th_albums_no
+import com.extraordinary.weaves.tendency.dialog.event_th_artists_no
+import com.extraordinary.weaves.tendency.dialog.event_th_playlists_no
+import com.extraordinary.weaves.tendency.dialog.event_th_styles_no
+import com.extraordinary.weaves.tendency.dialog.event_th_tracks_no
+import com.extraordinary.weaves.tendency.dialog.event_two_search_ok
+import com.extraordinary.weaves.tendency.dialog.event_two_style_click
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.google.android.gms.ads.nativead.NativeAd
 import dora.util.TextUtils
 import dora.util.ToastUtils
@@ -150,21 +159,31 @@ class AppSearch : baseActivity(){
         }
         binding.rlTrack.setOnClickListener {
             startInterActivity(Intent(this, TrackList::class.java),trackListInter())
+            logMusicEvents(event_th_tracks_no)
         }
         binding.rlAlbums.setOnClickListener {
             startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter())
+            logMusicEvents(event_th_albums_no)
         }
         binding.rlArtist.setOnClickListener {
             startInterActivity(Intent(this, AppArtistList::class.java), artistListInter())
+            logMusicEvents(event_th_artists_no)
+
         }
         binding.rlStyles.setOnClickListener {
             startInterActivity(Intent(this, AppStyleList::class.java), styleListInter())
+            logMusicEvents(event_th_styles_no)
+
         }
 
         binding.rlPlayList.setOnClickListener {
             startInterActivity(Intent(this, AppGeDanList::class.java), geDanListInter())
+            logMusicEvents(event_th_playlists_no)
+
         }
         binding.searchBtns.setOnClickListener {
+            logMusicEvents(event_two_search_ok)
+
             if (KeyboardUtils.isSoftInputVisible(this)) {
                 KeyboardUtils.hideSoftInput(this)
             }

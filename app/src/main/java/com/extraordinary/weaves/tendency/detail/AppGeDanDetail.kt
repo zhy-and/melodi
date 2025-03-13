@@ -51,6 +51,16 @@ import com.extraordinary.interstings.studios.utils.playViewsInter
 import com.extraordinary.interstings.studios.utils.queueInter
 import com.extraordinary.interstings.studios.utils.styleDetBanner
 import com.extraordinary.interstings.studios.utils.styleDetInter
+import com.extraordinary.weaves.tendency.dialog.event_one_play_bar
+import com.extraordinary.weaves.tendency.dialog.event_th_artist_play
+import com.extraordinary.weaves.tendency.dialog.event_th_playlist_created_add
+import com.extraordinary.weaves.tendency.dialog.event_th_playlist_created_delete
+import com.extraordinary.weaves.tendency.dialog.event_th_playlist_created_empty_add
+import com.extraordinary.weaves.tendency.dialog.event_th_playlist_created_empty_play
+import com.extraordinary.weaves.tendency.dialog.event_th_playlist_created_play
+import com.extraordinary.weaves.tendency.dialog.event_th_playlist_play
+import com.extraordinary.weaves.tendency.dialog.event_th_style_play
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.google.android.gms.ads.nativead.NativeAd
 import dora.util.TextUtils
 import dora.util.ToastUtils
@@ -172,6 +182,8 @@ class AppGeDanDetail : baseActivity(){
 
     }
     private var gedanId = -1L
+    private var style = -1
+    private var create = false
     private var bannerPos = geDanDetBanner()
    private var interPos = geDanDetInter()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -186,9 +198,9 @@ class AppGeDanDetail : baseActivity(){
             .titleBar(binding.title)
             .init()
         val detType = intent?.getIntExtra("det_type",-1)
-        val style = intent?.getIntExtra("style",-1)
+         style = intent?.getIntExtra("style",-1) ?: -1
          gedanId = intent?.getLongExtra("gedan_id",-1L) ?: -1L
-        val create = intent?.getBooleanExtra("create",false) ?: false
+         create = intent?.getBooleanExtra("create",false) ?: false
             try {
                     if (create){
                         val oldGeDanListData = loadGeDanData(GeDanData())
@@ -359,10 +371,17 @@ class AppGeDanDetail : baseActivity(){
                     putExtra("gedan_id",gedanId)
                     putExtra("add",true)
                 }, addSongsInter())
+                 if(gedanId != -1L && create){
+                logMusicEvents(event_th_playlist_created_empty_add)
+            }else if(gedanId != -1L){
+             logMusicEvents(event_th_playlist_created_add)
+                 }
             }
 
             binding.deleteBtn.setOnClickListener {
                 try {
+                    logMusicEvents(event_th_playlist_created_delete)
+
                     binding.bg.post{
                         showComDialog(this, R.layout.pop_delete_gedan,true,Gravity.CENTER).apply {
                             findViewById<View>(R.id.child_ok)?.setOnClickListener {
@@ -502,23 +521,35 @@ class AppGeDanDetail : baseActivity(){
         binding.btnHomeBottomPlay.setOnClickListener {
             showPlay(false)
             mediaManager?.replay()
+            logMusicEvents(event_one_play_bar)
+
         }
         binding.btnHomeBottomPause.setOnClickListener {
             showPlay(true)
             mediaManager?.pause()
+            logMusicEvents(event_one_play_bar)
+
         }
         binding.btnHomeBottomMenu.setOnClickListener {
             startInterActivity(Intent(this, AppPlayerList::class.java), queueInter())
+            logMusicEvents(event_one_play_bar)
 
         }
         binding.bottomMusic.setOnClickListener {
             startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
+            logMusicEvents(event_one_play_bar)
+
         }
         binding.addPic.setOnClickListener {
             startInterActivity(Intent(this, AppAddList::class.java)
                 .apply {
                     putExtra("gedan_id",gedanId)
                 }, addSongsInter())
+            if(gedanId != -1L && create){
+                logMusicEvents(event_th_playlist_created_empty_add)
+            }else if(gedanId != -1L){
+                logMusicEvents(event_th_playlist_created_add)
+            }
         }
 
         binding.playBtn.setOnClickListener {
@@ -530,6 +561,17 @@ class AppGeDanDetail : baseActivity(){
                     }
                 }
                 startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
+                if (style != -1){
+                    if (style > 6){
+                        logMusicEvents(event_th_playlist_play)
+                    }else{
+                        logMusicEvents(event_th_style_play)
+                    }
+                }else if(gedanId != -1L && create){
+                    logMusicEvents(event_th_playlist_created_empty_play)
+                }else if(gedanId != -1L){
+                    logMusicEvents(event_th_playlist_created_play)
+                }
             }catch (e : Exception){
                 e.printStackTrace()
             }
@@ -594,7 +636,7 @@ class AppGeDanDetail : baseActivity(){
                 binding?.recycleHislist?.visibility = View.GONE
             }
 
-        }, gedanId)
+        }, gedanId,style)
         binding.recycleHislist.run {
             layoutManager = LinearLayoutManager(this@AppGeDanDetail)
             adapter = listAdapter

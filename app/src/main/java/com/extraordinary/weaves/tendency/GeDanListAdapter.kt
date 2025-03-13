@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.extraordinary.interstings.studios.utils.geDanDetInter
 import com.extraordinary.weaves.tendency.bean.GeDanData
 import com.extraordinary.weaves.tendency.detail.AppGeDanDetail
+import com.extraordinary.weaves.tendency.dialog.event_two_playlist_created
+import com.extraordinary.weaves.tendency.dialog.event_two_playlist_default
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 
 
 class GeDanListAdapter(
@@ -60,6 +63,7 @@ class GeDanListAdapter(
                 putExtra("det_type",1)
                 putExtra("gedan_id",createBean.geDanId)
             }, geDanDetInter())
+            logMusicEvents(event_two_playlist_created)
         }
     }
 

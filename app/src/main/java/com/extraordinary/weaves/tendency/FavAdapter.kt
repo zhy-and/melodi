@@ -11,6 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.extraordinary.interstings.studios.utils.playViewsInter
 import com.extraordinary.weaves.tendency.application.GlobalMusApp
 import com.extraordinary.weaves.tendency.bean.Music
+import com.extraordinary.weaves.tendency.dialog.event_one_for_you
+import com.extraordinary.weaves.tendency.dialog.event_one_for_you_collect
+import com.extraordinary.weaves.tendency.dialog.event_one_most_played
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.extraordinary.weaves.tendency.player.PlayerView
 
 
@@ -45,6 +49,7 @@ class FavAdapter(
         holder.musicName.text = createBean.musicName
         holder.artlistName.text = createBean.artist
         if (createBean.favorite == 1){
+            logMusicEvents(event_one_for_you_collect)
             holder.collect.setImageResource(R.mipmap.home_fav_se)
         }else{
             holder.collect.setImageResource(R.mipmap.home_fav_un)
@@ -59,6 +64,8 @@ class FavAdapter(
                     playById(createBean.songId)
                 }
                 ctx?.startInterActivity(Intent(ctx, PlayerView::class.java), playViewsInter(),false)
+                logMusicEvents(event_one_for_you)
+
             }catch (e : Exception){
                 ctx?.startInterActivity(Intent(ctx, PlayerView::class.java), playViewsInter(),false)
                 e.printStackTrace()

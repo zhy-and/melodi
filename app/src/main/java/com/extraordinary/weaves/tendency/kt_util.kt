@@ -4,6 +4,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.extraordinary.weaves.tendency.application.GlobalMusApp
 import com.extraordinary.weaves.tendency.bean.Music
 import com.extraordinary.weaves.tendency.core.MusicScanner
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.extraordinary.weaves.tendency.event.AppEvent.Companion.REFRESH_NAME
 import com.jeremyliao.liveeventbus.LiveEventBus
 import java.util.concurrent.Executors
@@ -24,6 +25,7 @@ private fun scanMusic() {
                     for (i in playlist){
                         LogUtils.e(""+i.songId+"---"+i.albumId+"name ="+i.musicName+"dura ="+i.duration+"art ="+i.artist)
                     }
+                    logMusicEvents("other_scan_count",playlist.size.toString())
                     GlobalMusApp.instance?.mediaManager?.refreshPlaylist(playlist)
                     prepareSongs(playlist)
                     LiveEventBus

@@ -26,13 +26,28 @@ import com.blankj.utilcode.util.LogUtils
 import com.extraordinary.interstings.studios.utils.albumDetInter
 import com.extraordinary.interstings.studios.utils.artistDetInter
 import com.extraordinary.interstings.studios.utils.playViewsInter
+import com.extraordinary.weaves.tendency.dialog.event_th_album_edit_3
+import com.extraordinary.weaves.tendency.dialog.event_th_album_track
+import com.extraordinary.weaves.tendency.dialog.event_th_artist_edit_3
+import com.extraordinary.weaves.tendency.dialog.event_th_artist_track
+import com.extraordinary.weaves.tendency.dialog.event_th_playlist_created_edit
+import com.extraordinary.weaves.tendency.dialog.event_th_playlist_created_track
+import com.extraordinary.weaves.tendency.dialog.event_th_playlist_edit3
+import com.extraordinary.weaves.tendency.dialog.event_th_playlist_track
+import com.extraordinary.weaves.tendency.dialog.event_th_style_edit_3
+import com.extraordinary.weaves.tendency.dialog.event_th_style_track
+import com.extraordinary.weaves.tendency.dialog.event_th_tracks_r
+import com.extraordinary.weaves.tendency.dialog.event_two_playlist_track2
+import com.extraordinary.weaves.tendency.dialog.event_two_track_click
+import com.extraordinary.weaves.tendency.dialog.event_two_track_edit
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import dora.util.ToastUtils
 
-//5 gedan 4 playlist 3 search 2 normal
+//5 gedan 4 playlist 3 search 2 album 6 artist
 class TrackListAdapter(
     private var musicArrayList: ArrayList<Music>,
     private var type: Int,
-    private var base: baseActivity, private  val callback : RefreshPlayView? = null,private  val geDanId : Long = -1L
+    private var base: baseActivity, private  val callback : RefreshPlayView? = null,private  val geDanId : Long = -1L, val style : Int = -1
 ) :
     RecyclerView.Adapter<TrackListAdapter.AreaGeneViewH>() {
     override fun onCreateViewHolder(
@@ -73,19 +88,41 @@ class TrackListAdapter(
 
                     base?.startInterActivity(Intent(base, PlayerView::class.java), playViewsInter())
 //                base?.finish()
+                    logMusicEvents(event_th_tracks_r)
+
                     return@setOnClickListener
                 }
                 if (base.isDestroyed || base.isFinishing){
                     return@setOnClickListener
                 }
                 try {
+                    if (type == 1){
+                        logMusicEvents(event_two_track_edit)
+                    }else if(type == 2){
+                        logMusicEvents(event_th_album_edit_3)
+                    }
                     showComDialog(base, R.layout.item_popup_feed).apply {
                         if (type != 4){
                             findViewById<View>(R.id.play_delete)?.visibility = View.GONE
                         }
+
                         if (type == 5 && geDanId != -1L){
                             findViewById<View>(R.id.play_delete)?.visibility = View.VISIBLE
                             findViewById<TextView>(R.id.pop_txt)?.text = "Remove from this playlist"
+                            logMusicEvents(event_th_playlist_created_edit)
+
+                        }else if(type == 5 && style != -1){
+                            if (style > 6){
+                                //gedan
+                                logMusicEvents(event_th_playlist_edit3)
+                            }else{
+                                logMusicEvents(event_th_style_edit_3)
+                                //style
+                            }
+                        }
+
+                        else if(type == 6){
+                            logMusicEvents(event_th_artist_edit_3)
                         }
                         findViewById<View>(R.id.play_art)?.setOnClickListener {
                             disDialog(this,base)
@@ -195,6 +232,29 @@ class TrackListAdapter(
             }
             holder.itemView.setOnClickListener {
                 try {
+                    if (type == 1){
+                        logMusicEvents(event_two_track_click)
+                    }else if(type == 3){
+                        logMusicEvents(event_th_tracks_r)
+                    }else if(type == 5 && geDanId != -1L){
+                        logMusicEvents(event_th_playlist_created_track)
+                    }else if(type == 5){
+
+                    }
+                    else if(type == 5 && style != -1){
+                        if (style > 6){
+                            //gedan
+                            logMusicEvents(event_th_playlist_track)
+                        }else{
+                            logMusicEvents(event_th_style_track)
+                            //style
+                        }
+                    }
+                    else if(type == 2){
+                        logMusicEvents(event_th_album_track)
+                    }else if(type == 6){
+                        logMusicEvents(event_th_artist_track)
+                    }
                     GlobalMusApp.instance?.mediaManager?.apply {
                         refreshPlaylist(musicArrayList)
                         playById(createBean.songId)

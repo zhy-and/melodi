@@ -36,6 +36,8 @@ import com.extraordinary.interstings.studios.utils.lyricInter
 import com.extraordinary.interstings.studios.utils.playViewsInter
 import com.extraordinary.interstings.studios.utils.queueInter
 import com.extraordinary.interstings.studios.utils.queueListBanner
+import com.extraordinary.weaves.tendency.dialog.event_one_play_bar
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.google.android.gms.ads.nativead.NativeAd
 import dora.util.ToastUtils
 
@@ -65,18 +67,26 @@ class AppPlayerList : baseActivity(), TrackListAdapter.RefreshPlayView {
         playListBinding.btnHomeBottomPlay.setOnClickListener {
             showPlay(false)
             mediaManager?.replay()
+            logMusicEvents(event_one_play_bar)
+
         }
         playListBinding.btnHomeBottomPause.setOnClickListener {
             showPlay(true)
             mediaManager?.pause()
+            logMusicEvents(event_one_play_bar)
+
         }
         playListBinding.btnHomeBottomMenu.setOnClickListener {
             startInterActivity(Intent(this, AppPlayerList::class.java), queueInter())
 //            finish()
+            logMusicEvents(event_one_play_bar)
+
         }
         playListBinding.bottomMusic.setOnClickListener {
             startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
 //            finish()
+            logMusicEvents(event_one_play_bar)
+
         }
         if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
             checkPermission()

@@ -8,6 +8,9 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.extraordinary.interstings.studios.utils.playViewsInter
+import com.extraordinary.weaves.tendency.dialog.event_one_random_home
+import com.extraordinary.weaves.tendency.dialog.event_one_styles_home
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.extraordinary.weaves.tendency.player.PlayerView
 
 
@@ -36,7 +39,8 @@ class RecyHomeAdapter(
         holder.itemView.setOnClickListener {
             ctx?.startInterActivity(Intent(ctx, PlayerView::class.java).apply {
                 putExtra("play",true)
-            }, playViewsInter())
+            }, playViewsInter(),false)
+            logMusicEvents(event_one_random_home)
         }
     }
 

@@ -9,6 +9,9 @@ import com.extraordinary.interstings.studios.utils.scansInter
 import com.extraordinary.weaves.tendency.databinding.FeedBackBinding
 import com.extraordinary.weaves.tendency.databinding.LyricViewBinding
 import com.extraordinary.weaves.tendency.databinding.MoreViewBinding
+import com.extraordinary.weaves.tendency.dialog.event_th_start_scan
+import com.extraordinary.weaves.tendency.dialog.event_th_submit_feed
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.gyf.immersionbar.ImmersionBar
 import dora.util.TextUtils
 import dora.util.ThreadUtils
@@ -31,13 +34,14 @@ class FeedView : baseActivity() {
                 speFinish()
             }
             titleContent.text = "FeedBack"
-            finish()
         }
         binding.btnFeed.setOnClickListener {
             if (TextUtils.isEmpty(binding.searchEdit.text.toString())){
                 ToastUtils.showShort("Please input content")
                 return@setOnClickListener
             }
+            logMusicEvents(event_th_submit_feed)
+
             ThreadUtils.runOnUiThreadDelayed({
                 ToastUtils.showShort("Submit successfully")
                 finish()

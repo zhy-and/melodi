@@ -7,14 +7,7 @@ import java.util.List;
 public class ProductBean implements Serializable{
 
 
-    /**
-     * bgulxgdlfbw : tzkjpqsyokor
-     * caovdaafsey : owjshxjmwk
-     * hmdguffwtv : euuouozwkcu
-     * mmiubzlqcqm : uosxmmus
-     * ouecvwahcyx : vyaneqjkgf
-     * yvbgjmfbteobho : {"eqyrydzfwy":"pyaheb","grckgi":"mevclsxxomwgsp","mbwasbedbobtxa":"mhkhesatpug","mgatquvn":"qfbjdreizcez","mukolrygoj":"qqyvkebetvhazy","xgyvsjeazyn":{"eeclflbgzhg":"dzfruouhmkp","rxslqfpu":"plvqyfak","vscruffsqgprwa":{"beqhfwcrlgjqmg":"jqcgql","czpihnbwoq":"qlucqc","nyjxynieiu":[{"efkqmycr":{"dluulegqxfu":200,"qhsjpca":{"appId":"87454557","ebwapjuzjec":"CN","zrwtzmvkj":[]},"success":true,"wizggykp":"success"},"oumccpttstjz":"balpjfwlbyyk","vkvbsztngwdh":"lmazjrblvkyypr","xipuzqzn":"aoajayef"}],"thcwdubthj":"yoivxkumakg","vqicluyojpwf":"rhasjvxefmdm","xduuzxyzzqvl":"jmsouoaj"}}}
-     */
+
 
     private String bgulxgdlfbw;
     private String caovdaafsey;
@@ -72,14 +65,7 @@ public class ProductBean implements Serializable{
     }
 
     public static class YvbgjmfbteobhoBean {
-        /**
-         * eqyrydzfwy : pyaheb
-         * grckgi : mevclsxxomwgsp
-         * mbwasbedbobtxa : mhkhesatpug
-         * mgatquvn : qfbjdreizcez
-         * mukolrygoj : qqyvkebetvhazy
-         * xgyvsjeazyn : {"eeclflbgzhg":"dzfruouhmkp","rxslqfpu":"plvqyfak","vscruffsqgprwa":{"beqhfwcrlgjqmg":"jqcgql","czpihnbwoq":"qlucqc","nyjxynieiu":[{"efkqmycr":{"dluulegqxfu":200,"qhsjpca":{"appId":"87454557","ebwapjuzjec":"CN","zrwtzmvkj":[]},"success":true,"wizggykp":"success"},"oumccpttstjz":"balpjfwlbyyk","vkvbsztngwdh":"lmazjrblvkyypr","xipuzqzn":"aoajayef"}],"thcwdubthj":"yoivxkumakg","vqicluyojpwf":"rhasjvxefmdm","xduuzxyzzqvl":"jmsouoaj"}}
-         */
+
 
         private String eqyrydzfwy;
         private String grckgi;
@@ -137,11 +123,7 @@ public class ProductBean implements Serializable{
         }
 
         public static class XgyvsjeazynBean {
-            /**
-             * eeclflbgzhg : dzfruouhmkp
-             * rxslqfpu : plvqyfak
-             * vscruffsqgprwa : {"beqhfwcrlgjqmg":"jqcgql","czpihnbwoq":"qlucqc","nyjxynieiu":[{"efkqmycr":{"dluulegqxfu":200,"qhsjpca":{"appId":"87454557","ebwapjuzjec":"CN","zrwtzmvkj":[]},"success":true,"wizggykp":"success"},"oumccpttstjz":"balpjfwlbyyk","vkvbsztngwdh":"lmazjrblvkyypr","xipuzqzn":"aoajayef"}],"thcwdubthj":"yoivxkumakg","vqicluyojpwf":"rhasjvxefmdm","xduuzxyzzqvl":"jmsouoaj"}
-             */
+
 
             private String eeclflbgzhg;
             private String rxslqfpu;
@@ -172,14 +154,7 @@ public class ProductBean implements Serializable{
             }
 
             public static class VscruffsqgprwaBean {
-                /**
-                 * beqhfwcrlgjqmg : jqcgql
-                 * czpihnbwoq : qlucqc
-                 * nyjxynieiu : [{"efkqmycr":{"dluulegqxfu":200,"qhsjpca":{"appId":"87454557","ebwapjuzjec":"CN","zrwtzmvkj":[]},"success":true,"wizggykp":"success"},"oumccpttstjz":"balpjfwlbyyk","vkvbsztngwdh":"lmazjrblvkyypr","xipuzqzn":"aoajayef"}]
-                 * thcwdubthj : yoivxkumakg
-                 * vqicluyojpwf : rhasjvxefmdm
-                 * xduuzxyzzqvl : jmsouoaj
-                 */
+
 
                 private String beqhfwcrlgjqmg;
                 private String czpihnbwoq;
@@ -237,12 +212,7 @@ public class ProductBean implements Serializable{
                 }
 
                 public static class NyjxynieiuBean {
-                    /**
-                     * efkqmycr : {"dluulegqxfu":200,"qhsjpca":{"appId":"87454557","ebwapjuzjec":"CN","zrwtzmvkj":[]},"success":true,"wizggykp":"success"}
-                     * oumccpttstjz : balpjfwlbyyk
-                     * vkvbsztngwdh : lmazjrblvkyypr
-                     * xipuzqzn : aoajayef
-                     */
+
 
                     private EfkqmycrBean efkqmycr;
                     private String oumccpttstjz;
@@ -282,12 +252,7 @@ public class ProductBean implements Serializable{
                     }
 
                     public static class EfkqmycrBean {
-                        /**
-                         * dluulegqxfu : 200
-                         * qhsjpca : {"appId":"87454557","ebwapjuzjec":"CN","zrwtzmvkj":[]}
-                         * success : true
-                         * wizggykp : success
-                         */
+
 
                         private int dluulegqxfu;
                         private QhsjpcaBean qhsjpca;
@@ -327,11 +292,7 @@ public class ProductBean implements Serializable{
                         }
 
                         public static class QhsjpcaBean {
-                            /**
-                             * appId : 87454557
-                             * ebwapjuzjec : CN
-                             * zrwtzmvkj : []
-                             */
+
 
                             private String appId;
                             private List<diyData> zrwtzmvkj;

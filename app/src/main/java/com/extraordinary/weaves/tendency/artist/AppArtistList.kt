@@ -42,6 +42,15 @@ import com.extraordinary.weaves.tendency.bean.Album
 import com.extraordinary.weaves.tendency.bean.Artist
 import com.extraordinary.weaves.tendency.bean.Music
 import com.extraordinary.weaves.tendency.databinding.ArtistListViewBinding
+import com.extraordinary.weaves.tendency.dialog.event_one_play_bar
+import com.extraordinary.weaves.tendency.dialog.event_two_album_artist2
+import com.extraordinary.weaves.tendency.dialog.event_two_albums_2
+import com.extraordinary.weaves.tendency.dialog.event_two_playlist_created
+import com.extraordinary.weaves.tendency.dialog.event_two_playlists_2
+import com.extraordinary.weaves.tendency.dialog.event_two_search_2
+import com.extraordinary.weaves.tendency.dialog.event_two_styles_2
+import com.extraordinary.weaves.tendency.dialog.event_two_track_2
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.extraordinary.weaves.tendency.performScanMusic
 import com.google.android.gms.ads.nativead.NativeAd
 import com.gyf.immersionbar.ImmersionBar
@@ -242,9 +251,13 @@ class AppArtistList : baseActivity(){
         binding.rlTrack.setOnClickListener {
             startInterActivity(Intent(this, TrackList::class.java),trackListInter())
 //            finish()
+            logMusicEvents(event_two_track_2)
+
         }
 
         binding.rlAlbums.setOnClickListener {
+            logMusicEvents(event_two_albums_2)
+
             startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter())
 //            finish()
         }
@@ -256,6 +269,8 @@ class AppArtistList : baseActivity(){
             titleContent.text = "Artists"
             searchBtn.visibility = View.VISIBLE
             searchBtn.setOnClickListener {
+                logMusicEvents(event_two_search_2)
+
                 startInterActivity(Intent(this@AppArtistList, AppSearch::class.java), searchInter())
 //                finish()
             }
@@ -263,23 +278,32 @@ class AppArtistList : baseActivity(){
         binding.btnHomeBottomPlay.setOnClickListener {
             showPlay(false)
             mediaManager?.replay()
+            logMusicEvents(event_one_play_bar)
+
         }
         binding.btnHomeBottomPause.setOnClickListener {
             showPlay(true)
             mediaManager?.pause()
+            logMusicEvents(event_one_play_bar)
+
         }
         binding.btnHomeBottomMenu.setOnClickListener {
             startInterActivity(Intent(this, AppPlayerList::class.java), queueInter())
 //            finish()
+            logMusicEvents(event_one_play_bar)
+
         }
         binding.bottomMusic.setOnClickListener {
             startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
 //            finish()
+            logMusicEvents(event_one_play_bar)
+
         }
         binding.rlAl1.setOnClickListener {
             startInterActivity(Intent(this@AppArtistList, AppAlbumDetail::class.java).apply {
                 putExtra("album_id",binding.al1Txt.tag.toString().toInt())
             }, albumDetInter())
+            logMusicEvents(event_two_album_artist2)
 
 //            finish()
         }
@@ -288,18 +312,26 @@ class AppArtistList : baseActivity(){
                 putExtra("album_id",binding.al2Txt.tag.toString().toInt())
             }, albumDetInter())
 //            finish()
+            logMusicEvents(event_two_album_artist2)
+
         }
         binding.rlAl3.setOnClickListener {
             startInterActivity(Intent(this@AppArtistList, AppAlbumDetail::class.java).apply {
                 putExtra("album_id",binding.al3Txt.tag.toString().toInt())
             }, albumDetInter())
 //            finish()
+            logMusicEvents(event_two_album_artist2)
+
         }
         binding.rlPlayList.setOnClickListener {
+            logMusicEvents(event_two_playlists_2)
+
             startInterActivity(Intent(this, AppGeDanList::class.java), geDanListInter())
 //            finish()
         }
         binding.rlStyles.setOnClickListener {
+            logMusicEvents(event_two_styles_2)
+
             startInterActivity(Intent(this, AppStyleList::class.java), styleListInter())
 //            finish()
         }

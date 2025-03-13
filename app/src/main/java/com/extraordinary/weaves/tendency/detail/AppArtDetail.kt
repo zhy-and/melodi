@@ -24,6 +24,10 @@ import com.extraordinary.weaves.tendency.application.GlobalMusApp
 import com.extraordinary.weaves.tendency.baseActivity
 import com.extraordinary.weaves.tendency.bean.Music
 import com.extraordinary.weaves.tendency.databinding.ArtDetViewBinding
+import com.extraordinary.weaves.tendency.dialog.event_one_play_bar
+import com.extraordinary.weaves.tendency.dialog.event_th_album_play
+import com.extraordinary.weaves.tendency.dialog.event_th_artist_play
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.extraordinary.weaves.tendency.global.AppConfig
 import com.extraordinary.weaves.tendency.manager.MediaManager
 import com.extraordinary.weaves.tendency.performScanMusic
@@ -135,16 +139,24 @@ class AppArtDetail : baseActivity(){
         binding.btnHomeBottomPlay.setOnClickListener {
             showPlay(false)
             mediaManager?.replay()
+            logMusicEvents(event_one_play_bar)
+
         }
         binding.btnHomeBottomPause.setOnClickListener {
             showPlay(true)
             mediaManager?.pause()
+            logMusicEvents(event_one_play_bar)
+
         }
         binding.btnHomeBottomMenu.setOnClickListener {
             startInterActivity(Intent(this, AppPlayerList::class.java), queueInter())
+            logMusicEvents(event_one_play_bar)
+
         }
         binding.bottomMusic.setOnClickListener {
             startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
+            logMusicEvents(event_one_play_bar)
+
         }
 
         binding.playBtn.setOnClickListener {
@@ -155,6 +167,8 @@ class AppArtDetail : baseActivity(){
                         it.playById(musicArrayList[0].songId)
                     }
                 }
+                logMusicEvents(event_th_artist_play)
+
             }catch (e : Exception){
                 e.printStackTrace()
             }
@@ -175,7 +189,7 @@ class AppArtDetail : baseActivity(){
 
     private fun initRecyleList() {
 
-        listAdapter = TrackListAdapter(musicArrayList,2,this@AppArtDetail)
+        listAdapter = TrackListAdapter(musicArrayList,6,this@AppArtDetail)
         binding.recycleHislist.run {
             layoutManager = LinearLayoutManager(this@AppArtDetail)
             adapter = listAdapter

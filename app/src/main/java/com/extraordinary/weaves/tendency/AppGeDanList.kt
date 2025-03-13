@@ -35,6 +35,18 @@ import com.extraordinary.weaves.tendency.bean.Music
 import com.extraordinary.weaves.tendency.databinding.PlayListViewBinding
 import com.extraordinary.weaves.tendency.detail.AppArtDetail
 import com.extraordinary.weaves.tendency.detail.AppGeDanDetail
+import com.extraordinary.weaves.tendency.dialog.event_one_play_bar
+import com.extraordinary.weaves.tendency.dialog.event_two_albums_2
+import com.extraordinary.weaves.tendency.dialog.event_two_artist_playlist2
+import com.extraordinary.weaves.tendency.dialog.event_two_artists_2
+import com.extraordinary.weaves.tendency.dialog.event_two_create_playlist
+import com.extraordinary.weaves.tendency.dialog.event_two_playlist_default
+import com.extraordinary.weaves.tendency.dialog.event_two_playlist_fav
+import com.extraordinary.weaves.tendency.dialog.event_two_search_2
+import com.extraordinary.weaves.tendency.dialog.event_two_styles_2
+import com.extraordinary.weaves.tendency.dialog.event_two_track_2
+import com.extraordinary.weaves.tendency.dialog.event_two_track_edit
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.extraordinary.weaves.tendency.event.AppEvent
 import com.extraordinary.weaves.tendency.global.AppConfig
 import com.extraordinary.weaves.tendency.global.DataKeeper.loadGeDanData
@@ -118,6 +130,7 @@ class AppGeDanList : baseActivity(){
             titleContent.text = "Playlists"
             searchBtn.visibility = View.VISIBLE
             searchBtn.setOnClickListener {
+                logMusicEvents(event_two_search_2)
                 startInterActivity(Intent(this@AppGeDanList, AppSearch::class.java), searchInter())
 //                finish()
             }
@@ -127,7 +140,8 @@ class AppGeDanList : baseActivity(){
             startInterActivity(Intent(this@AppGeDanList, AppArtDetail::class.java).apply {
                 putExtra("artist",binding.al1Txt.text.toString())
             }, artistDetInter())
-  
+            logMusicEvents(event_two_artist_playlist2)
+
 //            finish()
         }
         binding.rlAl2.setOnClickListener {
@@ -137,6 +151,7 @@ class AppGeDanList : baseActivity(){
             }, artistDetInter())
           
 //            finish()
+            logMusicEvents(event_two_artist_playlist2)
 
         }
         binding.rlAl3.setOnClickListener {
@@ -144,6 +159,7 @@ class AppGeDanList : baseActivity(){
                 putExtra("artist",binding.al3Txt.text.toString())
             }, artistDetInter())
 //            finish()
+            logMusicEvents(event_two_artist_playlist2)
 
         }
         binding.rlAl4.setOnClickListener {
@@ -151,6 +167,7 @@ class AppGeDanList : baseActivity(){
                 putExtra("artist",binding.al4Txt.text.toString())
             }, artistDetInter())
 //            finish()
+            logMusicEvents(event_two_artist_playlist2)
 
         }
         if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
@@ -177,38 +194,55 @@ class AppGeDanList : baseActivity(){
         binding.rlTrack.setOnClickListener {
             startInterActivity(Intent(this, TrackList::class.java),trackListInter())
 //            finish()
+            logMusicEvents(event_two_track_2)
+
         }
 
         binding.rlArtList.setOnClickListener {
             startInterActivity(Intent(this, AppArtistList::class.java), artistListInter())
 //            finish()
+            logMusicEvents(event_two_artists_2)
+
         }
         binding.rlAlbums.setOnClickListener {
             startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter())
 //            finish()
+            logMusicEvents(event_two_albums_2)
+
         }
         binding.rlStyles.setOnClickListener {
             startInterActivity(Intent(this, AppStyleList::class.java), styleListInter())
 //            finish()
+            logMusicEvents(event_two_styles_2)
+
         }
         binding.btnHomeBottomPlay.setOnClickListener {
+            logMusicEvents(event_one_play_bar)
+
             showPlay(false)
             mediaManager?.replay()
         }
         binding.btnHomeBottomPause.setOnClickListener {
+            logMusicEvents(event_one_play_bar)
+
             showPlay(true)
             mediaManager?.pause()
         }
         binding.btnHomeBottomMenu.setOnClickListener {
+            logMusicEvents(event_one_play_bar)
+
             startInterActivity(Intent(this, AppPlayerList::class.java), queueInter())
 //            finish()
         }
         binding.bottomMusic.setOnClickListener {
+            logMusicEvents(event_one_play_bar)
+
             startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
 //            finish()
         }
 
         binding.mostPlayed.setOnClickListener {
+            logMusicEvents(event_two_playlist_default)
 
             startInterActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
                 putExtra("style",7)
@@ -218,12 +252,16 @@ class AppGeDanList : baseActivity(){
 
 
         binding.golden.setOnClickListener {
+            logMusicEvents(event_two_playlist_default)
+
             startInterActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
                 putExtra("style",8)
             }, geDanDetInter())
 //            finish()
         }
         binding.lost.setOnClickListener {
+            logMusicEvents(event_two_playlist_default)
+
             startInterActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
                 putExtra("style",9)
             }, geDanDetInter())
@@ -231,18 +269,24 @@ class AppGeDanList : baseActivity(){
         }
         binding.fav.setOnClickListener {
             //collect
+            logMusicEvents(event_two_playlist_fav)
+
             startInterActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
                 putExtra("style",10)
             }, geDanDetInter())
 //            finish()
         }
         binding.moon.setOnClickListener {
+            logMusicEvents(event_two_playlist_default)
+
             startInterActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
                 putExtra("style",11)
             }, geDanDetInter())
 //            finish()
         }
         binding.vibes.setOnClickListener {
+            logMusicEvents(event_two_playlist_default)
+
             startInterActivity(Intent(this@AppGeDanList, AppGeDanDetail::class.java).apply {
                 putExtra("style",12)
             }, geDanDetInter())
@@ -254,6 +298,8 @@ class AppGeDanList : baseActivity(){
                 putExtra("create",true)
             }, geDanDetInter())
 //            finish()
+            logMusicEvents(event_two_create_playlist)
+
         }
 
     }

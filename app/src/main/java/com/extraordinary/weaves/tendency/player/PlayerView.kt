@@ -35,6 +35,18 @@ import com.extraordinary.weaves.tendency.core.PlayModeControl
 import com.extraordinary.weaves.tendency.databinding.PlayerMainBinding
 import com.extraordinary.weaves.tendency.detail.AppAlbumDetail
 import com.extraordinary.weaves.tendency.detail.AppArtDetail
+import com.extraordinary.weaves.tendency.dialog.event_th_play_album
+import com.extraordinary.weaves.tendency.dialog.event_th_play_artist
+import com.extraordinary.weaves.tendency.dialog.event_th_play_collect
+import com.extraordinary.weaves.tendency.dialog.event_th_play_lyrics
+import com.extraordinary.weaves.tendency.dialog.event_th_play_mode
+import com.extraordinary.weaves.tendency.dialog.event_th_play_next
+import com.extraordinary.weaves.tendency.dialog.event_th_play_pause
+import com.extraordinary.weaves.tendency.dialog.event_th_play_play
+import com.extraordinary.weaves.tendency.dialog.event_th_play_previous
+import com.extraordinary.weaves.tendency.dialog.event_th_play_queue
+import com.extraordinary.weaves.tendency.dialog.event_th_submit_feed
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.extraordinary.weaves.tendency.event.AppEvent
 import com.extraordinary.weaves.tendency.global.AppConfig
 import com.extraordinary.weaves.tendency.global.AppConfig.Companion.MPS_PAUSE
@@ -231,6 +243,8 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
         binding.lyric.setOnClickListener {
             startInterActivity(Intent(this, AppLyricView::class.java), lyricInter(),false)
             finishBack()
+            logMusicEvents(event_th_play_lyrics)
+
         }
 
         binding.playList.setOnClickListener {
@@ -240,6 +254,8 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
             }
             startInterActivity(Intent(this, AppPlayerList::class.java), queueInter(),false)
             finishBack()
+            logMusicEvents(event_th_play_queue)
+
         }
         binding.lock.setOnClickListener {
             try {
@@ -253,6 +269,8 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
                     }, albumDetInter(),false)
                     finishBack()
                 }
+                logMusicEvents(event_th_play_album)
+
             }catch (e : Exception){
                 e.printStackTrace()
             }
@@ -268,6 +286,8 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
             startInterActivity(Intent(this@PlayerView, AppArtDetail::class.java).apply {
                 putExtra("artist",binding.musicSinger.text.toString())
             }, artistDetInter(),false)
+            logMusicEvents(event_th_play_artist)
+
         }
         binding.backBtn.setOnClickListener { speFinish() }
     }
@@ -391,6 +411,8 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
                         return
                     }
                     mediaManager!!.prev()
+                    logMusicEvents(event_th_play_previous)
+
                 }catch (e : Exception){
                     toScan()
                     e.printStackTrace()
@@ -405,6 +427,8 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
                         return
                     }
                     mediaManager!!.replay()
+                    logMusicEvents(event_th_play_play)
+
                 }catch (e : Exception){
                     toScan()
                     e.printStackTrace()
@@ -419,6 +443,8 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
                         return
                     }
                     mediaManager!!.next()
+                    logMusicEvents(event_th_play_next)
+
                 }catch (e : Exception){
                     toScan()
                     e.printStackTrace()
@@ -429,6 +455,8 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
             R.id.btn_music_play_pause ->
                 try {
                     mediaManager!!.pause()
+                    logMusicEvents(event_th_play_pause)
+
                 }catch (e : Exception){e.printStackTrace()}
             //音量
             //播放模式
@@ -438,6 +466,8 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
                         toScan()
                         return
                     }
+                    logMusicEvents(event_th_play_mode)
+
                     playModeControl.changePlayMode(binding.btnMusicPlayMode)
                 }catch (e : Exception){
                     e.printStackTrace()
@@ -451,6 +481,8 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
                         toScan()
                         return
                     }
+                    logMusicEvents(event_th_play_collect)
+
                     if (mediaManager!!.curMusic!!.favorite == 0) {
 //                    startAnimation(iv_sliding_favorite_flying!!)
                         refreshFavorite(1)

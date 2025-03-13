@@ -7,14 +7,7 @@ import java.util.List;
 public class CommonViewModel implements Serializable{
 
 
-    /**
-     * bgulxgdlfbw : tzkjpqsyokor
-     * caovdaafsey : owjshxjmwk
-     * hmdguffwtv : euuouozwkcu
-     * mmiubzlqcqm : uosxmmus
-     * ouecvwahcyx : vyaneqjkgf
-     * yvbgjmfbteobho : {"eqyrydzfwy":"pyaheb","grckgi":"mevclsxxomwgsp","mbwasbedbobtxa":"mhkhesatpug","mgatquvn":"qfbjdreizcez","mukolrygoj":"qqyvkebetvhazy","xgyvsjeazyn":{"eeclflbgzhg":"dzfruouhmkp","rxslqfpu":"plvqyfak","vscruffsqgprwa":{"beqhfwcrlgjqmg":"jqcgql","czpihnbwoq":"qlucqc","nyjxynieiu":[{"efkqmycr":{"elsrdirykp":"success","ryxjya":true,"szvrcilxij":200,"uiiugudcealz":[{"cfjhgzdfa":"1","cfzmyjoj":1846435010288422912,"evtpohd":100,"fayiiebmhdhz":"ca-app-pub-3940256099942544/9257395921","fsozxwub":1846442069729218560,"hdwpiwnqgex":1,"hgoxer":"1","ibqohki":"home_open(cold)","jzxfbvojwg":"1","lovfchcehwx":"day","lpxlfylpdvv":100,"owuyhb":"Splash","uewlmauz":"0","xvthivk":"day","zawjmcv":"Admob"}]}}]}}}
-     */
+
 
     private String bgulxgdlfbw;
     private String caovdaafsey;
@@ -72,14 +65,7 @@ public class CommonViewModel implements Serializable{
     }
 
     public static class YvbgjmfbteobhoBean {
-        /**
-         * eqyrydzfwy : pyaheb
-         * grckgi : mevclsxxomwgsp
-         * mbwasbedbobtxa : mhkhesatpug
-         * mgatquvn : qfbjdreizcez
-         * mukolrygoj : qqyvkebetvhazy
-         * xgyvsjeazyn : {"eeclflbgzhg":"dzfruouhmkp","rxslqfpu":"plvqyfak","vscruffsqgprwa":{"beqhfwcrlgjqmg":"jqcgql","czpihnbwoq":"qlucqc","nyjxynieiu":[{"efkqmycr":{"elsrdirykp":"success","ryxjya":true,"szvrcilxij":200,"uiiugudcealz":[{"cfjhgzdfa":"1","cfzmyjoj":1846435010288422912,"evtpohd":100,"fayiiebmhdhz":"ca-app-pub-3940256099942544/9257395921","fsozxwub":1846442069729218560,"hdwpiwnqgex":1,"hgoxer":"1","ibqohki":"home_open(cold)","jzxfbvojwg":"1","lovfchcehwx":"day","lpxlfylpdvv":100,"owuyhb":"Splash","uewlmauz":"0","xvthivk":"day","zawjmcv":"Admob"}]}}]}}
-         */
+
 
         private String eqyrydzfwy;
         private String grckgi;
@@ -137,11 +123,7 @@ public class CommonViewModel implements Serializable{
         }
 
         public static class XgyvsjeazynBean {
-            /**
-             * eeclflbgzhg : dzfruouhmkp
-             * rxslqfpu : plvqyfak
-             * vscruffsqgprwa : {"beqhfwcrlgjqmg":"jqcgql","czpihnbwoq":"qlucqc","nyjxynieiu":[{"efkqmycr":{"elsrdirykp":"success","ryxjya":true,"szvrcilxij":200,"uiiugudcealz":[{"cfjhgzdfa":"1","cfzmyjoj":1846435010288422912,"evtpohd":100,"fayiiebmhdhz":"ca-app-pub-3940256099942544/9257395921","fsozxwub":1846442069729218560,"hdwpiwnqgex":1,"hgoxer":"1","ibqohki":"home_open(cold)","jzxfbvojwg":"1","lovfchcehwx":"day","lpxlfylpdvv":100,"owuyhb":"Splash","uewlmauz":"0","xvthivk":"day","zawjmcv":"Admob"}]}}]}
-             */
+
 
             private String eeclflbgzhg;
             private String rxslqfpu;
@@ -172,11 +154,7 @@ public class CommonViewModel implements Serializable{
             }
 
             public static class VscruffsqgprwaBean {
-                /**
-                 * beqhfwcrlgjqmg : jqcgql
-                 * czpihnbwoq : qlucqc
-                 * nyjxynieiu : [{"efkqmycr":{"elsrdirykp":"success","ryxjya":true,"szvrcilxij":200,"uiiugudcealz":[{"cfjhgzdfa":"1","cfzmyjoj":1846435010288422912,"evtpohd":100,"fayiiebmhdhz":"ca-app-pub-3940256099942544/9257395921","fsozxwub":1846442069729218560,"hdwpiwnqgex":1,"hgoxer":"1","ibqohki":"home_open(cold)","jzxfbvojwg":"1","lovfchcehwx":"day","lpxlfylpdvv":100,"owuyhb":"Splash","uewlmauz":"0","xvthivk":"day","zawjmcv":"Admob"}]}}]
-                 */
+
 
                 private String beqhfwcrlgjqmg;
                 private String czpihnbwoq;
@@ -207,9 +185,7 @@ public class CommonViewModel implements Serializable{
                 }
 
                 public static class NyjxynieiuBean {
-                    /**
-                     * efkqmycr : {"elsrdirykp":"success","ryxjya":true,"szvrcilxij":200,"uiiugudcealz":[{"cfjhgzdfa":"1","cfzmyjoj":1846435010288422912,"evtpohd":100,"fayiiebmhdhz":"ca-app-pub-3940256099942544/9257395921","fsozxwub":1846442069729218560,"hdwpiwnqgex":1,"hgoxer":"1","ibqohki":"home_open(cold)","jzxfbvojwg":"1","lovfchcehwx":"day","lpxlfylpdvv":100,"owuyhb":"Splash","uewlmauz":"0","xvthivk":"day","zawjmcv":"Admob"}]}
-                     */
+
 
                     private EfkqmycrBean efkqmycr;
 
@@ -222,12 +198,7 @@ public class CommonViewModel implements Serializable{
                     }
 
                     public static class EfkqmycrBean {
-                        /**
-                         * elsrdirykp : success
-                         * ryxjya : true
-                         * szvrcilxij : 200
-                         * uiiugudcealz : [{"cfjhgzdfa":"1","cfzmyjoj":1846435010288422912,"evtpohd":100,"fayiiebmhdhz":"ca-app-pub-3940256099942544/9257395921","fsozxwub":1846442069729218560,"hdwpiwnqgex":1,"hgoxer":"1","ibqohki":"home_open(cold)","jzxfbvojwg":"1","lovfchcehwx":"day","lpxlfylpdvv":100,"owuyhb":"Splash","uewlmauz":"0","xvthivk":"day","zawjmcv":"Admob"}]
-                         */
+
 
                         private String elsrdirykp;
                         private boolean ryxjya;
@@ -267,23 +238,7 @@ public class CommonViewModel implements Serializable{
                         }
 
                         public static class UiiugudcealzBean {
-                            /**
-                             * cfjhgzdfa : 1
-                             * cfzmyjoj : 1846435010288422912
-                             * evtpohd : 100
-                             * fayiiebmhdhz : ca-app-pub-3940256099942544/9257395921
-                             * fsozxwub : 1846442069729218560
-                             * hdwpiwnqgex : 1
-                             * hgoxer : 1
-                             * ibqohki : home_open(cold)
-                             * jzxfbvojwg : 1
-                             * lovfchcehwx : day
-                             * lpxlfylpdvv : 100
-                             * owuyhb : Splash
-                             * uewlmauz : 0
-                             * xvthivk : day
-                             * zawjmcv : Admob
-                             */
+
 
                             private String cfjhgzdfa;
                             private long cfzmyjoj;

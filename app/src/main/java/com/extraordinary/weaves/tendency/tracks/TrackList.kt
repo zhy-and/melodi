@@ -50,6 +50,15 @@ import com.extraordinary.interstings.studios.utils.searchInter
 import com.extraordinary.interstings.studios.utils.styleListInter
 import com.extraordinary.interstings.studios.utils.trackListBanner
 import com.extraordinary.interstings.studios.utils.trackListInter
+import com.extraordinary.weaves.tendency.dialog.event_one_play_bar
+import com.extraordinary.weaves.tendency.dialog.event_two_albums_2
+import com.extraordinary.weaves.tendency.dialog.event_two_artists_2
+import com.extraordinary.weaves.tendency.dialog.event_two_playlist_track2
+import com.extraordinary.weaves.tendency.dialog.event_two_playlists_2
+import com.extraordinary.weaves.tendency.dialog.event_two_privacy_policy_setting
+import com.extraordinary.weaves.tendency.dialog.event_two_search_2
+import com.extraordinary.weaves.tendency.dialog.event_two_styles_2
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import dora.util.ToastUtils
 
 class TrackList : baseActivity() {
@@ -76,6 +85,8 @@ class TrackList : baseActivity() {
             titleContent.text = "Tracks"
             searchBtn.visibility = View.VISIBLE
             searchBtn.setOnClickListener {
+                logMusicEvents(event_two_search_2)
+
                 startInterActivity(Intent(this@TrackList, AppSearch::class.java), searchInter())
             }
         }
@@ -106,15 +117,23 @@ class TrackList : baseActivity() {
             startInterActivity(Intent(this, TrackList::class.java),trackListInter())
         }
         trackListViewBinding.rlAlbums.setOnClickListener {
+            logMusicEvents(event_two_albums_2)
+
             startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter())
         }
         trackListViewBinding.rlArtist.setOnClickListener {
+            logMusicEvents(event_two_artists_2)
+
             startInterActivity(Intent(this, AppArtistList::class.java), artistListInter())
         }
         trackListViewBinding.rlPlayList.setOnClickListener {
+            logMusicEvents(event_two_playlists_2)
+
             startInterActivity(Intent(this, AppGeDanList::class.java), geDanListInter())
         }
         trackListViewBinding.rlStyles.setOnClickListener {
+            logMusicEvents(event_two_styles_2)
+
             startInterActivity(Intent(this, AppStyleList::class.java), styleListInter())
         }
         trackListViewBinding.scan.setOnClickListener {
@@ -123,21 +142,31 @@ class TrackList : baseActivity() {
         trackListViewBinding.btnHomeBottomPlay.setOnClickListener {
             showPlay(false)
             mediaManager?.replay()
+            logMusicEvents(event_one_play_bar)
+
         }
         trackListViewBinding.btnHomeBottomPause.setOnClickListener {
             showPlay(true)
             mediaManager?.pause()
+            logMusicEvents(event_one_play_bar)
+
         }
         trackListViewBinding.btnHomeBottomMenu.setOnClickListener {
             startInterActivity(Intent(this, AppPlayerList::class.java), queueInter())
+            logMusicEvents(event_one_play_bar)
+
         }
         trackListViewBinding.bottomMusic.setOnClickListener {
             startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
+            logMusicEvents(event_one_play_bar)
+
         }
         trackListViewBinding.albumsOne.setOnClickListener {
             startInterActivity(Intent(this@TrackList, AppGeDanDetail::class.java).apply {
                 putExtra("style",9)
             }, geDanDetInter())
+            logMusicEvents(event_two_playlist_track2)
+
         }
 
 
@@ -145,11 +174,15 @@ class TrackList : baseActivity() {
             startInterActivity(Intent(this@TrackList, AppGeDanDetail::class.java).apply {
                 putExtra("style",8)
             }, geDanDetInter())
+            logMusicEvents(event_two_playlist_track2)
+
         }
         trackListViewBinding.albumsThr.setOnClickListener {
             startInterActivity(Intent(this@TrackList, AppGeDanDetail::class.java).apply {
                 putExtra("style",11)
             }, geDanDetInter())
+            logMusicEvents(event_two_playlist_track2)
+
         }
         checkEmpty()
     }

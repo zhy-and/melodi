@@ -21,6 +21,9 @@ import com.blankj.utilcode.util.LogUtils
 import com.extraordinary.interstings.studios.goodads.MainHomeStudy
 import com.extraordinary.interstings.studios.utils.scansInter
 import com.extraordinary.interstings.studios.utils.settingsInter
+import com.extraordinary.weaves.tendency.dialog.event_th_start_scan
+import com.extraordinary.weaves.tendency.dialog.event_th_tracks_r
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import dora.util.ThreadUtils
 import dora.util.ToastUtils
 import java.util.concurrent.Executors
@@ -41,6 +44,8 @@ class ScanPage : baseActivity() {
         binding.title.titleContent.text = "Scan Music"
         binding.title.backBtn.setOnClickListener { speFinish() }
         binding.scan.setOnClickListener {
+            logMusicEvents(event_th_start_scan)
+
             initPermission()
         }
     }

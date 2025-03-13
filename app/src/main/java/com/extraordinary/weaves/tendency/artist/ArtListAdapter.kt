@@ -25,6 +25,13 @@ import com.blankj.utilcode.util.LogUtils
 import com.extraordinary.interstings.studios.utils.albumDetInter
 import com.extraordinary.interstings.studios.utils.artistDetInter
 import com.extraordinary.interstings.studios.utils.playViewsInter
+import com.extraordinary.weaves.tendency.dialog.event_th_artists_r
+import com.extraordinary.weaves.tendency.dialog.event_th_playlists_no
+import com.extraordinary.weaves.tendency.dialog.event_two_album_artist2
+import com.extraordinary.weaves.tendency.dialog.event_two_album_click
+import com.extraordinary.weaves.tendency.dialog.event_two_artist_click
+import com.extraordinary.weaves.tendency.dialog.event_two_artist_edit
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import dora.util.ToastUtils
 
 
@@ -70,6 +77,8 @@ class ArtListAdapter(
         }
         holder.menus.setOnClickListener {
             if (defaultType == 3){
+                logMusicEvents(event_th_artists_r)
+
                 goArtDet(createBean)
                 return@setOnClickListener
             }
@@ -77,6 +86,9 @@ class ArtListAdapter(
                 return@setOnClickListener
             }
             try {
+                if (defaultType == 5){
+                    logMusicEvents(event_two_artist_edit)
+                }
                 showComDialog(ctx, R.layout.item_popup_feed).apply {
                     findViewById<View>(R.id.play_art)?.visibility = View.GONE
                     findViewById<View>(R.id.play_delete)?.visibility = View.GONE
@@ -146,6 +158,11 @@ class ArtListAdapter(
             }
         }
         holder.itemView.setOnClickListener {
+            if (defaultType != 3){
+                logMusicEvents(event_two_artist_click)
+            }else{
+                logMusicEvents(event_th_artists_r)
+            }
             holder.itemView.context.apply {
                 goArtDet(createBean)
 

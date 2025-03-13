@@ -18,6 +18,12 @@ import com.extraordinary.weaves.tendency.bean.Album
 import com.extraordinary.weaves.tendency.bean.Music
 import com.extraordinary.weaves.tendency.detail.AppAlbumDetail
 import com.extraordinary.weaves.tendency.detail.AppArtDetail
+import com.extraordinary.weaves.tendency.dialog.event_th_albums_r
+import com.extraordinary.weaves.tendency.dialog.event_th_artists_r
+import com.extraordinary.weaves.tendency.dialog.event_two_album_click
+import com.extraordinary.weaves.tendency.dialog.event_two_album_edit
+import com.extraordinary.weaves.tendency.dialog.event_two_style_album2
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.extraordinary.weaves.tendency.dialog.showComDialog
 import com.extraordinary.weaves.tendency.player.PlayerView
 import dora.db.builder.QueryBuilder
@@ -69,10 +75,13 @@ class AlbumListAdapter(
         holder.menus.setOnClickListener {
             if (defaultType == 3){
                 goAlbumDet(createBean)
+                logMusicEvents(event_th_albums_r)
                 return@setOnClickListener
             }
             if (checkFinish()) return@setOnClickListener
             try {
+                logMusicEvents(event_two_album_edit)
+
                 showComDialog(ctx, R.layout.item_popup_feed).apply {
                     findViewById<View>(R.id.play_album)?.visibility = View.GONE
                     findViewById<View>(R.id.play_delete)?.visibility = View.GONE
@@ -138,6 +147,11 @@ class AlbumListAdapter(
 
 
         holder.itemView.setOnClickListener {
+            if (defaultType != 3){
+                logMusicEvents(event_two_album_click)
+            }else{
+                logMusicEvents(event_th_albums_r)
+            }
             holder.itemView.context.apply {
                 goAlbumDet(createBean)
             }
