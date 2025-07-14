@@ -433,7 +433,7 @@ class MainHomeStudy {
             }
         }
         interstitialAd?.setOnPaidEventListener {
-            valueUpload(it,"Interstitial", interstitialAd.adUnitId)
+            valueUpload(it,"Interstitial", interstitialAd.adUnitId,pos)
         }
 
     }
@@ -564,7 +564,7 @@ class MainHomeStudy {
             val loader = AdLoader.Builder(context, unitVoxyId)
                 .forNativeAd { nativeAd ->
                     nativeAd.setOnPaidEventListener {
-                        valueUpload(it,"Native",unitVoxyId)
+                        valueUpload(it,"Native",unitVoxyId,postion)
                     }
                     if (weavesMusicNatPools) {
                         LogUtils.e( "result ad load suc${unitVoxyId}curr pos is ${CommonStudyUtils.basicInfoLog(postion)}")

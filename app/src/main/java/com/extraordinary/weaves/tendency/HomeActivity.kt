@@ -153,13 +153,8 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
             logMusicEvents(event_one_tracks_home)
 
         }
-
-
-
-
         binding.rlAlbums.setOnClickListener {
             isCanShow = true
-
 //            startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter())
             startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter(),false)
             logMusicEvents(event_one_albums_home)

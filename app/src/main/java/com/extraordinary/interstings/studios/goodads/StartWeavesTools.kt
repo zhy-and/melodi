@@ -203,7 +203,7 @@ class StartWeavesTools{
                 }
             }
         weavesObj?.setOnPaidEventListener {
-                valueUpload(it, "Appopen",startIds)
+                valueUpload(it, "Appopen",startIds,pos)
         }
         startIsShowing = true
         weavesObj?.show(context)

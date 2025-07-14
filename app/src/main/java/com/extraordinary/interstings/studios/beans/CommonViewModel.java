@@ -203,6 +203,16 @@ public class CommonViewModel implements Serializable{
                         private String elsrdirykp;
                         private boolean ryxjya;
                         private int szvrcilxij;
+
+                        public int getGcn() {
+                            return gcn;
+                        }
+
+                        public void setGcn(int gcn) {
+                            this.gcn = gcn;
+                        }
+
+                        private int gcn;
                         private List<UiiugudcealzBean> uiiugudcealz;
 
                         public String getElsrdirykp() {

@@ -1,5 +1,6 @@
 package com.extraordinary.weaves.tendency.application
 
+import android.app.Activity
 import android.text.TextUtils
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
@@ -19,6 +20,12 @@ import com.tencent.mmkv.MMKV
 import dora.BaseApplication
 import dora.db.Orm
 import dora.db.OrmConfig
+import com.appsflyer.AppsFlyerLib
+import com.appsflyer.AppsFlyerProperties
+import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.Utils
+import com.extraordinary.interstings.studios.utils.CommonStudyUtils.weaveLauStatus
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
 
 /**
  *
@@ -52,6 +59,7 @@ class GlobalMusApp : BaseApplication(), AppConfig {
     }
     private fun initReferInfos() {
         try {
+
             referrerClient = InstallReferrerClient.newBuilder(this).build()
             referrerClient?.startConnection(object : InstallReferrerStateListener {
                 override fun onInstallReferrerSetupFinished(responseCode: Int) {
@@ -91,16 +99,42 @@ class GlobalMusApp : BaseApplication(), AppConfig {
                     // Google Play by calling the startConnection() method.
                 }
             })
+            if (TextUtils.isEmpty(MMKV.defaultMMKV().getString("ad_id",""))){
+                Thread{
+                    val adInfo = AdvertisingIdClient.getAdvertisingIdInfo(this)
+                    adInfo?.id?.let {
+                        MMKV.defaultMMKV().putString("ad_id",it)
+                    }
+                }.start()
+            }
+            AppUtils.registerAppStatusChangedListener(object : Utils.OnAppStatusChangedListener{
+                override fun onForeground(activity: Activity?) {
+
+                }
+
+                override fun onBackground(activity: Activity?) {
+                    weaveLauStatus = false
+                }
+            })
         }catch (e : Exception){
             e.printStackTrace()
         }
     }
     private fun init() {
+        weaveLauStatus = true
+        initAF()
         MMKV.initialize(this)
         initDb()    // 初始化SQLite数据库的表
         initMedia() // 初始化媒体管理器
         LogUtils.getConfig().isLogSwitch = false
         initManager()
+    }
+
+    private fun initAF() {
+//        AppsFlyerLib.getInstance().setDebugLog(true)
+        AppsFlyerLib.getInstance().init("PHgNNUUFqYqzC5S9NAop7N", null, this)
+        AppsFlyerLib.getInstance().start(this)
+
     }
 
     private fun initManager() {

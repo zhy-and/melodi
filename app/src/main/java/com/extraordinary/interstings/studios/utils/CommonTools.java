@@ -6,14 +6,17 @@ import static com.extraordinary.interstings.studios.utils.NativeKt.MMKV_COEFS;
 import static com.extraordinary.interstings.studios.utils.NativeKt.MMKV_SYS;
 import static com.extraordinary.interstings.studios.utils.NativeKt.MMKV_LINES;
 
-import com.blankj.utilcode.util.LogUtils;
+import com.appsflyer.AdRevenueScheme;
 import com.extraordinary.interstings.studios.services.ApiStudios;
 import com.extraordinary.weaves.tendency.application.GlobalMusApp;
-import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.ads.AdValue;
 import com.tencent.mmkv.MMKV;
-
+import com.appsflyer.AFAdRevenueData;
+import com.appsflyer.MediationNetwork;
+import com.appsflyer.AppsFlyerLib;
+import java.util.HashMap;
+import java.util.Map;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -26,7 +29,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import java.util.Currency;
-import java.util.HashMap;
+
 import android.annotation.SuppressLint;
 
 
@@ -109,8 +112,10 @@ public class CommonTools {
 //        logger.logPurchase(new BigDecimal(purchase).divide(new BigDecimal(1000000.0)), Currency.getInstance(currencyCode));
 //    }
 
-    public static void valueUpload(AdValue adValue, String adType, String adId) {
+    public static void valueUpload(AdValue adValue, String adType, String adId,Long pos) {
         try {
+
+            initAFEvents(adValue,adId,adType);
             double configValues = 0;
             long distanceTimes = Long.parseLong(MMKV.defaultMMKV().getString(MMKV_SYS,"100"));
             if (System.currentTimeMillis() -  CommonStudyUtils.INSTANCE.getInstallSys() <=  (distanceTimes * 60 * 60 * 1000)) {
@@ -126,11 +131,32 @@ public class CommonTools {
                 }
             } else {
             }
-            ApiStudios.Companion.handleValues(adId,adType,adValue,configValues);
+            ApiStudios.Companion.handleValues(adId,adType,adValue,configValues,pos);
 
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private static void initAFEvents(AdValue adValue, String adId, String adType) {
+
+        AppsFlyerLib appsflyer = AppsFlyerLib.getInstance();
+
+// Create an instance of AFAdRevenueData
+        AFAdRevenueData adRevenueData = new AFAdRevenueData(
+                "admob",       // monetizationNetwork
+                MediationNetwork.GOOGLE_ADMOB, // mediationNetwork
+                "USD",           // currencyIso4217Code
+              new BigDecimal(String.valueOf(adValue.getValueMicros())).divide(new BigDecimal(1000000.0)).doubleValue()          // revenue
+//           1000     // revenue
+        );
+
+        Map<String, Object> additionalParameters = new HashMap<>();
+        additionalParameters.put(AdRevenueScheme.COUNTRY, getCountryInfo(GlobalMusApp.Companion.getInstance()));
+        additionalParameters.put(AdRevenueScheme.AD_UNIT, adId);
+        additionalParameters.put(AdRevenueScheme.AD_TYPE, adType);
+
+        appsflyer.logAdRevenue(adRevenueData, additionalParameters);
     }
 
 

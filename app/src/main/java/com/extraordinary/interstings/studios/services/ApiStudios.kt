@@ -2,6 +2,7 @@ package com.extraordinary.interstings.studios.services
 
 import android.content.Intent
 import android.os.Build
+import android.text.TextUtils
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.JsonUtils
@@ -23,6 +24,7 @@ import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFRESH
 import com.extraordinary.interstings.studios.utils.MMKV_COEFS
 import com.extraordinary.interstings.studios.utils.MMKV_SYS
 import com.extraordinary.interstings.studios.utils.MMKV_LINES
+import com.extraordinary.interstings.studios.utils.musColdStart
 import com.extraordinary.interstings.studios.workmanager.CommonRequestTools
 import com.extraordinary.interstings.studios.workmanager.TransSpesInters
 import com.extraordinary.weaves.tendency.AppStart.Companion.ouUserIsCallBack
@@ -51,7 +53,7 @@ class ApiStudios {
             }&fkossfbtweikm=${commonUniIds()}"
 
         var value_info =
-            "${commonConfig()}/shard/ground/weblogic/edc/logBook/saving"
+            "${commonConfig()}/muanpw/ozzyj/csqrub/rendition2/umnvx"
 
 
         val app_info =
@@ -130,28 +132,31 @@ class ApiStudios {
                 }
             }
             getProductInfos()
-            installEventsUpload()
         }
 
 
 
-        private fun jsonInfo(value: AdValue, adId: String, adsType: String, fbIpValue: Double): String? {
+        private fun jsonInfo(value: AdValue, adId: String, adsType: String, fbIpValue: Double,pos: Long): String? {
             val catPa: HashMap<String, String> = java.util.HashMap()
             try {
-                catPa["ukpftne"] = adId.replace("/","-")
-                catPa["hpcglvecibwfy"] =  "Show"
-                catPa["qsnfwhubrfsw"] = if(CommonStudyUtils.weaveLauStatus)"Cold" else("Warm")
-                catPa["ilerobbxgh"] = adsType
-                catPa["icfntudf"] = value.valueMicros.toString()
-                catPa["xdwemjn"] = value.currencyCode
-                catPa["lwuhpkcjpyv"] = value.precisionType.toString()
-                catPa["myxntynkf"] =  getCountryInfo(
+                catPa["xukqep"] = adId.replace("/","-")
+                catPa["daah"] =  "Show"
+                catPa["snbg"] = if(CommonStudyUtils.weaveLauStatus)"Cold" else("Warm")
+                catPa["ehtpzm"] = adsType
+                catPa["acxv"] = pos.toString()
+                catPa["miu"] = value.valueMicros.toString()
+                catPa["rbto"] = value.currencyCode
+                catPa["ctacw"] = value.precisionType.toString()
+                catPa["dbbi"] =  getCountryInfo(
                     GlobalMusApp.instance
                 ).lowercase()
+                catPa["zwh"] = "AdMob"
+
                 catPa["musicFInstall"] =  getInstallSys().toString()
                 catPa["musicFValue"] = fbIpValue.toString()
                 catPa["musicFOpens"] = MMKV.defaultMMKV().getLong("first_open",0L).toString()
                 catPa["musicPastTm"] = ((System.currentTimeMillis() - getInstallSys()) / 1000).toString()
+
                 return catPa.toString()
             }catch (e : Exception){
                 e.printStackTrace()
@@ -160,10 +165,22 @@ class ApiStudios {
             return catPa.toString()
         }
 
-        fun handleValues(adsId: String, type: String, value: AdValue, fbIpValue: Double){
+        private fun lauArgs(): String? {
+            val catPa: HashMap<String, String> = java.util.HashMap()
+            try {
+                catPa["snbg"] = if(CommonStudyUtils.weaveLauStatus)"Cold" else("Warm")
+                return catPa.toString()
+            }catch (e : Exception){
+                e.printStackTrace()
+            }
+
+            return catPa.toString()
+        }
+
+        fun handleValues(adsId: String, type: String, value: AdValue, fbIpValue: Double,pos: Long){
             try {
                 CommonRequestTools.get().upValues(
-                    stringHashMap(adsId, type, value, fbIpValue),
+                    stringHashMap(adsId, type, value, fbIpValue,pos),
                     value_info,
                     object : TransSpesInters.BasicRequestListener {
 
@@ -199,7 +216,25 @@ class ApiStudios {
                             }
 
                             override fun loadSuccessConfig(configInfo: String) {
-                                MMKV.defaultMMKV().putBoolean("install_event",true)
+//                                LogUtils.e(configInfo)
+                                try {
+                                    Gson().fromJson(
+                                        configInfo,
+                                        CommonViewModel::class.java
+                                    )?.run {
+                                        if (yvbgjmfbteobho != null && yvbgjmfbteobho.xgyvsjeazyn != null && yvbgjmfbteobho.xgyvsjeazyn.vscruffsqgprwa != null
+                                            &&  yvbgjmfbteobho.xgyvsjeazyn.vscruffsqgprwa.nyjxynieiu != null &&
+                                            yvbgjmfbteobho.xgyvsjeazyn.vscruffsqgprwa.nyjxynieiu.isNotEmpty() &&
+                                            yvbgjmfbteobho.xgyvsjeazyn.vscruffsqgprwa.nyjxynieiu[0].efkqmycr != null &&
+                                            yvbgjmfbteobho.xgyvsjeazyn.vscruffsqgprwa.nyjxynieiu[0].efkqmycr.gcn == 200) {
+                                            MMKV.defaultMMKV().putBoolean("install_event",true)
+//                                            LogUtils.e("install_event suc -----")
+                                        }
+                                    }
+                                }catch (e : Exception){
+                                    e.printStackTrace()
+                                }
+
                             }
 
 
@@ -211,34 +246,60 @@ class ApiStudios {
             }
 
         }
+
+
+        fun lauchEventsUpload(){
+            try {
+                    CommonRequestTools.get().upValues(
+                        lauchEvents(),
+                        value_info,
+                        object : TransSpesInters.BasicRequestListener {
+
+                            override fun loadFailed(message: String) {
+
+                            }
+
+                            override fun loadSuccessConfig(configInfo: String) {
+                            }
+
+
+                        })
+
+            }catch (e : Exception){
+                e.printStackTrace()
+            }
+
+        }
         private fun stringHashMap(
             adsId: String,
             adsType: String,
-            value: AdValue, fbIpValue: Double
+            value: AdValue, fbIpValue: Double,pos: Long
         ): HashMap<String, String> {
             val stringStringHashMap: HashMap<String, String> = java.util.HashMap()
             try {
-                stringStringHashMap["dppkptxndmx"] = AppUtils.getAppName()
-                stringStringHashMap["sikrappt"] = "Android"
-                stringStringHashMap["trwzbv"] = Build.MODEL
-                stringStringHashMap["tkrexyg"] = "10001"
-                stringStringHashMap["ezepfefmz"] = ""+System.currentTimeMillis()
-                stringStringHashMap["dvgifjyicaj"] = ""+System.currentTimeMillis()
-                stringStringHashMap["dunlda"] = ActivityUtils.getTopActivity().localClassName
-                stringStringHashMap["lrrlox"] = MMKV.defaultMMKV().getString(MUSIC_CONSTANT_APP_REFER_INFO,"")+""
-                stringStringHashMap["tjlgkz"] =  JsonUtils.formatJson(jsonInfo(
+                stringStringHashMap["gxooeg"] = AppUtils.getAppName()
+                stringStringHashMap["bhc"] = "Android"
+                stringStringHashMap["qoy"] = Build.BRAND
+                stringStringHashMap["twudq"] = Build.MODEL
+                stringStringHashMap["icxpb"] = "10001"
+                stringStringHashMap["cod"] = ""+System.currentTimeMillis()
+                stringStringHashMap["rwxv"] = ActivityUtils.getTopActivity().localClassName
+                stringStringHashMap["gkwgi"] = MMKV.defaultMMKV().getString(MUSIC_CONSTANT_APP_REFER_INFO,"")+""
+                stringStringHashMap["bfdoc"] =  JsonUtils.formatJson(jsonInfo(
                     value,
                     adsId,
                     adsType,
-                    fbIpValue
+                    fbIpValue,pos
                 ))
-                stringStringHashMap["znddwtnxae"] = commonUniIds()
-                stringStringHashMap["vmafwyxxq"] = "" +   loadIds(
+                stringStringHashMap["wnysk"] = commonUniIds()
+                stringStringHashMap["kfrfw"] = "" +   loadIds(
                     GlobalMusApp.instance
                 )
-                stringStringHashMap["njnfqva"] = Build.VERSION.RELEASE
-                stringStringHashMap["pzhdjs"] = Build.MODEL
-                stringStringHashMap["cywuhlkmm"] = AppUtils.getAppVersionName()
+                stringStringHashMap["rgcv"] = Build.VERSION.RELEASE
+                stringStringHashMap["jtetd"] = AppUtils.getAppVersionName()
+                if(!TextUtils.isEmpty(MMKV.defaultMMKV().getString("ad_id",""))){
+                    stringStringHashMap["quoo"] = MMKV.defaultMMKV().getString("ad_id","")+""
+                }
                 LogUtils.e(stringStringHashMap.toString())
                 return stringStringHashMap
             }catch (e : Exception){
@@ -253,23 +314,56 @@ class ApiStudios {
         ): HashMap<String, String> {
             val stringStringHashMap: HashMap<String, String> = java.util.HashMap()
             try {
-                stringStringHashMap["dppkptxndmx"] = AppUtils.getAppName()
-                stringStringHashMap["sikrappt"] = "Android"
-                stringStringHashMap["trwzbv"] = Build.MODEL
-                stringStringHashMap["tkrexyg"] = "10003"
-                stringStringHashMap["ezepfefmz"] = ""+System.currentTimeMillis()
-                stringStringHashMap["dvgifjyicaj"] = ""+System.currentTimeMillis()
-                stringStringHashMap["dunlda"] = ActivityUtils.getTopActivity().localClassName
-                stringStringHashMap["lrrlox"] = MMKV.defaultMMKV().getString(MUSIC_CONSTANT_APP_REFER_INFO,"")+""
-                stringStringHashMap["znddwtnxae"] = commonUniIds()
-                stringStringHashMap["vmafwyxxq"] = "" +   loadIds(
+                stringStringHashMap["gxooeg"] = AppUtils.getAppName()
+                stringStringHashMap["bhc"] = "Android"
+                stringStringHashMap["qoy"] = Build.BRAND
+                stringStringHashMap["twudq"] = Build.MODEL
+                stringStringHashMap["icxpb"] = "10003"
+                stringStringHashMap["cod"] = ""+System.currentTimeMillis()
+                stringStringHashMap["rwxv"] = ActivityUtils.getTopActivity().localClassName
+                stringStringHashMap["gkwgi"] = MMKV.defaultMMKV().getString(MUSIC_CONSTANT_APP_REFER_INFO,"")+""
+                stringStringHashMap["wnysk"] = commonUniIds()
+                stringStringHashMap["kfrfw"] = "" +   loadIds(
                     GlobalMusApp.instance
                 )
-                stringStringHashMap["njnfqva"] = Build.VERSION.RELEASE
-                stringStringHashMap["pzhdjs"] = Build.MODEL
-                stringStringHashMap["cywuhlkmm"] = AppUtils.getAppVersionName()
+                stringStringHashMap["rgcv"] = Build.VERSION.RELEASE
+                stringStringHashMap["jtetd"] = AppUtils.getAppVersionName()
+                if(!TextUtils.isEmpty(MMKV.defaultMMKV().getString("ad_id",""))){
+                    stringStringHashMap["quoo"] = MMKV.defaultMMKV().getString("ad_id","")+""
+                }
                 LogUtils.e(stringStringHashMap.toString())
-                return stringStringHashMap
+            }catch (e : Exception){
+                e.printStackTrace()
+            }
+            return stringStringHashMap
+        }
+
+
+        private fun lauchEvents(
+
+        ): HashMap<String, String> {
+            val stringStringHashMap: HashMap<String, String> = java.util.HashMap()
+            try {
+                stringStringHashMap["gxooeg"] = AppUtils.getAppName()
+                stringStringHashMap["bhc"] = "Android"
+                stringStringHashMap["qoy"] = Build.BRAND
+                stringStringHashMap["twudq"] = Build.MODEL
+                stringStringHashMap["icxpb"] = "10005"
+                stringStringHashMap["cod"] = ""+System.currentTimeMillis()
+                stringStringHashMap["rwxv"] = ActivityUtils.getTopActivity().localClassName
+                stringStringHashMap["gkwgi"] = MMKV.defaultMMKV().getString(MUSIC_CONSTANT_APP_REFER_INFO,"")+""
+                stringStringHashMap["wnysk"] = commonUniIds()
+                stringStringHashMap["kfrfw"] = "" +   loadIds(
+                    GlobalMusApp.instance
+                )
+                stringStringHashMap["rgcv"] = Build.VERSION.RELEASE
+                stringStringHashMap["bfdoc"] =  JsonUtils.formatJson(lauArgs())
+                stringStringHashMap["jtetd"] = AppUtils.getAppVersionName()
+                if(!TextUtils.isEmpty(MMKV.defaultMMKV().getString("ad_id",""))){
+                    stringStringHashMap["quoo"] = MMKV.defaultMMKV().getString("ad_id","")+""
+                }
+                stringStringHashMap["etqpmn"] =  System.currentTimeMillis().toString()+ loadIds(GlobalMusApp.instance)
+                LogUtils.e(stringStringHashMap.toString())
             }catch (e : Exception){
                 e.printStackTrace()
             }
@@ -338,6 +432,7 @@ class ApiStudios {
                                                 MUSIC_CONSTANT_APP_AD_CACHE_TM,
                                                 System.currentTimeMillis()
                                             )
+
                                         }
                                         MainHomeStudy.homeStudy.initMusConfig(view,flag)
                                     } else {
@@ -440,6 +535,7 @@ class ApiStudios {
                         }
                     })
             }
+            installEventsUpload()
         }
 
 

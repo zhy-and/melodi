@@ -10,6 +10,7 @@ import com.blankj.utilcode.util.ThreadUtils
 import com.extraordinary.interstings.studios.beans.ViewModelRemove
 import com.extraordinary.interstings.studios.goodads.GoogleMobileAdsConsentManager
 import com.extraordinary.interstings.studios.goodads.MainHomeStudy
+import com.extraordinary.interstings.studios.services.ApiStudios.Companion.lauchEventsUpload
 import com.extraordinary.interstings.studios.services.ApiStudios.Companion.loadBaseInfos
 import com.extraordinary.interstings.studios.utils.CommonStudyUtils
 import com.extraordinary.interstings.studios.utils.checkOUsers
@@ -89,6 +90,7 @@ class AppStart : baseActivity() {
                 EventBus.getDefault().register(this)
             }
             loadBaseInfos(this,false)
+            lauchEventsUpload()
         }catch (e : Exception){
             e.printStackTrace()
         }
