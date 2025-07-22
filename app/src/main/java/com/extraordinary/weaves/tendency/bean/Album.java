@@ -20,7 +20,13 @@ import dora.db.table.Table;
  */
 @Table("album")
 public class Album implements OrmTable, Parcelable, Sort {
-
+    public Album copy() {
+        Album album = new Album();
+        album.album_name = this.album_name;
+        album.album_id = this.album_id;
+        album.number_of_songs = this.number_of_songs;
+        return album;
+    }
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_ALBUM_NAME = "album_name";
     public static final String COLUMN_ALBUM_ID = "album_id";

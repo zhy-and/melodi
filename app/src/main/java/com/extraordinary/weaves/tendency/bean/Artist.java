@@ -20,7 +20,14 @@ import dora.db.table.Table;
  */
 @Table("artist")
 public class Artist implements OrmTable, Parcelable, Sort {
-
+    public Artist copy() {
+        Artist artist = new Artist();
+        artist.id = this.id;
+        artist.name = this.name;
+        artist.number_of_tracks = this.number_of_tracks;
+        artist.sortLetter = this.sortLetter;
+        return artist;
+    }
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_ARTIST_NAME = "artist_name";
     public static final String COLUMN_NUMBER_OF_TRACKS = "number_of_tracks";

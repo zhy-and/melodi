@@ -228,7 +228,7 @@ class AppArtistList : baseActivity(){
         mediaManager = GlobalMusApp.instance!!.mediaManager!!
 
         if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
-            checkPermission()
+//            checkPermission()
 
             LiveEventBus
                 .get(AppEvent.REFRESH_NAME, String::class.java)
@@ -244,9 +244,8 @@ class AppArtistList : baseActivity(){
                         e.printStackTrace()
                     }
                 }
-        }else{
-           initRecyleList()
         }
+        initRecyleList()
         checkEmpty()
         binding.rlTrack.setOnClickListener {
             startInterActivity(Intent(this, TrackList::class.java),trackListInter())

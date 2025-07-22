@@ -41,6 +41,14 @@ class AppStart : baseActivity() {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
         try {
+            ImmersionBar.with(this)
+                .transparentStatusBar()
+                .transparentNavigationBar()
+                .fullScreen(true)
+                .init()
+            modeBinding = StartModeBinding.inflate(layoutInflater)
+            setContentView(modeBinding.root)
+            loadHomeConfig()
             if (MMKV.defaultMMKV().getLong("first_open",0L) == 0L){
                 MMKV.defaultMMKV().putLong("first_open",System.currentTimeMillis())
             }
@@ -55,13 +63,7 @@ class AppStart : baseActivity() {
         }catch (e : Exception){
             e.printStackTrace()
         }
-        ImmersionBar.with(this)
-            .transparentStatusBar()
-            .transparentNavigationBar()
-            .fullScreen(true)
-            .init()
-        modeBinding = StartModeBinding.inflate(layoutInflater)
-        setContentView(modeBinding.root)
+
         if (!checkOUsers()){
             ouUserIsCallBack = true
         }

@@ -22,9 +22,9 @@ private fun scanMusic() {
             try {
                 GlobalMusApp.instance?.let {
                     val playlist = MusicScanner.scan(it) as MutableList<Music>
-                    for (i in playlist){
-                        LogUtils.e(""+i.songId+"---"+i.albumId+"name ="+i.musicName+"dura ="+i.duration+"art ="+i.artist)
-                    }
+//                    for (i in playlist){
+//                        LogUtils.e(""+i.songId+"---"+i.albumId+"name ="+i.musicName+"dura ="+i.duration+"art ="+i.artist)
+//                    }
                     logMusicEvents("other_scan_count",playlist.size.toString())
                     GlobalMusApp.instance?.mediaManager?.refreshPlaylist(playlist)
                     prepareSongs(playlist)

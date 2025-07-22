@@ -171,7 +171,7 @@ class AppGeDanList : baseActivity(){
 
         }
         if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
-            checkPermission()
+//            checkPermission()
             LiveEventBus
                 .get(AppEvent.REFRESH_NAME, String::class.java)
                 .observe(this) {
@@ -187,9 +187,10 @@ class AppGeDanList : baseActivity(){
                     }
                 }
             //todo
-        }else{
-            mediaManager = GlobalMusApp.instance!!.mediaManager!!
         }
+//        else{
+            mediaManager = GlobalMusApp.instance?.mediaManager?: return
+//        }
         checkEmpty()
         binding.rlTrack.setOnClickListener {
             startInterActivity(Intent(this, TrackList::class.java),trackListInter())
@@ -366,10 +367,11 @@ class AppGeDanList : baseActivity(){
                         }
                     }
                     if (3 < art.selectAll().size){
-                        binding.al3Txt.post {
-                            binding.al3Txt.text = art.selectAll()[3].name
+                        binding.al4Txt.post {
+                            binding.al4Txt.text = art.selectAll()[3].name
                         }
                     }
+
                 }
             }.start()
 

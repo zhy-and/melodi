@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:hardwareAccelerated="true"
         android:name=".application.GlobalMusApp"
         android:networkSecurityConfig="@xml/network_config"
         android:requestLegacyExternalStorage="true"

@@ -200,7 +200,7 @@ class AppAlbumDetail : baseActivity(){
             speFinish()
         }
         if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
-            checkPermission()
+//            checkPermission()
 //            LiveEventBus
 //                .get(ApolloEvent.REFRESH_NAME, String::class.java)
 //                .observe(this) {
@@ -210,9 +210,10 @@ class AppAlbumDetail : baseActivity(){
 //                    startActivity(Intent(this,AppAlbumList::class.java))
 //                    finish()
 //                }
-        }else{
-            initRecyleList()
         }
+//        else{
+            initRecyleList()
+//        }
         if (musicArrayList.isEmpty()){
             binding.recycleHislist.visibility = View.GONE
             binding.noContentPic.visibility = View.VISIBLE
@@ -250,6 +251,8 @@ class AppAlbumDetail : baseActivity(){
                 }
                 logMusicEvents(event_th_album_play)
             }catch (e : Exception){
+                startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
+
                 e.printStackTrace()
             }
 

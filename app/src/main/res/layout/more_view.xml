@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <RelativeLayout
-            android:background="@drawable/settings_shap"
+            android:background="@drawable/setting_bg"
             android:id="@+id/scan_settings"
             android:layout_marginTop="8dp"
             android:layout_marginHorizontal="16dp"
@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:paddingHorizontal="15dp"
             android:layout_marginBottom="15dp"
-            android:layout_height="48dp">
+            android:layout_height="74dp">
 
 
             <TextView
@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Scan music"
-                android:textColor="#FFFFFFFF"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 />
 
@@ -38,7 +38,7 @@
                 android:id="@+id/more"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@mipmap/scan_more"
+                android:src="@mipmap/mores"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -53,7 +53,7 @@
         <RelativeLayout
             android:background="@drawable/settings_shap"
             android:id="@+id/feed_settings"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:layout_marginHorizontal="16dp"
             app:layout_constraintTop_toBottomOf="@id/scan_settings"
             android:layout_width="match_parent"
@@ -93,7 +93,7 @@
         <RelativeLayout
             android:background="@drawable/settings_shap"
             android:id="@+id/pri_settings"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:layout_marginHorizontal="16dp"
             app:layout_constraintTop_toBottomOf="@id/feed_settings"
             android:layout_width="match_parent"

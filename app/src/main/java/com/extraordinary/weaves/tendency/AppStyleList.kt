@@ -259,7 +259,7 @@ class AppStyleList : baseActivity(){
 
         }
         if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
-            checkPermission()
+//            checkPermission()
             LiveEventBus
                 .get(AppEvent.REFRESH_NAME, String::class.java)
                 .observe(this) {
@@ -274,11 +274,12 @@ class AppStyleList : baseActivity(){
                     }
                 }
             //todo
-        }else{
-            mediaManager = GlobalMusApp.instance!!.mediaManager!!
+        }
+//        else{
+            mediaManager = GlobalMusApp.instance?.mediaManager?:return
 
             initRecyleList()
-        }
+//        }
         checkEmpty()
         binding.rlTrack.setOnClickListener {
             startInterActivity(Intent(this, TrackList::class.java),trackListInter())

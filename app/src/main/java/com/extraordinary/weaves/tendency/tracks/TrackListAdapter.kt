@@ -255,11 +255,16 @@ class TrackListAdapter(
                     }else if(type == 6){
                         logMusicEvents(event_th_artist_track)
                     }
-                    GlobalMusApp.instance?.mediaManager?.apply {
-                        refreshPlaylist(musicArrayList)
-                        playById(createBean.songId)
+                    GlobalMusApp.instance?.mediaManager?.also {
+                        if (musicArrayList.isNotEmpty()){
+                            it.refreshPlaylist(musicArrayList)
+                            it.playById(musicArrayList[position].songId)
+                        }
                     }
+
                 }catch (e : Exception){
+                    base?.startInterActivity(Intent(base, PlayerView::class.java), playViewsInter())
+                    base?.finish()
                     e.printStackTrace()
                 }
 

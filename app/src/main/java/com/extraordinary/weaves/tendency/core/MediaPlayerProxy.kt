@@ -316,7 +316,7 @@ class MediaPlayerProxy private constructor(private var audioCachePath: String, /
     companion object {
         private const val LOCALHOST = "127.0.0.1"
         private const val HTTP_PORT = 80
-        private const val SOCKET_TIMEOUT = 5000
+        private const val SOCKET_TIMEOUT = 15000
     }
 
     init {

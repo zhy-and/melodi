@@ -109,10 +109,11 @@ class TrackList : baseActivity() {
                     }
 
                 }
-            initPermission()
-        }else{
-            initRecyleList()
+//            initPermission()
         }
+//        else{
+            initRecyleList()
+//        }
         trackListViewBinding.rlTrack.setOnClickListener {
             startInterActivity(Intent(this, TrackList::class.java),trackListInter())
         }

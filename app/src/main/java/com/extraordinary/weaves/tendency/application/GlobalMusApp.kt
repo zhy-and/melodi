@@ -26,6 +26,7 @@ import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.Utils
 import com.extraordinary.interstings.studios.utils.CommonStudyUtils.weaveLauStatus
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
+import java.net.HttpURLConnection
 
 /**
  *

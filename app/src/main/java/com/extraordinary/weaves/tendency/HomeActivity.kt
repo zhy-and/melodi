@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
+import android.util.Log
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
@@ -57,13 +58,11 @@ import com.extraordinary.weaves.tendency.detail.AppGeDanDetail
 import com.extraordinary.weaves.tendency.dialog.event_one_albums_home
 import com.extraordinary.weaves.tendency.dialog.event_one_artists_home
 import com.extraordinary.weaves.tendency.dialog.event_one_feedback_home
-import com.extraordinary.weaves.tendency.dialog.event_one_for_you_collect
 import com.extraordinary.weaves.tendency.dialog.event_one_most_played
 import com.extraordinary.weaves.tendency.dialog.event_one_most_played_more
 import com.extraordinary.weaves.tendency.dialog.event_one_play_bar
 import com.extraordinary.weaves.tendency.dialog.event_one_play_home
 import com.extraordinary.weaves.tendency.dialog.event_one_playlists_home
-import com.extraordinary.weaves.tendency.dialog.event_one_random_home
 import com.extraordinary.weaves.tendency.dialog.event_one_re_album
 import com.extraordinary.weaves.tendency.dialog.event_one_re_album_more
 import com.extraordinary.weaves.tendency.dialog.event_one_re_artist
@@ -84,6 +83,7 @@ import com.extraordinary.weaves.tendency.dialog.event_permit_scan_agree
 import com.extraordinary.weaves.tendency.dialog.event_permit_scan_refuse
 import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.extraordinary.weaves.tendency.dialog.showComDialog
+import com.extraordinary.weaves.tendency.event.AppEvent
 import com.extraordinary.weaves.tendency.global.AppConfig
 import com.extraordinary.weaves.tendency.manager.MediaManager
 import com.extraordinary.weaves.tendency.player.PlayerView
@@ -91,13 +91,12 @@ import com.extraordinary.weaves.tendency.scan.ScanPage
 import com.extraordinary.weaves.tendency.search.AppSearch
 import com.extraordinary.weaves.tendency.tracks.TrackList
 import com.extraordinary.weaves.tendency.view.AppMoreView
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.gyf.immersionbar.ImmersionBar
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.tencent.mmkv.MMKV
 import dora.db.dao.DaoFactory
 import dora.util.ThreadUtils
@@ -131,17 +130,24 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
         if (!EventBus.getDefault().isRegistered(this)){
             EventBus.getDefault().register(this)
         }
+        loadHomeConfig()
+        initPermission()
         mediaManager = GlobalMusApp.instance?.mediaManager
         mediaManager?.connectService()
         mediaManager?.setOnCompletionListener(this)
-        initPermission()
+//        initPermission()
 //        timer = MusicTimer(mPanHandle)
         binding.bans.apply {
             setAlphaItem(true)
             setLoop()
             adapter = RecyHomeAdapter(string,this@HomeActivity)
         }
-
+        LiveEventBus
+            .get(AppEvent.REFRESH_MUSIC_HOME_JK_REFRESH, String::class.java)
+            .observe(this) {
+                Log.e("status =----","REFRESH_MUSIC_HOME_JK_REFRESH")
+                updateCollectItem()
+            }
         binding.settings.setOnClickListener {
             logMusicEvents(event_one_setting_home)
             isCanShow = true
@@ -208,16 +214,7 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
             }, playViewsInter(),false)
             logMusicEvents(event_one_shuffle_home)
         }
-        binding.playSong.setOnClickListener {
-            logMusicEvents(event_one_play_bar)
 
-            isCanShow = true
-            startInterActivity(Intent(this, PlayerView::class.java).apply {
-                putExtra("play",true)
-            }, playViewsInter(),false)
-            logMusicEvents(event_one_play_home)
-
-        }
         binding.scan.setOnClickListener {
             isCanShow = true
             
@@ -225,11 +222,7 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
             startInterActivity(Intent(this, ScanPage::class.java), scansInter(),false)
             logMusicEvents(event_one_scan_home)
         }
-        binding.feed.setOnClickListener {
-            isCanShow = true
-            startInterActivity(Intent(this, FeedView::class.java), feedBacksInter(),false)
-            logMusicEvents(event_one_feedback_home)
-        }
+
         binding.albumsTitle.setOnClickListener {
             isCanShow = true
             startInterActivity(Intent(this, AppAlbumList::class.java), albumListInter(),false)
@@ -544,37 +537,41 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
      favAdapter?.notifyDataSetChanged()
     }
     private fun initPermission() {
-        if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
-            XXPermissions.with(this).permission(Permission.READ_MEDIA_AUDIO)
-                .request(object :OnPermissionCallback{
-
-                    override fun onGranted(permissions: MutableList<String>, allGranted: Boolean) {
-                        logMusicEvents(event_permit_scan_agree)
-                        checkPostPermission()
-                        if (allGranted) {
-                            MMKV.defaultMMKV().putBoolean("is_first_auth",true)
-                            scanMusic1()
-                        }
-                    }
-                    override fun onDenied(permissions: MutableList<String>, doNotAskAgain: Boolean) {
-                        logMusicEvents(event_permit_scan_refuse)
-
-                        checkPostPermission()
-                        if (doNotAskAgain) {
-                            ToastUtils.showLong(R.string.permission_never_denyd)
-//                        toast("被永久拒绝授权，请手动授予录音和日历权限")
-                            // 如果是被永久拒绝就跳转到应用权限系统设置页面
-//                            XXPermissions.startPermissionActivity(this@HomeActivity, permissions)
-                        } else {
-                            ToastUtils.showLong(R.string.permission_one_denyd)
-//                        toast("获取录音和日历权限失败")
-                        }
-                    }
-                })
-        }else{
+//        if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
+//            XXPermissions.with(this).permission(Permission.READ_MEDIA_AUDIO)
+//                .request(object :OnPermissionCallback{
+//
+//                    override fun onGranted(permissions: MutableList<String>, allGranted: Boolean) {
+//                        logMusicEvents(event_permit_scan_agree)
+//                        checkPostPermission()
+//                        if (allGranted) {
+//                            MMKV.defaultMMKV().putBoolean("is_first_auth",true)
+//                            scanMusic1()
+//                        }
+//                    }
+//                    override fun onDenied(permissions: MutableList<String>, doNotAskAgain: Boolean) {
+//                        logMusicEvents(event_permit_scan_refuse)
+//
+//                        checkPostPermission()
+//                        if (doNotAskAgain) {
+//                            ToastUtils.showLong(R.string.permission_never_denyd)
+////                        toast("被永久拒绝授权，请手动授予录音和日历权限")
+//                            // 如果是被永久拒绝就跳转到应用权限系统设置页面
+////                            XXPermissions.startPermissionActivity(this@HomeActivity, permissions)
+//                        } else {
+//                            ToastUtils.showLong(R.string.permission_one_denyd)
+////                        toast("获取录音和日历权限失败")
+//                        }
+//                    }
+//                })
+//        }else{
             checkPostPermission()
-        }
+//        }
     }
+
+
+
+
 
     private fun checkPostPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !XXPermissions.isGranted(this,Permission.POST_NOTIFICATIONS)) {

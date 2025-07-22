@@ -153,10 +153,11 @@ class AppSearch : baseActivity(){
         binding.title.backBtn.setOnClickListener { speFinish() }
         mediaManager = GlobalMusApp.instance!!.mediaManager!!
         if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
-            checkPermission()
-        }else{
-            initView()
+//            checkPermission()
         }
+//        else{
+            initView()
+//        }
         binding.rlTrack.setOnClickListener {
             startInterActivity(Intent(this, TrackList::class.java),trackListInter())
             logMusicEvents(event_th_tracks_no)

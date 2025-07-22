@@ -121,7 +121,7 @@ class AppArtDetail : baseActivity(){
             speFinish()
         }
         if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
-            checkPermission()
+//            checkPermission()
 //            LiveEventBus
 //                .get(ApolloEvent.REFRESH_NAME, String::class.java)
 //                .observe(this) {
@@ -132,9 +132,10 @@ class AppArtDetail : baseActivity(){
 //                    startActivity(Intent(this,AppArtistList::class.java))
 //                    finish()
 //                }
-        }else{
-            initRecyleList()
         }
+//        else{
+            initRecyleList()
+//        }
         checkEmpty()
         binding.btnHomeBottomPlay.setOnClickListener {
             showPlay(false)
@@ -170,6 +171,8 @@ class AppArtDetail : baseActivity(){
                 logMusicEvents(event_th_artist_play)
 
             }catch (e : Exception){
+                startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
+
                 e.printStackTrace()
             }
 

@@ -45,7 +45,7 @@ class PlayModeControl(internal val context: Context) : AppConfig {
      * @param playModeBtn
      */
     fun changePlayMode(playModeBtn: ImageView) {
-        when (mediaManager!!.playMode) {
+        when (mediaManager?.playMode) {
             AppConfig.MPM_LIST_LOOP_PLAY -> {
                 playModeBtn.setImageResource(R.mipmap.ic_playmode_list_loop)
                 mediaManager.playMode = AppConfig.MPM_SINGLE_LOOP_PLAY

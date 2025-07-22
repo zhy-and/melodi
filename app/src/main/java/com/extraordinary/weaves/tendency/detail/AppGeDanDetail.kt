@@ -430,7 +430,7 @@ class AppGeDanDetail : baseActivity(){
             speFinish()
         }
         if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
-            checkPermission()
+//            checkPermission()
             LiveEventBus
                 .get(REFRESH_NAME, String::class.java)
                 .observe(this) {
@@ -514,9 +514,10 @@ class AppGeDanDetail : baseActivity(){
                         checkEmpty()
                     }
                 }
-        }else{
-            initRecyleList()
         }
+//        else{
+            initRecyleList()
+//        }
         checkEmpty()
         binding.btnHomeBottomPlay.setOnClickListener {
             showPlay(false)
@@ -573,6 +574,7 @@ class AppGeDanDetail : baseActivity(){
                     logMusicEvents(event_th_playlist_created_play)
                 }
             }catch (e : Exception){
+                startInterActivity(Intent(this, PlayerView::class.java), playViewsInter())
                 e.printStackTrace()
             }
 

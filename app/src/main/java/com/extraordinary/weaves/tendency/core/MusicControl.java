@@ -1,5 +1,8 @@
 package com.extraordinary.weaves.tendency.core;
 
+import static com.extraordinary.weaves.tendency.event.AppEvent.REFRESH_MUSIC_HOME_MPS_PLAYING;
+import static com.extraordinary.weaves.tendency.event.AppEvent.REFRESH_MUSIC_LOADING;
+
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
@@ -7,22 +10,31 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.BassBoost;
 import android.media.audiofx.Equalizer;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager;
+import android.util.Log;
 
+import com.extraordinary.interstings.studios.utils.MusicStateHolder;
 import com.extraordinary.weaves.tendency.PreferencesManager;
 import com.extraordinary.weaves.tendency.bean.IMediaService;
 import com.extraordinary.weaves.tendency.bean.Music;
+import com.extraordinary.weaves.tendency.event.AppEvent;
 import com.extraordinary.weaves.tendency.global.AppConfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import dora.db.builder.WhereBuilder;
 import dora.db.dao.DaoFactory;
 import dora.db.dao.OrmDao;
 import com.blankj.utilcode.util.LogUtils;
+import com.jeremyliao.liveeventbus.LiveEventBus;
+
 import dora.util.TextUtils;
 import dora.util.ToastUtils;
 
@@ -33,7 +45,7 @@ public class MusicControl implements MediaPlayer.OnCompletionListener, AppConfig
 
     private final Random mRandom;
     private int mPlayMode;
-    private final MediaPlayerProxy mMediaPlayer;
+    private final MediaPlayer mMediaPlayer;
     private final List<Music> mPlaylist;
     private final Context mContext;
     private int mCurPlayIndex;
@@ -56,8 +68,8 @@ public class MusicControl implements MediaPlayer.OnCompletionListener, AppConfig
         this.mCurMusicId = -1;
         this.mPlaylist = new ArrayList<>();
         this.mDao = DaoFactory.INSTANCE.getDao(Music.class);
-        this.mMediaPlayer = new MediaPlayerProxy();
-        this.mMediaPlayer.setNeedCacheAudio(true);
+        this.mMediaPlayer = new MediaPlayer();
+        this.mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         this.mMediaPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK); //播放音频的时候加锁，防止CPU休眠
         AudioAttributes attrs = new AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -66,6 +78,11 @@ public class MusicControl implements MediaPlayer.OnCompletionListener, AppConfig
         this.mMediaPlayer.setOnCompletionListener(this);
         this.mRandom = new Random();
         this.mRandom.setSeed(System.currentTimeMillis());
+        mMediaPlayer.setOnInfoListener((mp, what, extra) -> {
+            Log.d("PlayerInfo", "Info: " + what);
+            return true;
+        });
+
     }
 
     /**
@@ -198,9 +215,25 @@ public class MusicControl implements MediaPlayer.OnCompletionListener, AppConfig
      * @return
      */
     public boolean prepare(int pos) {
+        try {
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        LiveEventBus.get(REFRESH_MUSIC_LOADING,Boolean.class).post(true);
+
         mCurPlayIndex = pos;
         mPendingProgress = 0;
-        mMediaPlayer.reset();
+
+        if (pos < 0 || pos >= mPlaylist.size()) {
+            ToastUtils.showShort(mContext, "无法播放此音乐");
+            return false;
+        }
+
+        Music music = mPlaylist.get(pos);
+        if (music == null) {
+            return false;
+        }
         if (mPrefsManager.getBassBoost()) {
             setBassBoost(1000);
         } else {
@@ -215,45 +248,122 @@ public class MusicControl implements MediaPlayer.OnCompletionListener, AppConfig
             }
             setEqualizer(decibels);
         }
+        final boolean[] isFirst = {false};
         String path = mPlaylist.get(pos).data;
         if (TextUtils.isNotEmpty(path)) {
             try {
-                mMediaPlayer.setDataSource(path);
-                mMediaPlayer.prepare();
-                mPlayState = MPS_PREPARE;
+
+                        try {
+                            LiveEventBus.get(AppEvent.REFRESH_MUSIC_LOADING,Boolean.class).post(true);
+                            mMediaPlayer.stop();
+                            mMediaPlayer.reset();
+                            mMediaPlayer.setDataSource(path);
+
+                            if (path.startsWith("http")) {
+
+
+                                mMediaPlayer.setOnBufferingUpdateListener((mp, percent) -> {
+
+                                    if (percent >= 50 && !isFirst[0]){
+                                        LiveEventBus.get(AppEvent.REFRESH_MUSIC_LOADING,Boolean.class).post(false);
+
+                                        mPlayState = MPS_PLAYING;
+                                        isFirst[0] = true;
+                                        LogUtils.e("durs","---"+mp.getDuration());
+                                        Music currentMusic = mPlaylist.get(pos);
+                                        if (currentMusic != null && !TextUtils.isEmpty(currentMusic.data)) {
+                                            // 获取 duration
+                                            int duration = mp.getDuration(); // 毫秒
+                                            if (duration > 0) {
+                                                // 更新歌曲时长
+                                                currentMusic.duration = duration;
+                                                setCurMusic(currentMusic);
+                                            }
+                                        }
+                                    }
+
+                                });
+                                mMediaPlayer.setOnInfoListener((mp, what, extra) -> {
+                                    if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END){
+
+                                    }
+                                    return true;
+                                });
+
+                                mMediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
+                                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                                        .build());
+                                mMediaPlayer.prepareAsync();
+
+                                mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                    @Override
+                                    public void onPrepared(MediaPlayer mp) {
+//
+                                        mPlayState = MPS_PREPARE;
+                                        sendMusicPlayBroadcast();
+                                        if (!mMediaPlayer.isPlaying()) {  // 确保不会重复start
+                                            mp.start();
+                                            mPlayState = MPS_PLAYING;
+                                            sendMusicPlayBroadcast();
+                                        }
+
+                                    }
+                                });
+                            }else {
+                                mMediaPlayer.prepare();
+                                mPlayState = MPS_PREPARE;
+
+                            }
+
+
+                            mMediaPlayer.setOnErrorListener((mp, what, extra) -> {
+                                Log.e("MusicControl", "播放失败：" + what + " extra=" + extra);
+//                                mMediaPlayer.reset();
+                                mPlayState = MPS_INVALID;
+//                                mMediaPlayer.reset();
+                                return true;
+                            });
+                        } catch (Exception e) {
+                           e.printStackTrace();
+                        }
+
+//                    }
+//                });
+
+
+
             } catch (Exception e) {
                 mPlayState = MPS_INVALID;
-                if (pos < mPlaylist.size()) {
-                    pos++;
-                    playById(mPlaylist.get(pos).songId);
-                }
                 return false;
             }
         } else {
-            ToastUtils.showShort(mContext, "歌曲路径为空");
         }
         mCurMusic = mPlaylist.get(mCurPlayIndex);
+
         sendMusicPlayBroadcast();
         return true;
     }
-
     /**
      * 根据歌曲的id来播放。
      *
      * @param id
      * @return
      */
+
     public boolean playById(int id) {
         if (requestFocus()) {
+            mCurMusic = mPlaylist.get(mCurPlayIndex);
             int position = seekPosById(mPlaylist, id);
             mCurPlayIndex = position;
             if (mCurMusicId == id) {
                 if (!mMediaPlayer.isPlaying()) {
-                    mMediaPlayer.start();
-                    mPlayState = MPS_PLAYING;
-                    sendMusicPlayBroadcast();
-                    mCurMusic = mPlaylist.get(mCurPlayIndex);
-                    saveLatest(mCurMusic);
+                        mMediaPlayer.start();
+                        mPlayState = MPS_PLAYING;
+                        sendMusicPlayBroadcast();
+                        mCurMusic = mPlaylist.get(mCurPlayIndex);
+                        saveLatest(mCurMusic);
+
                 } else {
                     pause();
                 }
@@ -284,12 +394,12 @@ public class MusicControl implements MediaPlayer.OnCompletionListener, AppConfig
 //                        mPendingProgress = progress;
 //                    }
 //                });
-                String localProxyUrl = mMediaPlayer.getLocalURLAndSetRemoteSocketAddress(url);
+//                String localProxyUrl = mMediaPlayer.getLocalURLAndSetRemoteSocketAddress(url);
 //                mPlaylist.add(mCurPlayIndex, music);    //插入到当前播放位置
 //                mCurMusic = music;
-                mMediaPlayer.startProxy();
+//                mMediaPlayer.startProxy();
                 mMediaPlayer.reset();
-                mMediaPlayer.setDataSource(localProxyUrl);
+//                mMediaPlayer.setDataSource(localProxyUrl);
                 mMediaPlayer.prepareAsync();
                 mMediaPlayer.start();
                 mPlayState = MPS_PLAYING;
@@ -436,10 +546,14 @@ public class MusicControl implements MediaPlayer.OnCompletionListener, AppConfig
      * @return 毫秒
      */
     public int duration() {
-        if (mPlayState == MPS_INVALID || mPlayState == MPS_NO_FILE) {
-            return 0;
-        }
-        return mMediaPlayer.getDuration();
+//        if (mPlayState == MPS_PLAYING || mPlayState == MPS_PAUSE || mPlayState == MPS_PREPARE) {
+//            return mMediaPlayer.getDuration();
+//        }
+        return 0;
+//        if (mPlayState == MPS_INVALID || mPlayState == MPS_NO_FILE) {
+//            return 0;
+//        }
+//        return mMediaPlayer.getDuration();
     }
 
     /**
@@ -573,6 +687,7 @@ public class MusicControl implements MediaPlayer.OnCompletionListener, AppConfig
      * @return
      */
     public boolean next() {
+        LiveEventBus.get(REFRESH_MUSIC_LOADING,Boolean.class).post(true);
         switch (mPlayMode) {
             case MPM_LIST_LOOP_PLAY:    //列表循环
                 return moveRight();
@@ -689,11 +804,39 @@ public class MusicControl implements MediaPlayer.OnCompletionListener, AppConfig
      * @return
      */
     public boolean replay() {
+
         if (requestFocus()) {
             if (mPlayState == MPS_INVALID || mPlayState == MPS_NO_FILE) {
-                return false;
+//                if (mPlaylist.get(mCurPlayIndex).data.contains("http")){
+//
+//                }else {
+                    return false;
+//                }
             }
-            mMediaPlayer.start();
+            try{
+                if (mPlaylist.get(mCurPlayIndex).data.contains("http")){
+                    if (mPlayState == MPS_PAUSE ){
+                        mMediaPlayer.start();
+                    }else {
+                        mMediaPlayer.reset();
+                        mMediaPlayer.setDataSource(mPlaylist.get(mCurPlayIndex).data);
+                        mMediaPlayer.prepareAsync(); // 仅在 IDLE 状态调用
+                        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                                mPlayState = MPS_PLAYING;
+                                mMediaPlayer.start();
+                            }
+                        });
+                    }
+
+                }else {
+                    mMediaPlayer.start();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
             mPlayState = MPS_PLAYING;
             sendMusicPlayBroadcast();
             mCurMusic = mPlaylist.get(mCurPlayIndex);

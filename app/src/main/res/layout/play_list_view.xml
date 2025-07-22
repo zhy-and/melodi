@@ -27,7 +27,7 @@
             android:layout_height="wrap_content">
             <RelativeLayout
                 android:gravity="center"
-                android:layout_marginEnd="7dp"
+                android:layout_marginEnd="4dp"
                 android:layout_weight="1"
                 android:id="@+id/rl_track"
                 android:layout_width="0dp"
@@ -39,6 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
+                    android:visibility="gone"
                     android:layout_below="@id/sl_text"
                     android:layout_centerHorizontal="true"
                     android:layout_width="wrap_content"
@@ -53,7 +54,7 @@
 
             <RelativeLayout
                 android:gravity="center"
-                android:layout_marginStart="7dp"
+                android:layout_marginHorizontal="4dp"
                 android:layout_weight="1"
                 android:id="@+id/rl_albums"
                 android:layout_width="0dp"
@@ -65,6 +66,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
+                    android:visibility="gone"
+
                     android:layout_centerHorizontal="true"
                     android:layout_below="@id/album"
                     android:layout_width="wrap_content"
@@ -76,7 +79,7 @@
             </RelativeLayout>
             <RelativeLayout
                 android:gravity="center"
-                android:layout_marginHorizontal="7dp"
+                android:layout_marginHorizontal="4dp"
                 android:layout_weight="1"
                 android:id="@+id/rl_art_list"
                 android:layout_width="0dp"
@@ -88,6 +91,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
+                    android:visibility="gone"
+
                     android:layout_centerHorizontal="true"
                     android:layout_below="@id/url"
                     android:layout_width="wrap_content"
@@ -99,7 +104,7 @@
             </RelativeLayout>
             <RelativeLayout
                 android:gravity="center"
-                android:layout_marginStart="7dp"
+                android:layout_marginStart="4dp"
                 android:layout_weight="1"
                 android:id="@+id/rl_styles"
                 android:layout_width="0dp"
@@ -111,6 +116,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
+                    android:visibility="gone"
+
                     android:layout_centerHorizontal="true"
                     android:layout_below="@id/styles"
                     android:layout_width="wrap_content"

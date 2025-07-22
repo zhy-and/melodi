@@ -108,12 +108,14 @@ class ScanPage : baseActivity() {
         try {
             Executors.newCachedThreadPool().submit {
                 try {
+                    MMKV.defaultMMKV().putBoolean("isSave",false)
                     val playlist = MusicScanner.scan(this@ScanPage) as MutableList<Music>
                     for (i in playlist){
                         LogUtils.e(""+i.songId+"---"+i.albumId+"name ="+i.musicName+"dura ="+i.duration+"art ="+i.artist)
                     }
                     GlobalMusApp.instance!!.mediaManager!!.refreshPlaylist(playlist)
                     prepareSongs(playlist)
+                    loadHomeConfig()
                 } finally {
                 }
             }

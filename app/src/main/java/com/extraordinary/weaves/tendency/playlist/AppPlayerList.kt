@@ -89,7 +89,7 @@ class AppPlayerList : baseActivity(), TrackListAdapter.RefreshPlayView {
 
         }
         if (!MMKV.defaultMMKV().getBoolean("is_first_auth",false)){
-            checkPermission()
+//            checkPermission()
             LiveEventBus
                 .get(AppEvent.REFRESH_NAME, String::class.java)
                 .observe(this) {
@@ -107,9 +107,10 @@ class AppPlayerList : baseActivity(), TrackListAdapter.RefreshPlayView {
                     }
 
                 }
-        }else{
-            initRecyleList()
         }
+//        else{
+            initRecyleList()
+//        }
       checkEmpty()
     }
 

@@ -9,9 +9,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.SeekBar
+import androidx.core.view.isVisible
 import com.blankj.utilcode.util.LogUtils
 import com.extraordinary.interstings.studios.goodads.CommonWeavesStyle
 import com.extraordinary.interstings.studios.goodads.MainHomeStudy
@@ -41,11 +43,9 @@ import com.extraordinary.weaves.tendency.dialog.event_th_play_collect
 import com.extraordinary.weaves.tendency.dialog.event_th_play_lyrics
 import com.extraordinary.weaves.tendency.dialog.event_th_play_mode
 import com.extraordinary.weaves.tendency.dialog.event_th_play_next
-import com.extraordinary.weaves.tendency.dialog.event_th_play_pause
 import com.extraordinary.weaves.tendency.dialog.event_th_play_play
 import com.extraordinary.weaves.tendency.dialog.event_th_play_previous
 import com.extraordinary.weaves.tendency.dialog.event_th_play_queue
-import com.extraordinary.weaves.tendency.dialog.event_th_submit_feed
 import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.extraordinary.weaves.tendency.event.AppEvent
 import com.extraordinary.weaves.tendency.global.AppConfig
@@ -72,11 +72,15 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
 
         when (message.what) {
             0x100 ->
-                mediaManager?.let {
-                    refreshSeekProgress(
-                        it.position(),
-                        it.duration()
-                    )
+                mediaManager?.let { its ->
+                    its.curMusic?.let { a->
+//                        Log.e("current pos ",""+its.position()+"total"+a.duration)
+                        refreshSeekProgress(
+                            its.position(),
+                            a.duration
+                        )
+                    }
+
                 }
 
         }
@@ -103,25 +107,27 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MainHomeStudy.homeStudy.getShowCyAds(playViewsInter(),this)
-
         ImmersionBar.with(this)
             .transparentStatusBar()
             .init()
         binding = PlayerMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+    try {
         mediaManager = GlobalMusApp.instance?.mediaManager
         updateStatus()
-
         playModeControl = PlayModeControl(this)
         initViews()
+        showLoading(true)
+
         setTimer(mPanHandle)
         LiveEventBus
             .get(AppEvent.REFRESH_MUSIC_HOME_MPS_INVALID, String::class.java)
             .observe(this) {
-                timer?.stopTimer()
-                val music = mediaManager?.curMusic
-                refreshUI(0, music!!.duration, music)
-                showPlay(true)
+                Log.e("status =----","REFRESH_MUSIC_HOME_MPS_INVALID")
+//                timer?.stopTimer()
+//                val music = mediaManager?.curMusic ?: return@observe
+//                refreshUI(0, music.duration, music)
+//                showPlay(true)
             }
 
         LiveEventBus
@@ -129,26 +135,39 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
             .observe(this) {
                 val music = mediaManager?.curMusic
                 timer?.stopTimer()
+
                 //todo playauto
-                if (playAuto){
-                    mediaManager?.let {
-                        if (music != null){
-                            refreshUI( it.position(), music.duration, music)
-                        }
+//                if (playAuto){
+                mediaManager?.let {
+                    if (music != null){
+                        refreshUI( it.position(), music.duration, music)
                     }
                 }
+//                }
                 showPlay(true)
             }
 
         LiveEventBus
             .get(AppEvent.REFRESH_MUSIC_HOME_MPS_PLAYING, String::class.java)
             .observe(this) {
+//                showLoading(false)
+//                if (mediaManager?.playState == MPS_PLAYING){
+//                    showLoading(false)
+//                }else{
+//                    showLoading(true)
+//                }
                 val music = mediaManager?.curMusic
                 mediaManager?.let {
-                    refreshUI(it.position(), music!!.duration, music)
+                    refreshUI(it.position(), music!!.duration, music!!)
                 }
                 showPlay(false)
                 timer?.startTimer()
+            }
+        LiveEventBus
+            .get(AppEvent.REFRESH_MUSIC_LOADING, Boolean::class.java)
+            .observeSticky(this) {
+                LogUtils.e("status =----","REFRESH_MUSIC_LOADING")
+                showLoading(it)
             }
 
         LiveEventBus
@@ -159,6 +178,10 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
                 refreshUI(0, music!!.duration, music)
                 showPlay(true)
             }
+
+
+
+
         mediaManager?.let {
             receviver = MusicPlayReceiver(it)
         }
@@ -168,10 +191,12 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
         }else{
             registerReceiver(receviver, filter)
         }
+//        showLoading(true)
         if (mediaManager?.playState == MPS_PLAYING){
+//            showLoading(false)
             val music = mediaManager?.curMusic
             mediaManager?.let {
-                refreshUI(it.position(), music!!.duration, music)
+                refreshUI(it.position(), music!!.duration, music!!)
             }
             showPlay(false)
             timer?.startTimer()
@@ -190,8 +215,23 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
             }
             mediaManager?.replay()
         }
+    }catch (e : Exception){
+        e.printStackTrace()
     }
 
+
+    }
+    // 添加一个新方法来处理加载状态
+    private fun showLoading(show: Boolean) {
+        Log.e("status",""+show)
+        if (show) {
+            binding.loadings.visibility = View.VISIBLE
+            binding.loadings.playAnimation()
+        } else {
+            binding.loadings.cancelAnimation()
+            binding.loadings.visibility = View.GONE
+        }
+    }
     private fun updateStatus() {
         try {
             mediaManager?.curMusic?.apply {
@@ -313,9 +353,12 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
         } else {
             binding.btnMusicPlayFavorite.setImageResource(R.mipmap.ic_favorite_unchecked)
         }
-        curMusic!!.favorite = favorite
-        mediaManager!!.setCurMusic(curMusic!!)
-        saveFavorite(curMusic!!, favorite)
+        curMusic?.favorite = favorite
+        curMusic?.let {
+//            mediaManager?.setCurMusic(it)
+            saveFavorite(it, favorite)
+        }
+
     }
 
     private fun saveFavorite(music: Music, favorite: Int) {
@@ -335,18 +378,34 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
         LogUtils.e("onStartTrackingTouch")
             playAuto = false
             timer?.stopTimer()
-            mediaManager!!.pause()
+//            mediaManager?.pause()
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar) {
-        LogUtils.e("onStopTrackingTouch")
+//        LogUtils.e("onStopTrackingTouch")
+//        playAuto = true
+//        mediaManager?.let { player ->
+//            // 直接跳轉到目標位置，避免調用 replay() 導致狀態重置
+//            player.seekTo(seekBarProgress)
+//            // 手動更新一次 UI
+//            refreshSeekProgress(seekBarProgress * player.duration() / 100, player.duration())
+//        }
+//        timer?.startTimer()
+        try {
             playAuto = true
             mediaManager?.let {
-                it.seekTo(seekBarProgress)
-                refreshSeekProgress(it.position(), it.duration())
-                it.replay()
+                curMusic?.let { its ->
+                    it.seekTo(seekBarProgress)
+                    refreshSeekProgress(it.position(), its.duration)
+                }
+
+//            it.replay()
             }
             timer?.startTimer()
+        }catch (e : Exception){
+            e.printStackTrace()
+        }
+
     }
 
 
@@ -354,22 +413,34 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
      * 刷新播放进度。
      */
     fun refreshSeekProgress(curTime: Int, totalTime: Int) {
-        var curTime = curTime
-        var totalTime = totalTime
-        val tempCurTime = curTime
-        curTime /= 1000
-        totalTime /= 1000
-        val curMinute = curTime / 60
-        val curSecond = curTime % 60
+        try {
+            if (!binding.loadings.isVisible && curTime == 0 && totalTime == 0){
+                showLoading(true)
+            }else{
+                if (binding.loadings.isVisible && curTime != 0 && totalTime != 0){
+                    showLoading(false)
+                }
+            }
 
-        val curTimeString = String.format("%02d:%02d", curMinute, curSecond)
-        binding.tvMusicPlayCurTime.text = curTimeString
+            val tempCurTime = curTime
+            val curTimeSec = curTime / 1000
+            val totalTimeSec = totalTime / 1000
 
-        var rate = 0
-        if (totalTime != 0) {
-            rate = (curTime.toFloat() / totalTime * 100).toInt()
+            binding.tvMusicPlayCurTime.text = String.format("%02d:%02d",
+                curTimeSec / 60, curTimeSec % 60)
+
+            if (binding.tvMusicPlayTotalTime.text != String.format("%02d:%02d",
+                    totalTimeSec / 60, totalTimeSec % 60)) {
+                binding.tvMusicPlayTotalTime.text = String.format("%02d:%02d",
+                    totalTimeSec / 60, totalTimeSec % 60)
+            }
+
+            binding.sbMusicPlayPlayback.progress =
+                if (totalTime != 0) (curTime.toFloat() / totalTime * 100).toInt() else 0
+        }catch (e : Exception){
+            e.printStackTrace()
         }
-        binding.sbMusicPlayPlayback.progress = rate
+
 
     }
 
@@ -406,15 +477,17 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
             //上一首
             R.id.btn_music_play_prev -> {
                 try {
+                    showLoading(true)
+
                     if (curMusic == null) {
                         toScan()
                         return
                     }
-                    mediaManager!!.prev()
+                    mediaManager?.prev()
                     logMusicEvents(event_th_play_previous)
 
                 }catch (e : Exception){
-                    toScan()
+//                    toScan()
                     e.printStackTrace()
                 }
 
@@ -426,11 +499,11 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
                         toScan()
                         return
                     }
-                    mediaManager!!.replay()
+                    mediaManager?.replay()
                     logMusicEvents(event_th_play_play)
 
                 }catch (e : Exception){
-                    toScan()
+//                    toScan()
                     e.printStackTrace()
                 }
 
@@ -438,15 +511,17 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
             //下一首
             R.id.btn_music_play_next -> {
                 try {
+                    showLoading(true)
+
                     if (curMusic == null) {
                         toScan()
                         return
                     }
-                    mediaManager!!.next()
+                    mediaManager?.next()
                     logMusicEvents(event_th_play_next)
 
                 }catch (e : Exception){
-                    toScan()
+//                    toScan()
                     e.printStackTrace()
                 }
 
@@ -454,10 +529,14 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
             //暂停
             R.id.btn_music_play_pause ->
                 try {
-                    mediaManager!!.pause()
-                    logMusicEvents(event_th_play_pause)
-
-                }catch (e : Exception){e.printStackTrace()}
+                    mediaManager?.pause()
+                    // 暫停時強制刷新一次進度（保持當前位置）
+                    mediaManager?.let {
+                        refreshSeekProgress(it.position(), it.duration())
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             //音量
             //播放模式
             R.id.btn_music_play_mode -> {
@@ -483,7 +562,7 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
                     }
                     logMusicEvents(event_th_play_collect)
 
-                    if (mediaManager!!.curMusic!!.favorite == 0) {
+                    if (mediaManager?.curMusic?.favorite == 0) {
 //                    startAnimation(iv_sliding_favorite_flying!!)
                         refreshFavorite(1)
                     } else {
