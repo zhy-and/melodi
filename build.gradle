@@ -7,7 +7,6 @@ buildscript {
         maven { url 'https://raw.githubusercontent.com/martinloren/AabResGuard/mvn-repo' }
     }
     dependencies {
-        classpath "com.bytedance.android:aabresguard-plugin:0.1.10"
         classpath 'com.github.megatronking.stringfog:gradle-plugin:5.2.0'
         classpath 'com.github.megatronking.stringfog:xor:5.0.0'
         classpath 'com.google.gms:google-services:4.3.15'

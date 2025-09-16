@@ -7,10 +7,12 @@ import static com.extraordinary.interstings.studios.utils.NativeKt.MMKV_SYS;
 import static com.extraordinary.interstings.studios.utils.NativeKt.MMKV_LINES;
 
 import com.appsflyer.AdRevenueScheme;
+import com.blankj.utilcode.util.LogUtils;
 import com.extraordinary.interstings.studios.services.ApiStudios;
 import com.extraordinary.weaves.tendency.application.GlobalMusApp;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.ads.AdValue;
+import com.google.android.gms.ads.ResponseInfo;
 import com.tencent.mmkv.MMKV;
 import com.appsflyer.AFAdRevenueData;
 import com.appsflyer.MediationNetwork;
@@ -112,7 +114,7 @@ public class CommonTools {
 //        logger.logPurchase(new BigDecimal(purchase).divide(new BigDecimal(1000000.0)), Currency.getInstance(currencyCode));
 //    }
 
-    public static void valueUpload(AdValue adValue, String adType, String adId,Long pos) {
+    public static void valueUpload(AdValue adValue, String adType, String adId, Long pos, ResponseInfo responseInfo) {
         try {
 
             initAFEvents(adValue,adId,adType);
@@ -131,7 +133,8 @@ public class CommonTools {
                 }
             } else {
             }
-            ApiStudios.Companion.handleValues(adId,adType,adValue,configValues,pos);
+            ApiStudios.Companion.handleValues(adId,adType,adValue,configValues,pos,responseInfo);
+
 
         } catch (Exception e){
             e.printStackTrace();

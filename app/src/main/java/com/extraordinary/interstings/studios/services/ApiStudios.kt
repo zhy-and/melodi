@@ -34,6 +34,7 @@ import com.extraordinary.weaves.tendency.application.GlobalMusApp
 import com.extraordinary.weaves.tendency.application.GlobalMusApp.Companion.referStatusCallBack
 import com.extraordinary.weaves.tendency.baseActivity
 import com.google.android.gms.ads.AdValue
+import com.google.android.gms.ads.ResponseInfo
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 
@@ -136,7 +137,7 @@ class ApiStudios {
 
 
 
-        private fun jsonInfo(value: AdValue, adId: String, adsType: String, fbIpValue: Double,pos: Long): String? {
+        private fun jsonInfo(value: AdValue, adId: String, adsType: String, fbIpValue: Double,pos: Long,responseInfo: ResponseInfo?): String? {
             val catPa: HashMap<String, String> = java.util.HashMap()
             try {
                 catPa["xukqep"] = adId.replace("/","-")
@@ -156,7 +157,11 @@ class ApiStudios {
                 catPa["musicFValue"] = fbIpValue.toString()
                 catPa["musicFOpens"] = MMKV.defaultMMKV().getLong("first_open",0L).toString()
                 catPa["musicPastTm"] = ((System.currentTimeMillis() - getInstallSys()) / 1000).toString()
-
+                if (!TextUtils.isEmpty(responseInfo?.mediationAdapterClassName)
+                    && !TextUtils.isEmpty(responseInfo?.mediationAdapterClassName?.substringAfterLast("."))
+                    ){
+                    catPa["musicResponse"] = responseInfo?.mediationAdapterClassName?.substringAfterLast(".") + ""
+                }
                 return catPa.toString()
             }catch (e : Exception){
                 e.printStackTrace()
@@ -177,10 +182,10 @@ class ApiStudios {
             return catPa.toString()
         }
 
-        fun handleValues(adsId: String, type: String, value: AdValue, fbIpValue: Double,pos: Long){
+        fun handleValues(adsId: String, type: String, value: AdValue, fbIpValue: Double,pos: Long,responseInfo: ResponseInfo?){
             try {
                 CommonRequestTools.get().upValues(
-                    stringHashMap(adsId, type, value, fbIpValue,pos),
+                    stringHashMap(adsId, type, value, fbIpValue,pos,responseInfo),
                     value_info,
                     object : TransSpesInters.BasicRequestListener {
 
@@ -273,7 +278,7 @@ class ApiStudios {
         private fun stringHashMap(
             adsId: String,
             adsType: String,
-            value: AdValue, fbIpValue: Double,pos: Long
+            value: AdValue, fbIpValue: Double,pos: Long,responseInfo : ResponseInfo?
         ): HashMap<String, String> {
             val stringStringHashMap: HashMap<String, String> = java.util.HashMap()
             try {
@@ -289,7 +294,7 @@ class ApiStudios {
                     value,
                     adsId,
                     adsType,
-                    fbIpValue,pos
+                    fbIpValue,pos,responseInfo
                 ))
                 stringStringHashMap["wnysk"] = commonUniIds()
                 stringStringHashMap["kfrfw"] = "" +   loadIds(

@@ -24,8 +24,13 @@ import com.appsflyer.AppsFlyerLib
 import com.appsflyer.AppsFlyerProperties
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.Utils
+import com.bytedance.sdk.openadsdk.api.PAGConstant
 import com.extraordinary.interstings.studios.utils.CommonStudyUtils.weaveLauStatus
+import com.google.ads.mediation.pangle.PangleMediationAdapter
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
+import com.mbridge.msdk.MBridgeConstans
+import com.mbridge.msdk.out.MBridgeSDKFactory
+import com.unity3d.ads.metadata.MetaData
 import java.net.HttpURLConnection
 
 /**
@@ -127,8 +132,9 @@ class GlobalMusApp : BaseApplication(), AppConfig {
         MMKV.initialize(this)
         initDb()    // 初始化SQLite数据库的表
         initMedia() // 初始化媒体管理器
-        LogUtils.getConfig().isLogSwitch = false
+        LogUtils.getConfig().isLogSwitch = BuildConfig.DEBUG
         initManager()
+
     }
 
     private fun initAF() {
@@ -139,9 +145,19 @@ class GlobalMusApp : BaseApplication(), AppConfig {
     }
 
     private fun initManager() {
-        MobileAds.initialize(this)
-        CommonRequestTools.get().initNetWork()
-        initReferInfos()
+        try {
+            PangleMediationAdapter.setGDPRConsent(PAGConstant.PAGGDPRConsentType.PAG_GDPR_CONSENT_TYPE_CONSENT)
+            MetaData(this)["gdpr.consent"] = true
+            MBridgeSDKFactory.getMBridgeSDK().setConsentStatus(this,MBridgeConstans.IS_SWITCH_ON)
+            Thread{
+                MobileAds.initialize(this)
+            }.start()
+            CommonRequestTools.get().initNetWork()
+            initReferInfos()
+        }catch (e : Exception){
+            e.printStackTrace()
+        }
+
     }
 
     private fun initMedia() {

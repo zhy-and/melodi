@@ -17,6 +17,7 @@ import com.extraordinary.interstings.studios.utils.musHotStart
 import com.extraordinary.weaves.tendency.application.GlobalMusApp
 import com.extraordinary.weaves.tendency.baseActivity
 import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.MobileAds
 
 class StartWeavesTools{
 
@@ -87,7 +88,7 @@ class StartWeavesTools{
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                     startIsLoading = false
                     upListener?.LoadedError()
-                    LogUtils.d("AppOpenAdLoadCallback onAdFailedToLoad: " + loadAdError.message)
+                    LogUtils.d("AppOpenAdLoadCallback onAdFailedToLoad: " + loadAdError.toString())
                 }
             }
         )
@@ -116,6 +117,7 @@ class StartWeavesTools{
 
     /** Keep track of the time an app open ad is loaded to ensure you don't show an expired ad. */
     private var startTimes: Long = 0
+
 
     /**
      * Load an app open ad.
@@ -189,13 +191,17 @@ class StartWeavesTools{
                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                     weavesObj = null
                     startIsShowing = false
-                    LogUtils.d("onAdFailedToShowFullScreenContent: " + adError.message)
+                    LogUtils.e("onAdFailedToShowFullScreenContent: " + adError.toString())
                     listener?.dispathSuc()
 //                        loadAd(activity)
                 }
 
                 /** Called when fullscreen content is shown. */
                 override fun onAdShowedFullScreenContent() {
+//                    //TODO
+//                    MobileAds.openAdInspector(GlobalMusApp.instance!!){
+//
+//                    }
                     LogUtils.d("onAdShowedFullScreenContent.")
                     listener?.dispathError()
                     CommonStudyUtils.showCountAdd(pos)
@@ -203,7 +209,7 @@ class StartWeavesTools{
                 }
             }
         weavesObj?.setOnPaidEventListener {
-                valueUpload(it, "Appopen",startIds,pos)
+                valueUpload(it, "Appopen",startIds,pos,weavesObj?.responseInfo)
         }
         startIsShowing = true
         weavesObj?.show(context)

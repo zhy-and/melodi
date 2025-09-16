@@ -74,6 +74,7 @@ import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.nativead.NativeAd
@@ -203,7 +204,7 @@ class MainHomeStudy {
                         LogUtils.e(
                             "inter ad load error =====" + CommonStudyUtils.basicInfoLog(
                                 interPos
-                            ) + ""
+                            ) + loadAdError.toString()
                         )
                         notifyCySts(false)
                         tperklyTranslateIntersLis?.interIsWeavesSuc(false)
@@ -424,6 +425,10 @@ class MainHomeStudy {
 
             override fun onAdShowedFullScreenContent() {
                 // Called when ad is shown.
+//                //TODO
+//                MobileAds.openAdInspector(GlobalMusApp.instance!!){
+//
+//                }
                 interWeavesIsShowing = true
                 CommonStudyUtils.showCountAdd(pos)
 //                ThreadUtils.runOnUiThreadDelayed({
@@ -433,7 +438,7 @@ class MainHomeStudy {
             }
         }
         interstitialAd?.setOnPaidEventListener {
-            valueUpload(it,"Interstitial", interstitialAd.adUnitId,pos)
+            valueUpload(it,"Interstitial", interstitialAd.adUnitId,pos,interstitialAd?.responseInfo)
         }
 
     }
@@ -491,9 +496,7 @@ class MainHomeStudy {
                    lyricBanner(),  queueListBanner()
                    -> {
                        if (!TextUtils.isEmpty(it.fayiiebmhdhz)) {
-
                             banWeavesIds = it.fayiiebmhdhz
-
                        }
                    }
 
@@ -503,7 +506,6 @@ class MainHomeStudy {
                    geDanDetInter(),  addSongsInter(), playViewsInter(), lyricInter(), queueInter(), finishPageInterOne(), finishPageInterTwo()
                    -> {
                        if (!TextUtils.isEmpty(it.fayiiebmhdhz)) {
-
                             interWeavesId = it.fayiiebmhdhz
 
                        }
@@ -564,7 +566,7 @@ class MainHomeStudy {
             val loader = AdLoader.Builder(context, unitVoxyId)
                 .forNativeAd { nativeAd ->
                     nativeAd.setOnPaidEventListener {
-                        valueUpload(it,"Native",unitVoxyId,postion)
+                        valueUpload(it,"Native",unitVoxyId,postion,nativeAd?.responseInfo)
                     }
                     if (weavesMusicNatPools) {
                         LogUtils.e( "result ad load suc${unitVoxyId}curr pos is ${CommonStudyUtils.basicInfoLog(postion)}")
@@ -584,7 +586,7 @@ class MainHomeStudy {
                         LogUtils.e(
                             "native  onAdFailedToLoad ------" + CommonStudyUtils.basicInfoLog(
                                 postion
-                            )
+                            )+adError.toString()
                         )
                         notifyNative(weavesMusicNatPools,false)
                         resultAdLoadBack?.nativeIsWeavesSuc(false)
@@ -612,6 +614,10 @@ class MainHomeStudy {
 
                     override fun onAdImpression() {
                         try {
+//                            //TODO
+//                            MobileAds.openAdInspector(GlobalMusApp.instance!!){
+//
+//                            }
                             if (currentPos.toInt() != -1) {
                                 postion = currentPos
                             }
