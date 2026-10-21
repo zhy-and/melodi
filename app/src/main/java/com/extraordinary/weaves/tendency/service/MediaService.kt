@@ -8,6 +8,8 @@ import android.content.IntentFilter
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.IBinder
+import android.os.Handler
+import android.os.Looper
 import android.os.RemoteException
 import androidx.annotation.RequiresApi
 import com.extraordinary.weaves.tendency.global.AppConfig.Companion.ACTION_CANCEL
@@ -41,6 +43,15 @@ class MediaService : Service(){
     private var controlBroadcast: ControlBroadcast? = null
     private var prefsManager: PreferencesManager? = null
     private var simplePlayer: SimpleAudioPlayer? = null
+    private val playbackBridgeHandler = Handler(Looper.getMainLooper())
+    private val playbackBridgeTicker = object : Runnable {
+        override fun run() {
+            if (::mc.isInitialized && mc.isPlaying) {
+                mc.publishPlaybackBridgeSnapshot()
+            }
+            playbackBridgeHandler.postDelayed(this, 15_000L)
+        }
+    }
 
     override fun onBind(intent: Intent): IBinder? {
         binder = MediaServiceImpl()
@@ -75,9 +86,6 @@ class MediaService : Service(){
                 ACTION_PREV -> mc.prev()
                 ACTION_CANCEL -> {
                     cancelNotification()
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CUPCAKE) {
-                        killAllOtherProcess(context)
-                    }
                     android.os.Process.killProcess(android.os.Process.myPid())
                 }
             }
@@ -113,10 +121,12 @@ class MediaService : Service(){
         prefsManager = PreferencesManager(this)
         simplePlayer = SimpleAudioPlayer(this)
         mc = MusicControl(this)
+        playbackBridgeHandler.postDelayed(playbackBridgeTicker, 15_000L)
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        playbackBridgeHandler.removeCallbacks(playbackBridgeTicker)
         unregisterReceiver(controlBroadcast)
         mc.exit()
         simplePlayer?.exit()

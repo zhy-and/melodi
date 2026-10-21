@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_notif_toolbar_card"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:id="@+id/notif_action_play_pause"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginEnd="4dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_notif_action_play"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="4dp">
+        <ImageView android:layout_width="28dp" android:layout_height="28dp" android:contentDescription="@null" android:scaleType="centerInside" android:src="@drawable/ic_notif_toolbar_play_badge" />
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:layout_weight="1" android:gravity="center" android:maxLines="1" android:text="@string/notif_toolbar_play_pause" android:textColor="@color/notif_toolbar_text" android:textSize="11sp" android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/notif_action_library"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginHorizontal="4dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_notif_action_library"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="4dp">
+        <ImageView android:layout_width="28dp" android:layout_height="28dp" android:contentDescription="@null" android:scaleType="centerInside" android:src="@drawable/ic_notif_toolbar_library_badge" />
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:layout_weight="1" android:gravity="center" android:maxLines="1" android:text="@string/notif_toolbar_playlists" android:textColor="@color/notif_toolbar_text" android:textSize="11sp" android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/notif_action_scan"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="4dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_notif_action_scan"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="4dp">
+        <ImageView android:layout_width="28dp" android:layout_height="28dp" android:contentDescription="@null" android:scaleType="centerInside" android:src="@drawable/ic_notif_toolbar_scan_badge" />
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:layout_weight="1" android:gravity="center" android:maxLines="1" android:text="@string/notif_toolbar_scan" android:textColor="@color/notif_toolbar_text" android:textSize="11sp" android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

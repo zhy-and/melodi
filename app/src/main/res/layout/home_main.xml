@@ -67,6 +67,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/home_scroll"
         android:paddingBottom="20dp"
         android:layout_width="match_parent"
         app:layout_constraintTop_toBottomOf="@id/top_contents"

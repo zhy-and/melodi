@@ -10,8 +10,8 @@ import android.os.Message
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
-import android.view.KeyEvent
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import android.widget.RatingBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.AppUtils
@@ -108,6 +108,58 @@ import java.util.concurrent.Executors
 
 
 class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
+    private var pendingOpenPlayer = false
+    private var playbackServiceConnected = false
+
+    private fun openPlayerIfRequested() {
+        if (pendingOpenPlayer && playbackServiceConnected) {
+            pendingOpenPlayer = false
+            startActivity(Intent(this, PlayerView::class.java))
+        }
+    }
+
+    private fun scrollToSection(target: android.view.View) {
+        binding.homeScroll.post {
+            val rect = android.graphics.Rect(0, 0, target.width, target.height)
+            binding.homeScroll.offsetDescendantRectToMyCoords(target, rect)
+            binding.homeScroll.smoothScrollTo(0, rect.top)
+        }
+    }
+
+    private fun handlePushEntry() {
+        com.extraordinary.weaves.tendency.widget.WidgetEntryUi.requestFromNotification(this, intent)
+        if (intent.getBooleanExtra(
+                com.extraordinary.weaves.tendency.widget.MusicPlayerAppWidgetProvider.EXTRA_OPEN_PLAYER, false)) {
+            intent.removeExtra(com.extraordinary.weaves.tendency.widget.MusicPlayerAppWidgetProvider.EXTRA_OPEN_PLAYER)
+            pendingOpenPlayer = true
+        }
+        when (com.extraordinary.weaves.tendency.runtime.NotificationToolbarAction.fromWireValue(
+            intent.getStringExtra(com.extraordinary.weaves.tendency.runtime.NotificationToolbarHelper.EXTRA_ACTION),
+        )) {
+            com.extraordinary.weaves.tendency.runtime.NotificationToolbarAction.LIBRARY -> scrollToSection(binding.rlTrack)
+            else -> Unit
+        }
+        intent.removeExtra(com.extraordinary.weaves.tendency.runtime.NotificationToolbarHelper.EXTRA_ACTION)
+        openPlayerIfRequested()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handlePushEntry()
+    }
+    private val homeBackCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (MainHomeStudy.homeStudy.uniqueInter != null) {
+                MainHomeStudy.homeStudy.showCachedInter(finishPageInterOne(), this@HomeActivity)
+            } else {
+                com.extraordinary.weaves.tendency.widget.WidgetEntryUi.showExitRetain(this@HomeActivity) {
+                    moveTaskToBack(false)
+                }
+            }
+        }
+    }
+
     private var isCanShow = false
     private  var playlist: MutableList<Music> ?= null
     private  var favAdapter: FavAdapter ?= null
@@ -120,6 +172,7 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        onBackPressedDispatcher.addCallback(this, homeBackCallback)
         ImmersionBar.with(this)
             .transparentStatusBar()
             .transparentNavigationBar()
@@ -127,6 +180,7 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
             .init()
         binding = HomeMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        handlePushEntry()
         if (!EventBus.getDefault().isRegistered(this)){
             EventBus.getDefault().register(this)
         }
@@ -574,18 +628,7 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
 
 
     private fun checkPostPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !XXPermissions.isGranted(this,Permission.POST_NOTIFICATIONS)) {
-            XXPermissions.with(this@HomeActivity).permission(Permission.POST_NOTIFICATIONS).request(object : OnPermissionCallback{
-                override fun onGranted(p0: MutableList<String>, p1: Boolean) {
-                    logMusicEvents(event_permit_notice_agree)
-
-                }
-                override fun onDenied(permissions: MutableList<String>, doNotAskAgain: Boolean) {
-                    logMusicEvents(event_permit_notice_refuse)
-
-                }
-            })
-        }
+        requestNotificationPermissionAtHome()
     }
 
     private var isLoaded = false
@@ -887,18 +930,6 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
             scanMusic()
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK){
-            if (MainHomeStudy.homeStudy.uniqueInter != null){
-                MainHomeStudy.homeStudy.showCachedInter(finishPageInterOne(),this)
-                return true
-            }
-            moveTaskToBack(false)
-            return true
-        }
-        return  super.onKeyDown(keyCode,event)
-    }
-
     /**
      * 扫描歌曲。
      */
@@ -1006,7 +1037,9 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
     private  var mediaManager: MediaManager?= null
 
     override fun onConnectCompletion(service: IMediaService?) {
+        playbackServiceConnected = service != null
         initData()
+        openPlayerIfRequested()
     }
 
 }

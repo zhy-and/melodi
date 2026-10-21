@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="@android:color/transparent" android:strokeColor="@color/notif_icon_brand" android:strokeWidth="1.8" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M3 9h4l4-4v14l-4-4H3z M15 8a6 6 0 0 1 0 8 M17 5a10 10 0 0 1 0 14" />
+    <path android:fillColor="@color/notif_icon_brand_accent" android:pathData="M19 10h2v4h-2z" />
+</vector>

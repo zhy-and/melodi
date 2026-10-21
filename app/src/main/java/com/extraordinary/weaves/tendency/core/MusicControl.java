@@ -447,6 +447,9 @@ public class MusicControl implements MediaPlayer.OnCompletionListener, AppConfig
     AudioManager.OnAudioFocusChangeListener audioFocusListener = new AudioManager.OnAudioFocusChangeListener() {
         public void onAudioFocusChange(int focusChange) {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+                mContext.sendBroadcast(new Intent().setClassName(mContext,
+                                "com.extraordinary.weaves.tendency.notification.localpush.PlaybackBridgeReceiver")
+                        .putExtra("playback_audio_focus_lost", true));
                 // Pause playback
                 pause();
             } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
@@ -855,6 +858,28 @@ public class MusicControl implements MediaPlayer.OnCompletionListener, AppConfig
         Intent intent = new Intent(ACTION_PLAY);
         intent.putExtra("play_state", mPlayState);
         mContext.sendBroadcast(intent);
+        publishPlaybackBridgeSnapshot();
+    }
+
+    public void publishPlaybackBridgeSnapshot() {
+        Music song = mCurMusic;
+        if (mCurPlayIndex >= 0 && mCurPlayIndex < mPlaylist.size()) {
+            song = mPlaylist.get(mCurPlayIndex);
+        }
+        long duration = 0L;
+        long position = 0L;
+        try {
+            duration = Math.max(0, mMediaPlayer.getDuration());
+            position = Math.max(0, mMediaPlayer.getCurrentPosition());
+        } catch (IllegalStateException ignored) { }
+        mContext.sendBroadcast(new Intent().setClassName(mContext,
+                        "com.extraordinary.weaves.tendency.notification.localpush.PlaybackBridgeReceiver")
+                .putExtra("playback_has_song", song != null)
+                .putExtra("playback_is_playing", mPlaying)
+                .putExtra("playback_title", song == null ? "" : song.musicName)
+                .putExtra("playback_artist", song == null ? "" : song.artist)
+                .putExtra("playback_duration", duration)
+                .putExtra("playback_position", position));
 //        Apollo.emit(ApolloEvent.REFRESH_LOCAL_NUMS);
     }
 

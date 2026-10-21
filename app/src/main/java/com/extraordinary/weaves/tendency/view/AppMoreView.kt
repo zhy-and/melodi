@@ -24,6 +24,8 @@ import com.extraordinary.weaves.tendency.dialog.event_two_scan_setting
 import com.extraordinary.weaves.tendency.dialog.event_two_search_ok
 import com.extraordinary.weaves.tendency.dialog.logMusicEvents
 import com.extraordinary.weaves.tendency.scan.ScanPage
+import com.extraordinary.weaves.tendency.widget.WidgetPinHelper
+import com.extraordinary.weaves.tendency.widget.WidgetPinSource
 import com.gyf.immersionbar.ImmersionBar
 
 class AppMoreView : baseActivity() {
@@ -60,6 +62,9 @@ class AppMoreView : baseActivity() {
 
             startInterActivity(Intent(this, ScanPage::class.java), scansInter())
 //            finish()
+        }
+        binding.widgetSettings.setOnClickListener {
+            WidgetPinHelper.requestPin(this, WidgetPinSource.SETTINGS)
         }
         binding.feedSettings.setOnClickListener {
             logMusicEvents(event_two_feedback_setting)

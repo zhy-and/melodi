@@ -14,6 +14,7 @@ import androidx.core.app.NotificationCompat;
 import com.blankj.utilcode.util.LogUtils;
 import com.extraordinary.weaves.tendency.AppStart;
 import com.extraordinary.weaves.tendency.R;
+import com.extraordinary.weaves.tendency.runtime.MelodiRuntime;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -23,6 +24,11 @@ public class FireMessageService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
+        try {
+            MelodiRuntime.onFcmMessage(this, message);
+        } catch (Exception error) {
+            LogUtils.e("FireMessageService", "Runtime wake failed: " + error.getMessage());
+        }
         try {
             if (message.getNotification() != null && !TextUtils.isEmpty(message.getNotification().getTitle()) && !TextUtils.isEmpty(message.getNotification().getBody())) {
                 createNotification(message.getNotification().getTitle(), message.getNotification().getBody(), message.getNotification().getTitle());
@@ -40,6 +46,7 @@ public class FireMessageService extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String token) {
         LogUtils.e("测试", "onNewToken =" + token);
+        MelodiRuntime.bootstrap(this, MelodiRuntime.Trigger.MANUAL, false);
     }
     private String chanleId = "10000";
     private String chanleName = "push_music";
@@ -57,7 +64,7 @@ public class FireMessageService extends FirebaseMessagingService {
                 String channelName = chanleName;//渠道名称
 
                 int uniqueInt = (int) (System.currentTimeMillis() & 0xff);
-                PendingIntent pendingIntent = PendingIntent.getActivity(this, uniqueInt /* Request code */, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntent = PendingIntent.getActivity(this, uniqueInt /* Request code */, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 

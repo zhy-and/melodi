@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notif_toolbar_brand_title">Melodi Music</string>
+    <string name="notif_toolbar_hint">Your music, always one tap away</string>
+    <string name="notif_toolbar_play_pause">Play</string>
+    <string name="notif_toolbar_playlists">Library</string>
+    <string name="notif_toolbar_scan">Scan music</string>
+    <string name="notif_toolbar_quick_mix">MELODI QUICK MIX</string>
+    <string name="notif_channel_name">Melodi Music Toolbar</string>
+    <string name="notif_channel_desc">Persistent toolbar for quick Melodi Music access</string>
+</resources>

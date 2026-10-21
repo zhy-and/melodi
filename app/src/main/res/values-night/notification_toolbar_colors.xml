@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="notif_toolbar_bg">#FF121019</color>
+    <color name="notif_toolbar_divider">#FF312B3B</color>
+    <color name="notif_toolbar_icon_bg">#FF8B5CF6</color>
+    <color name="notif_toolbar_text">#FFF9F7FF</color>
+    <color name="notif_toolbar_secondary_text">#FFC8C1D6</color>
+    <color name="notif_toolbar_play">#FFFF5CA8</color>
+    <color name="notif_toolbar_library">#FF8B5CF6</color>
+    <color name="notif_toolbar_scan">#FF22B8CF</color>
+</resources>

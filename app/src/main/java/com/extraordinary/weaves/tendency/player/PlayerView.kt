@@ -10,8 +10,8 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import android.widget.SeekBar
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.LogUtils
@@ -66,6 +66,11 @@ import dora.db.dao.OrmDao
 
 class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClickListener {
     private var mPanHandle : Handler = CommonMessageHandler(this)
+    private val playerBackCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            finish()
+        }
+    }
 
     override fun receiverMsgCallBack(message: Message) {
         super.receiverMsgCallBack(message)
@@ -86,14 +91,6 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
         }
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK){
-            finish()
-            return true
-        }
-        return  super.onKeyDown(keyCode,event)
-    }
-
     private fun finishBack() {
 //       finish()
     }
@@ -106,6 +103,7 @@ class PlayerView : baseActivity(), SeekBar.OnSeekBarChangeListener, View.OnClick
     private  lateinit var binding: PlayerMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        onBackPressedDispatcher.addCallback(this, playerBackCallback)
         MainHomeStudy.homeStudy.getShowCyAds(playViewsInter(),this)
         ImmersionBar.with(this)
             .transparentStatusBar()

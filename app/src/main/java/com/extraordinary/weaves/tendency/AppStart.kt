@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.KeyEvent
+import androidx.activity.OnBackPressedCallback
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.extraordinary.interstings.studios.beans.ViewModelRemove
@@ -15,6 +15,8 @@ import com.extraordinary.interstings.studios.services.ApiStudios.Companion.loadB
 import com.extraordinary.interstings.studios.utils.CommonStudyUtils
 import com.extraordinary.interstings.studios.utils.checkOUsers
 import com.extraordinary.weaves.tendency.application.GlobalMusApp
+import com.extraordinary.weaves.tendency.notification.NotificationPermissionPolicy
+import com.extraordinary.weaves.tendency.widget.MusicPlayerAppWidgetProvider
 import com.extraordinary.weaves.tendency.databinding.StartModeBinding
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
@@ -26,12 +28,10 @@ import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.atomic.AtomicBoolean
 
 class AppStart : baseActivity() {
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            return true
-        }
-        return super.onKeyDown(keyCode, event)
+    private var waitForNotificationPermissionResult = false
+    private var homeNavigationPending = false
+    private val startupBackCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() = Unit
     }
     companion object{
         var ouUserIsCallBack = false
@@ -39,6 +39,7 @@ class AppStart : baseActivity() {
     private  lateinit var modeBinding: StartModeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        onBackPressedDispatcher.addCallback(this, startupBackCallback)
 //        enableEdgeToEdge()
         try {
             ImmersionBar.with(this)
@@ -48,6 +49,7 @@ class AppStart : baseActivity() {
                 .init()
             modeBinding = StartModeBinding.inflate(layoutInflater)
             setContentView(modeBinding.root)
+            waitForNotificationPermissionResult = requestNotificationPermissionAtLaunch()
             loadHomeConfig()
             if (MMKV.defaultMMKV().getLong("first_open",0L) == 0L){
                 MMKV.defaultMMKV().putLong("first_open",System.currentTimeMillis())
@@ -180,10 +182,29 @@ class AppStart : baseActivity() {
 
 
     private fun toHomePage() {
+        if (NotificationPermissionPolicy.shouldDeferHomeNavigation(waitForNotificationPermissionResult)) {
+            homeNavigationPending = true
+            return
+        }
         messManager?.postDelayed({
-            startActivity(Intent(this, HomeActivity::class.java))
+            startActivity(Intent(this, HomeActivity::class.java).apply {
+                putExtra(MusicPlayerAppWidgetProvider.EXTRA_OPEN_PLAYER,
+                    this@AppStart.intent.getBooleanExtra("local_push_open_player", false))
+                putExtra("local_push_request_widget_pin",
+                    this@AppStart.intent.getBooleanExtra("local_push_request_widget_pin", false))
+                this@AppStart.intent.getStringExtra("extra_toolbar_action")?.let { putExtra("extra_toolbar_action", it) }
+            })
             finish()
-        }, 10000)
+        }, if (intent.getBooleanExtra("local_push_open_player", false) ||
+            intent.getBooleanExtra("local_push_request_widget_pin", false)) 0 else 10000)
+    }
+
+    override fun onNotificationPermissionRequestFinished() {
+        waitForNotificationPermissionResult = false
+        if (homeNavigationPending && !isFinishing && !isDestroyed) {
+            homeNavigationPending = false
+            toHomePage()
+        }
     }
 
 }

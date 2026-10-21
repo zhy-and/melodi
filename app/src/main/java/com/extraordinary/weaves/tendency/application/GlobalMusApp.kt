@@ -6,6 +6,7 @@ import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ProcessUtils
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFER_INFO
 import com.extraordinary.interstings.studios.workmanager.CommonRequestTools
 import com.extraordinary.weaves.tendency.BuildConfig
@@ -15,6 +16,14 @@ import com.extraordinary.weaves.tendency.bean.Folder
 import com.extraordinary.weaves.tendency.bean.Music
 import com.extraordinary.weaves.tendency.global.AppConfig
 import com.extraordinary.weaves.tendency.manager.MediaManager
+import com.extraordinary.weaves.tendency.analytics.MelodiPushAnalytics
+import com.extraordinary.weaves.tendency.notification.localpush.LocalEventPushBootstrap
+import com.extraordinary.weaves.tendency.notification.localpush.LocalPushTelemetry
+import com.extraordinary.weaves.tendency.notification.localpush.LocalPushUi
+import com.extraordinary.weaves.tendency.runtime.MelodiRuntime
+import com.extraordinary.weaves.tendency.runtime.RuntimeRemoteConfig
+import com.extraordinary.weaves.tendency.runtime.UserSegmentHelper
+import com.extraordinary.weaves.tendency.widget.WidgetPinHelper
 import com.google.android.gms.ads.MobileAds
 import com.tencent.mmkv.MMKV
 import dora.BaseApplication
@@ -32,6 +41,9 @@ import com.mbridge.msdk.MBridgeConstans
 import com.mbridge.msdk.out.MBridgeSDKFactory
 import com.unity3d.ads.metadata.MetaData
 import java.net.HttpURLConnection
+
+internal fun shouldRunFullAppInitialization(processName: String, packageName: String): Boolean =
+    processName == packageName
 
 /**
  *
@@ -61,6 +73,10 @@ class GlobalMusApp : BaseApplication(), AppConfig {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        if (!shouldRunFullAppInitialization(ProcessUtils.getCurrentProcessName(), packageName)) {
+            initDb()
+            return
+        }
         init()
     }
     private fun initReferInfos() {
@@ -79,6 +95,7 @@ class GlobalMusApp : BaseApplication(), AppConfig {
                                     LogUtils.e("InstallReferrerClient","InstallReferrerClient success$referrerUrl")
                                     if (!TextUtils.isEmpty(referrerUrl)){
                                         MMKV.defaultMMKV().putString(MUSIC_CONSTANT_APP_REFER_INFO,referrerUrl)
+                                        UserSegmentHelper.onReferInfoUpdated(this@GlobalMusApp)
                                         referrerClient?.endConnection()
                                     }
                                 }
@@ -98,6 +115,7 @@ class GlobalMusApp : BaseApplication(), AppConfig {
                             referrerClient?.endConnection()
                         }
                     }
+                    UserSegmentHelper.notifyReferFlowFinished(this@GlobalMusApp)
                 }
 
                 override fun onInstallReferrerServiceDisconnected() {
@@ -115,7 +133,8 @@ class GlobalMusApp : BaseApplication(), AppConfig {
             }
             AppUtils.registerAppStatusChangedListener(object : Utils.OnAppStatusChangedListener{
                 override fun onForeground(activity: Activity?) {
-
+                    MelodiRuntime.onAppForeground(this@GlobalMusApp)
+                    LocalEventPushBootstrap.refreshOnForeground(this@GlobalMusApp)
                 }
 
                 override fun onBackground(activity: Activity?) {
@@ -130,10 +149,23 @@ class GlobalMusApp : BaseApplication(), AppConfig {
         weaveLauStatus = true
         initAF()
         MMKV.initialize(this)
+        UserSegmentHelper.startGate(this)
         initDb()    // 初始化SQLite数据库的表
         initMedia() // 初始化媒体管理器
         LogUtils.getConfig().isLogSwitch = BuildConfig.DEBUG
         initManager()
+        LocalPushTelemetry.listener = object : LocalPushTelemetry.Listener {
+            override fun funnel(context: android.content.Context, values: Map<String, String>) {
+                MelodiPushAnalytics.logLpFunnel(context, values)
+            }
+            override fun report(context: android.content.Context, route: String, reason: String, result: String) {
+                MelodiPushAnalytics.reportBackend(context, "10008", route, reason, result)
+            }
+        }
+        LocalPushUi.widgetPinnedChecker = { WidgetPinHelper.hasPinnedWidget(it) }
+        LocalEventPushBootstrap.start(this)
+        MelodiRuntime.bootstrap(this)
+        RuntimeRemoteConfig.refreshIfNeeded(this)
 
     }
 

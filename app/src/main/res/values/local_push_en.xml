@@ -1,0 +1,169 @@
+<resources>
+<string name="notif_event_channel_name">Melodi reminders</string>
+    
+<string name="notif_event_channel_desc">Local reminders from Melodi</string>
+    
+<string name="notif_event_screenshot_title">Another screenshot? Open Melodi when you\'re ready</string>
+    
+<string-array name="notif_event_screenshot_titles">
+        <item>Another screenshot? Open Melodi when you\'re ready</item>
+        <item>New screenshot found — tap to open Melodi</item>
+        <item>Screenshots piling up — take a music break</item>
+        <item>Don\'t forget your favorite music</item>
+        <item>New screenshot +1 — return to your music</item>
+    </string-array>
+    
+<string name="notif_event_install_title">New app installed — return to your music</string>
+    
+<string name="notif_event_uninstall_title">App uninstalled — return to Melodi</string>
+    
+<string name="notif_event_battery_below_50_title">Battery at 50%, playlist at 100%</string>
+    
+<string name="notif_event_battery_below_20_title">Phone needs charging — ears need music!</string>
+    
+<string name="notif_event_charging_title">Charging ready — playlists waiting</string>
+    
+<string name="notif_event_charging_full_title">Battery full — keep enjoying the music</string>
+    
+<string name="notif_event_charging_to_80_title">Battery recovered — resume high-quality playback?</string>
+    
+<string name="notif_event_charging_disconnect_title">Still listening without a charger</string>
+    
+<string name="notif_event_app_update_title">App updated — come back for music</string>
+    
+<string name="notif_event_network_change_title">Network glitch — keep playing?</string>
+    
+<string name="notif_event_screen_lock_title">Switched to background play mode.</string>
+    
+<string-array name="notif_event_screen_lock_titles">
+        <item>Switched to background play mode.</item>
+        <item>Lock the screen, not the music.</item>
+        <item>Sleep mode activated.</item>
+    </string-array>
+    
+<string name="notif_event_screen_on_after_lock_title">Screen\'s on — music should be on too.</string>
+    
+<string-array name="notif_event_screen_on_after_lock_titles">
+        <item>Screen\'s on — music should be on too.</item>
+        <item>Wake up your ears — your favorite song is one tap away.</item>
+    </string-array>
+    
+<string name="notif_event_storage_free_drop_title">Phone storage changed — open Melodi</string>
+    
+<string name="notif_event_scheduled_push_1_title">Your local library grew — tap to import now</string>
+    
+<string name="notif_event_scheduled_push_2_title">Sweet dreams start here — tap to listen</string>
+    
+<string name="notif_event_scheduled_push_3_title">One tap to your playlists — set up a widget</string>
+    
+<string name="notif_event_app_inactive_title">We miss you — see what\'s new while you were away</string>
+    
+<string-array name="notif_event_app_inactive_titles">
+        <item>We miss you — see what\'s new while you were away</item>
+        <item>Your music library is calling — tap to come back</item>
+        <item>Too quiet for too long — fill the silence with rhythm</item>
+        <item>Days without music are wasted — tap to change that</item>
+        <item>Long time no see! Rediscover the songs you loved</item>
+    </string-array>
+    
+<string-array name="notif_event_scheduled_push_1_titles">
+        <item>Your local library grew — tap to import now</item>
+        <item>New music unlocked — organize and play</item>
+        <item>New songs ready to join your playlist</item>
+        <item>Time to tidy up — reshape your music library</item>
+        <item>Playlists your way — create today\'s list</item>
+        <item>Album mode on — immerse in a full album</item>
+        <item>Your albums are calling — tap to browse</item>
+        <item>A new wave is here — set your music mood</item>
+        <item>Hand-picked gems — tap to preview now</item>
+        <item>All set — check today\'s recommendations</item>
+        <item>Start today\'s music journey</item>
+        <item>AI curated tracks just for you — tap to listen</item>
+        <item>Your AI playlist is ready — discover surprises</item>
+        <item>Let AI handle today\'s playlist — tap to start</item>
+        <item>Time to refresh your favorites — tap to organize</item>
+        <item>Give your music life a clean sweep</item>
+    </string-array>
+    
+<string-array name="notif_event_scheduled_push_2_titles">
+        <item>Sweet dreams start here — tap to listen</item>
+        <item>30 minutes to bedtime — play sleep tracks</item>
+        <item>Drift off to dreamy melodies — tap to play</item>
+    </string-array>
+    
+<string-array name="notif_event_scheduled_push_3_titles">
+        <item>One tap to your playlists — set up a widget</item>
+        <item>Widgets make it easier — add a music shortcut</item>
+        <item>Play fast without unlocking — enable the home widget</item>
+    </string-array>
+    
+<string name="notif_event_action_open_home">Open</string>
+    
+<string name="notif_event_wired_headset_connect_title">Headphones in — silent world mode on</string>
+    
+<string name="notif_event_wired_headset_disconnect_title">Headphones unplugged? Tap to switch</string>
+    
+<string name="notif_event_bluetooth_connect_title">Bluetooth connected — start playing?</string>
+    
+<string name="notif_event_bluetooth_disconnect_title">Connection lost? Tap to reconnect</string>
+    
+<string name="notif_event_audio_focus_lost_title">Interrupted by another app? Tap to continue</string>
+    
+<string name="notif_event_volume_above_50_title">Volume cranked up? Unlock high-energy playlists</string>
+    
+<string name="notif_event_volume_below_20_title">Soft mode on — tap for soothing tracks</string>
+    
+<string name="notif_event_user_unlock_title">Nice to see you — pick up that song again</string>
+    
+<string name="notif_event_boot_completed_title">Startup done — your library missed you</string>
+    
+<string name="notif_event_playback_paused_title">One tap to resume your music — continue</string>
+    
+<string name="notif_event_playback_background_title">Playing now — tap for lyrics</string>
+    
+<string-array name="notif_event_playback_background_titles">
+        <item>Playing now — tap for lyrics</item>
+        <item>Still playing — tap to see what\'s next</item>
+        <item>Lyrics unlocked — open the player</item>
+    </string-array>
+    
+<string name="notif_event_app_background_title">Music is still playing</string>
+    
+<string name="notif_event_app_background_content">Tap to return and keep listening</string>
+    
+<string-array name="notif_event_app_background_titles">
+        <item>Music is still playing</item>
+        <item>Music is waiting for you</item>
+        <item>Don\'t stay away too long</item>
+        <item>Return to the player in one tap</item>
+        <item>Offline music is ready</item>
+        <item>Hang on — don\'t go far</item>
+        <item>Back to the music world</item>
+        <item>Playlists ready for you</item>
+    </string-array>
+    
+<string-array name="notif_event_app_background_contents">
+        <item>Tap to return and keep listening</item>
+        <item>Tap to return and browse your local playlists</item>
+        <item>Your local library is waiting for you</item>
+        <item>Tap the notification to jump back to music</item>
+        <item>Return to the app and enjoy local tracks anytime</item>
+        <item>Your personal playlist is waiting to play</item>
+        <item>One tap to continue your music journey</item>
+        <item>Tap back and start your favorite tracks</item>
+    </string-array>
+    
+<string name="notif_event_audio_download_title">Audio downloaded — listen offline anytime</string>
+    
+<string-array name="notif_event_audio_download_titles">
+        <item>Audio downloaded — listen offline anytime</item>
+        <item>High-quality audio saved — tap to preview</item>
+        <item>The audio you waited for is ready — listen now</item>
+        <item>Audio saved locally — tap to play</item>
+        <item>New track downloaded — open to listen now</item>
+    </string-array>
+    
+<string name="notif_days_unit">day</string>
+
+    
+</resources>

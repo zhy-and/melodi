@@ -1,6 +1,9 @@
 package com.extraordinary.weaves.tendency
 
 import android.app.AlertDialog
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -9,7 +12,16 @@ import android.os.Message
 import android.os.PersistableBundle
 import android.util.Log
 import android.view.KeyEvent
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import com.extraordinary.weaves.tendency.notification.NotificationPermissionPolicy
+import com.extraordinary.weaves.tendency.analytics.MelodiPushAnalytics
+import com.extraordinary.weaves.tendency.runtime.MelodiRuntime
+import com.extraordinary.weaves.tendency.dialog.logMusicEvents
+import com.extraordinary.weaves.tendency.dialog.event_permit_notice_agree
+import com.extraordinary.weaves.tendency.dialog.event_permit_notice_refuse
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.extraordinary.interstings.studios.beans.MDataBeans
@@ -37,6 +49,95 @@ import dora.util.PinyinUtils
 
 
 open class baseActivity : AppCompatActivity() {
+
+    private var notificationRequestInFlight = false
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            notificationRequestInFlight = false
+            val result = NotificationPermissionPolicy.afterResult(
+                granted || hasNotificationPermission(), notificationDenials(),
+            )
+            MMKV.defaultMMKV().putInt(NOTIFICATION_DENIALS_KEY, result.denials)
+            MelodiPushAnalytics.logPermissionPath(this,
+                if (result.nextStep == NotificationPermissionPolicy.NextStep.GRANTED)
+                    "path_notif_perm_granted" else "path_notif_perm_denied")
+            logMusicEvents(if (result.nextStep == NotificationPermissionPolicy.NextStep.GRANTED)
+                event_permit_notice_agree else event_permit_notice_refuse)
+            if (result.nextStep == NotificationPermissionPolicy.NextStep.GRANTED) {
+                MelodiRuntime.onNotificationPermissionGranted(this)
+            }
+            onNotificationPermissionRequestFinished()
+        }
+
+    protected fun hasNotificationPermission(): Boolean =
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+
+    private fun notificationDenials(): Int = MMKV.defaultMMKV().getInt(NOTIFICATION_DENIALS_KEY, 0)
+
+    fun requestNotificationPermissionAtLaunch(): Boolean {
+        if (hasNotificationPermission()) {
+            MelodiRuntime.onNotificationPermissionGranted(this)
+            return false
+        }
+        if (NotificationPermissionPolicy.canLaunchRequest(
+                notificationRequestInFlight,
+                NotificationPermissionPolicy.shouldRequestAtLaunch(notificationDenials()),
+            )) {
+            MelodiPushAnalytics.logPermissionPath(this, "path_notif_perm_shown")
+            notificationRequestInFlight = true
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            return true
+        }
+        return false
+    }
+
+    fun requestNotificationPermissionAtHome() {
+        if (hasNotificationPermission() || isFinishing) return
+        if (NotificationPermissionPolicy.canLaunchRequest(
+                notificationRequestInFlight,
+                NotificationPermissionPolicy.shouldRequestAtHome(
+                    notificationDenials(), shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS),
+                ),
+            )) {
+            MelodiPushAnalytics.logPermissionPath(this, "path_notif_perm_home_retry")
+            notificationRequestInFlight = true
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
+
+    protected open fun onNotificationPermissionRequestFinished() = Unit
+
+    companion object {
+        private const val NOTIFICATION_DENIALS_KEY = "push_notification_denials"
+    }
+
+    private val baseBackCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            when (BackNavigationPolicy.exitActionFor(localClassName)) {
+                BackNavigationPolicy.ExitAction.FIRST_AD -> {
+                    LogUtils.e("------------------------one back ")
+                    MainHomeStudy.homeStudy.getShowCyAds(finishPageInterOne(), this@baseActivity)
+                    finish()
+                }
+                BackNavigationPolicy.ExitAction.SECOND_AD -> {
+                    LogUtils.e("------------------------two back ")
+                    MainHomeStudy.homeStudy.getShowCyAds(finishPageInterTwo(), this@baseActivity)
+                    finish()
+                }
+                BackNavigationPolicy.ExitAction.NONE -> {
+                    isEnabled = false
+                    onBackPressedDispatcher.onBackPressed()
+                    isEnabled = true
+                }
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        onBackPressedDispatcher.addCallback(this, baseBackCallback)
+    }
 
     val albumOnlineList: MutableList<Album> = ArrayList()
     val artOnlineList: MutableList<Artist> = ArrayList()
@@ -307,12 +408,16 @@ open class baseActivity : AppCompatActivity() {
     }
 
      fun speFinish() {
-        if (checkPageOne()){
-            LogUtils.e("------------------------f one back ")
-            MainHomeStudy.homeStudy.getShowCyAds(finishPageInterOne(),this)
-        }else if (checkPageTwo()){
-            LogUtils.e("------------------------f two back ")
-            MainHomeStudy.homeStudy.getShowCyAds(finishPageInterTwo(),this)
+        when (BackNavigationPolicy.exitActionFor(localClassName)) {
+            BackNavigationPolicy.ExitAction.FIRST_AD -> {
+                LogUtils.e("------------------------f one back ")
+                MainHomeStudy.homeStudy.getShowCyAds(finishPageInterOne(), this)
+            }
+            BackNavigationPolicy.ExitAction.SECOND_AD -> {
+                LogUtils.e("------------------------f two back ")
+                MainHomeStudy.homeStudy.getShowCyAds(finishPageInterTwo(), this)
+            }
+            BackNavigationPolicy.ExitAction.NONE -> Unit
         }
         super.finish()
     }
@@ -362,54 +467,6 @@ open class baseActivity : AppCompatActivity() {
         }
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK && checkPageOne()){
-            LogUtils.e("------------------------one back ")
-            MainHomeStudy.homeStudy.getShowCyAds(finishPageInterOne(),this)
-            finish()
-            return true
-        }else if (keyCode == KeyEvent.KEYCODE_BACK && checkPageTwo()){
-            LogUtils.e("------------------------two back ")
-            MainHomeStudy.homeStudy.getShowCyAds(finishPageInterTwo(),this)
-            finish()
-            return true
-        }
-        return  super.onKeyDown(keyCode,event)
-    }
-    private fun checkPageOne(): Boolean {
-        if (this.localClassName.contains("HomeActivity")
-            || this.localClassName.contains("AppStart")
-            || this.localClassName.contains("AppGeDanDetail")
-            || this.localClassName.contains("AppAlbumDetail")
-            || this.localClassName.contains("AppArtDetail")
-            || this.localClassName.contains("AppLyricView")
-            || this.localClassName.contains("FeedView")
-            || this.localClassName.contains("PrivacyPage")
-        ){
-            return false
-        }
-        return true
-    }
-
-    private fun checkPageTwo(): Boolean {
-        if (this.localClassName.contains("HomeActivity")
-            || this.localClassName.contains("AppStart")
-            || this.localClassName.contains("AppSearch")
-            || this.localClassName.contains("AppMoreView")
-            || this.localClassName.contains("ScanPage")
-            || this.localClassName.contains("TrackList")
-            || this.localClassName.contains("AppStyleList")
-            || this.localClassName.contains("AppAlbumList")
-            || this.localClassName.contains("AppArtistList")
-            || this.localClassName.contains("AppGeDanList")
-            || this.localClassName.contains("PlayerView")
-            || this.localClassName.contains("AppPlayerList")
-        ){
-            return false
-        }
-
-        return true
-    }
     open fun setTimer(handler: Handler){
             timer = MusicTimer(handler)
         }
