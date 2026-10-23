@@ -150,6 +150,9 @@
   @com.google.gson.annotations.SerializedName <fields>;
 }
 ##---------------End: proguard configuration for Gson  ----------
+
+# Gson reflects on local push config models and generic Map fields.
+-keep class com.extraordinary.weaves.tendency.notification.localpush.LocalPushConfig$* { *; }
 #-------------------------------------------------------------------------
 #okhttp
 -dontwarn com.squareup.okhttp.**

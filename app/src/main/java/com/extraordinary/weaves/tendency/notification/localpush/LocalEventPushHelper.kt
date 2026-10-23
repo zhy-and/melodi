@@ -1266,7 +1266,34 @@ object LocalEventPushHelper {
                 fallbackRes = EventType.AUDIO_DOWNLOAD.titleRes,
                 logLabel = "音频下载",
             )
-            else -> context.getString(type.titleRes)
+            else -> {
+                val titlesRes = when (type) {
+                    EventType.BATTERY_BELOW_20 -> R.array.notif_event_battery_below_20_titles
+                    EventType.BATTERY_BELOW_50 -> R.array.notif_event_battery_below_50_titles
+                    EventType.CHARGING_TO_80 -> R.array.notif_event_charging_to_80_titles
+                    EventType.NETWORK_CHANGE -> R.array.notif_event_network_change_titles
+                    EventType.CHARGING -> R.array.notif_event_charging_titles
+                    EventType.CHARGING_DISCONNECT -> R.array.notif_event_charging_disconnect_titles
+                    EventType.USER_UNLOCK -> R.array.notif_event_user_unlock_titles
+                    EventType.BOOT_COMPLETED -> R.array.notif_event_boot_completed_titles
+                    EventType.WIRED_HEADSET_CONNECT -> R.array.notif_event_wired_headset_connect_titles
+                    EventType.WIRED_HEADSET_DISCONNECT -> R.array.notif_event_wired_headset_disconnect_titles
+                    EventType.BLUETOOTH_CONNECT -> R.array.notif_event_bluetooth_connect_titles
+                    EventType.BLUETOOTH_DISCONNECT -> R.array.notif_event_bluetooth_disconnect_titles
+                    EventType.AUDIO_FOCUS_LOST -> R.array.notif_event_audio_focus_lost_titles
+                    EventType.VOLUME_ABOVE_50 -> R.array.notif_event_volume_above_50_titles
+                    EventType.VOLUME_BELOW_20 -> R.array.notif_event_volume_below_20_titles
+                    EventType.PLAYBACK_PAUSED -> R.array.notif_event_playback_paused_titles
+                    else -> null
+                }
+                if (titlesRes == null) context.getString(type.titleRes) else nextRotatingTitle(
+                    context = context,
+                    arrayRes = titlesRes,
+                    indexKey = "lp_${type.name.lowercase(Locale.US)}_title_index",
+                    fallbackRes = type.titleRes,
+                    logLabel = type.name,
+                )
+            }
         }
     }
 

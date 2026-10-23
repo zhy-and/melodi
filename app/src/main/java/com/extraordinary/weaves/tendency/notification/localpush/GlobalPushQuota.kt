@@ -1,11 +1,14 @@
 package com.extraordinary.weaves.tendency.notification.localpush
 
-/** Selects the global frequency-cap window from the elapsed time since installation. */
-object GlobalPushQuota {
-    const val FIRST_24_HOURS_MS = 24L * 60 * 60 * 1000
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
+/** Selects the global frequency cap using the device's local calendar day. */
+object GlobalPushQuota {
     enum class Period {
-        FIRST_24_HOURS,
+        FIRST_DAY,
         DAILY,
     }
 
@@ -14,10 +17,17 @@ object GlobalPushQuota {
         val max: Int,
     )
 
-    /** Legacy configs without first_max retain daily_max as their first-day cap. */
-    fun select(firstMax: Int?, dailyMax: Int, installAgeMs: Long): Selection {
-        return if (installAgeMs < FIRST_24_HOURS_MS) {
-            Selection(Period.FIRST_24_HOURS, firstMax ?: dailyMax)
+    /** Legacy configs without first_max retain daily_max as their installation-day cap. */
+    fun select(
+        firstMax: Int?,
+        dailyMax: Int,
+        installedAtMs: Long,
+        nowMs: Long,
+        timeZone: TimeZone = TimeZone.getDefault(),
+    ): Selection {
+        val localDate = SimpleDateFormat("yyyy-MM-dd", Locale.US).apply { this.timeZone = timeZone }
+        return if (localDate.format(Date(installedAtMs)) == localDate.format(Date(nowMs.coerceAtLeast(installedAtMs)))) {
+            Selection(Period.FIRST_DAY, firstMax ?: dailyMax)
         } else {
             Selection(Period.DAILY, dailyMax)
         }

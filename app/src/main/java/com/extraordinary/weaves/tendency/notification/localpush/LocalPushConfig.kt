@@ -355,7 +355,7 @@ object LocalPushConfig {
     }
 
     private const val KEY_FIRST_SEEN_AT = "local_push_first_seen_at"
-    private const val KEY_FIRST_24_HOURS_GLOBAL = "local_push_first_24_hours_global"
+    private const val KEY_FIRST_DAY_GLOBAL = "local_push_first_24_hours_global"
     private const val KEY_GLOBAL_LAST_SHOWN_AT = "local_push_global_last_shown_at"
     private const val KEY_DAILY_DATE = "local_push_daily_date"
     private const val KEY_DAILY_GLOBAL = "local_push_daily_global"
@@ -588,7 +588,7 @@ object LocalPushConfig {
         val store = MMKV.defaultMMKV()
         val globalQuota = globalQuota(context, now)
         val globalCountKey = when (globalQuota.period) {
-            GlobalPushQuota.Period.FIRST_24_HOURS -> KEY_FIRST_24_HOURS_GLOBAL
+            GlobalPushQuota.Period.FIRST_DAY -> KEY_FIRST_DAY_GLOBAL
             GlobalPushQuota.Period.DAILY -> KEY_DAILY_GLOBAL
         }
         val globalCount = store.getInt(globalCountKey, 0)
@@ -623,9 +623,9 @@ object LocalPushConfig {
         store.putLong(KEY_PREFIX_BUCKET_LAST + runtime.bucketKey, now)
         store.putLong(KEY_PREFIX_SCENE_LAST + runtime.sceneKey, now)
         when (globalQuota.period) {
-            GlobalPushQuota.Period.FIRST_24_HOURS -> store.putInt(
-                KEY_FIRST_24_HOURS_GLOBAL,
-                store.getInt(KEY_FIRST_24_HOURS_GLOBAL, 0) + 1,
+            GlobalPushQuota.Period.FIRST_DAY -> store.putInt(
+                KEY_FIRST_DAY_GLOBAL,
+                store.getInt(KEY_FIRST_DAY_GLOBAL, 0) + 1,
             )
             GlobalPushQuota.Period.DAILY -> store.putInt(
                 KEY_DAILY_GLOBAL,
@@ -644,7 +644,7 @@ object LocalPushConfig {
         LogUtils.i(
             TAG,
             "记录展示成功：scene=${runtime.sceneKey} bucket=${runtime.bucketKey} now=$now " +
-                "globalPeriod=${globalQuota.period} globalFirst24h=${store.getInt(KEY_FIRST_24_HOURS_GLOBAL, 0)} " +
+                "globalPeriod=${globalQuota.period} globalFirstDay=${store.getInt(KEY_FIRST_DAY_GLOBAL, 0)} " +
                 "globalDaily=${store.getInt(KEY_DAILY_GLOBAL, 0)} " +
                 "bucketDaily=${store.getInt(KEY_PREFIX_BUCKET_DAILY + runtime.bucketKey, 0)} " +
                 "sceneDaily=${store.getInt(KEY_PREFIX_SCENE_DAILY + runtime.sceneKey, 0)}",
@@ -759,15 +759,15 @@ object LocalPushConfig {
 
     private fun globalQuota(context: Context, now: Long): GlobalPushQuota.Selection {
         val installStartedAt = installStartedAt(context)
-        val installAgeMs = (now - installStartedAt).coerceAtLeast(0L)
         return GlobalPushQuota.select(
             firstMax = config.global.firstMax,
             dailyMax = config.global.dailyMax,
-            installAgeMs = installAgeMs,
+            installedAtMs = installStartedAt,
+            nowMs = now,
         ).also { quota ->
             LogUtils.i(
                 TAG,
-                "全局展示窗口判断：installStartedAt=$installStartedAt installAgeMs=$installAgeMs " +
+                "全局展示窗口判断：installStartedAt=$installStartedAt now=$now " +
                     "period=${quota.period} max=${quota.max}",
             )
         }

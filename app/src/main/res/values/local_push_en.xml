@@ -17,153 +17,289 @@
     
 <string name="notif_event_uninstall_title">App uninstalled — return to Melodi</string>
     
-<string name="notif_event_battery_below_50_title">Battery at 50%, playlist at 100%</string>
+<string name="notif_event_battery_below_50_title">Half the battery, just right for half the good songs.</string>
     
-<string name="notif_event_battery_below_20_title">Phone needs charging — ears need music!</string>
+<string name="notif_event_battery_below_20_title">The last few minutes before shutdown belong to that unfinished song.</string>
     
-<string name="notif_event_charging_title">Charging ready — playlists waiting</string>
+<string name="notif_event_charging_title">The phone\'s recovering — your ears needn\'t idle.</string>
     
 <string name="notif_event_charging_full_title">Battery full — keep enjoying the music</string>
     
-<string name="notif_event_charging_to_80_title">Battery recovered — resume high-quality playback?</string>
+<string name="notif_event_charging_to_80_title">80% is the golden zone for listening.</string>
     
-<string name="notif_event_charging_disconnect_title">Still listening without a charger</string>
+<string name="notif_event_charging_disconnect_title">Charging done — the road ahead belongs to the music.</string>
     
 <string name="notif_event_app_update_title">App updated — come back for music</string>
     
-<string name="notif_event_network_change_title">Network glitch — keep playing?</string>
+<string name="notif_event_network_change_title">The network\'s back, and that cloud song found you.</string>
     
-<string name="notif_event_screen_lock_title">Switched to background play mode.</string>
+<string name="notif_event_screen_lock_title">The screen dims, and the world of sound lights up.</string>
     
 <string-array name="notif_event_screen_lock_titles">
-        <item>Switched to background play mode.</item>
-        <item>Lock the screen, not the music.</item>
-        <item>Sleep mode activated.</item>
+        <item>The screen dims, and the world of sound lights up.</item>
+        <item>Eyes rest, ears take over — a perfect shift change.</item>
+        <item>The screen sleeps; the melody stays awake.</item>
+        <item>The screen goes out — the stage of sound gets its lights.</item>
+        <item>Eyes close — the ears\' little universe opens.</item>
     </string-array>
     
-<string name="notif_event_screen_on_after_lock_title">Screen\'s on — music should be on too.</string>
+<string name="notif_event_screen_on_after_lock_title">The screen\'s awake, but the ears are still yawning.</string>
     
 <string-array name="notif_event_screen_on_after_lock_titles">
-        <item>Screen\'s on — music should be on too.</item>
-        <item>Wake up your ears — your favorite song is one tap away.</item>
+        <item>The screen\'s awake, but the ears are still yawning.</item>
+        <item>The instant the screen lights, the melody\'s in place.</item>
+        <item>In the time it takes to light the screen, the intro begins.</item>
+        <item>Screen on? A melody wants to meet you.</item>
+        <item>The screen-on instant — how about a melody you\'ve never heard?</item>
     </string-array>
     
 <string name="notif_event_storage_free_drop_title">Phone storage changed — open Melodi</string>
     
-<string name="notif_event_scheduled_push_1_title">Your local library grew — tap to import now</string>
+<string name="notif_event_scheduled_push_1_title">Scan finished — the library\'s map grew a ring.</string>
     
-<string name="notif_event_scheduled_push_2_title">Sweet dreams start here — tap to listen</string>
+<string name="notif_event_scheduled_push_2_title">The last minutes before sleep suit a light melody.</string>
     
-<string name="notif_event_scheduled_push_3_title">One tap to your playlists — set up a widget</string>
+<string name="notif_event_scheduled_push_3_title">Keep a music door on your screen — play anytime.</string>
     
-<string name="notif_event_app_inactive_title">We miss you — see what\'s new while you were away</string>
+<string name="notif_event_app_inactive_title">Your playlist\'s been quiet a whole day — it\'s not used to it.</string>
     
 <string-array name="notif_event_app_inactive_titles">
-        <item>We miss you — see what\'s new while you were away</item>
-        <item>Your music library is calling — tap to come back</item>
-        <item>Too quiet for too long — fill the silence with rhythm</item>
-        <item>Days without music are wasted — tap to change that</item>
-        <item>Long time no see! Rediscover the songs you loved</item>
+        <item>Your playlist\'s been quiet a whole day — it\'s not used to it.</item>
+        <item>A play button silent for 24 hours awaits an exception.</item>
+        <item>Long time no see — new songs await your pick.</item>
+        <item>The playlist\'s unchanged — it just misses your visit.</item>
+        <item>Come look — today\'s picks match your taste.</item>
     </string-array>
     
 <string-array name="notif_event_scheduled_push_1_titles">
-        <item>Your local library grew — tap to import now</item>
-        <item>New music unlocked — organize and play</item>
-        <item>New songs ready to join your playlist</item>
-        <item>Time to tidy up — reshape your music library</item>
-        <item>Playlists your way — create today\'s list</item>
-        <item>Album mode on — immerse in a full album</item>
-        <item>Your albums are calling — tap to browse</item>
-        <item>A new wave is here — set your music mood</item>
-        <item>Hand-picked gems — tap to preview now</item>
-        <item>All set — check today\'s recommendations</item>
-        <item>Start today\'s music journey</item>
-        <item>AI curated tracks just for you — tap to listen</item>
-        <item>Your AI playlist is ready — discover surprises</item>
-        <item>Let AI handle today\'s playlist — tap to start</item>
-        <item>Time to refresh your favorites — tap to organize</item>
-        <item>Give your music life a clean sweep</item>
+        <item>Scan finished — the library\'s map grew a ring.</item>
+        <item>Songs lost in folders have rejoined the ranks.</item>
+        <item>Library updated — time to stroll the new continent.</item>
+        <item>Library refreshed — a new repeat-one awaits your claim.</item>
+        <item>The treasure map of local music\'s just been drawn.</item>
+        <item>The ever-looping playlist could use fresh blood.</item>
+        <item>A stuffed playlist pushes the true loves to the corner.</item>
+        <item>The ritual of a new playlist starts with its first song.</item>
+        <item>Update the playlist — repeat-one feels fresh again.</item>
+        <item>Gather the loved ones in — that\'s when a playlist gets a soul.</item>
+        <item>There\'s an album made for start-to-finish tonight.</item>
+        <item>The one you saved still has unopened tracks.</item>
+        <item>An album\'s a film — which one screens tonight?</item>
+        <item>While sorting, an old familiar album surfaced.</item>
+        <item>A few on your album shelf have gathered dust.</item>
+        <item>Did you find that album\'s hidden track?</item>
+        <item>Your go-to genre just got a fresh shipment.</item>
+        <item>Rock or folk — let tonight\'s mood decide.</item>
+        <item>The genre\'s new arrivals suit your taste.</item>
+        <item>Genre radar — an untried style lies ahead.</item>
+        <item>Genre zones sorted — enter by mood.</item>
+        <item>Tonight\'s genre pick leans retro.</item>
+        <item>Favorite #1 — still remember why back then?</item>
+        <item>Tidying favorites is filing your feelings.</item>
+        <item>Saved-but-unplayed songs wait to be found.</item>
+        <item>Unfinished saves are unwrapped gifts.</item>
+        <item>The best time to tidy favorites is now.</item>
+        <item>Put the heart-fluttering ones up front.</item>
     </string-array>
     
 <string-array name="notif_event_scheduled_push_2_titles">
-        <item>Sweet dreams start here — tap to listen</item>
-        <item>30 minutes to bedtime — play sleep tracks</item>
-        <item>Drift off to dreamy melodies — tap to play</item>
+        <item>The last minutes before sleep suit a light melody.</item>
+        <item>Let a gentle song draw today\'s full stop.</item>
+        <item>Sleep hour — white noise and soft tunes on duty.</item>
+        <item>Before goodnight, pick the softest one.</item>
+        <item>Today\'s fatigue dissolves into a slow melody.</item>
+        <item>Tonight\'s playlist has switched to sleep mode.</item>
     </string-array>
     
 <string-array name="notif_event_scheduled_push_3_titles">
-        <item>One tap to your playlists — set up a widget</item>
-        <item>Widgets make it easier — add a music shortcut</item>
-        <item>Play fast without unlocking — enable the home widget</item>
+        <item>Keep a music door on your screen — play anytime.</item>
+        <item>Music on the desktop saves the hunt every time.</item>
+        <item>Add a music window — good songs at a glance.</item>
+        <item>That empty desktop slot is made for music.</item>
+        <item>Let music move onto your screen — closer to you.</item>
     </string-array>
     
-<string name="notif_event_action_open_home">Open</string>
+<string name="notif_event_action_open_home">GO</string>
     
-<string name="notif_event_wired_headset_connect_title">Headphones in — silent world mode on</string>
+<string name="notif_event_wired_headset_connect_title">That jack-click is the doorbell to your private booth.</string>
     
-<string name="notif_event_wired_headset_disconnect_title">Headphones unplugged? Tap to switch</string>
+<string name="notif_event_wired_headset_disconnect_title">Headphones off — the good song saves your progress.</string>
     
-<string name="notif_event_bluetooth_connect_title">Bluetooth connected — start playing?</string>
+<string name="notif_event_bluetooth_connect_title">Bluetooth in — the room becomes your concert hall.</string>
     
-<string name="notif_event_bluetooth_disconnect_title">Connection lost? Tap to reconnect</string>
+<string name="notif_event_bluetooth_disconnect_title">Device off, song not — let it play on.</string>
     
-<string name="notif_event_audio_focus_lost_title">Interrupted by another app? Tap to continue</string>
+<string name="notif_event_audio_focus_lost_title">The interrupted song still stands there waiting.</string>
     
-<string name="notif_event_volume_above_50_title">Volume cranked up? Unlock high-energy playlists</string>
+<string name="notif_event_volume_above_50_title">At high volume, the song shows its true face.</string>
     
-<string name="notif_event_volume_below_20_title">Soft mode on — tap for soothing tracks</string>
+<string name="notif_event_volume_below_20_title">Under 20% hides the most delicate passage.</string>
     
-<string name="notif_event_user_unlock_title">Nice to see you — pick up that song again</string>
+<string name="notif_event_user_unlock_title">That unlock can carry a melody along.</string>
     
-<string name="notif_event_boot_completed_title">Startup done — your library missed you</string>
+<string name="notif_event_boot_completed_title">The phone\'s awake — who gets to be the first song?</string>
     
-<string name="notif_event_playback_paused_title">One tap to resume your music — continue</string>
+<string name="notif_event_playback_paused_title">Where\'d you leave off? The progress bar remembers.</string>
     
-<string name="notif_event_playback_background_title">Playing now — tap for lyrics</string>
+<string name="notif_event_playback_background_title">The background song\'s hitting the part you love.</string>
     
 <string-array name="notif_event_playback_background_titles">
-        <item>Playing now — tap for lyrics</item>
-        <item>Still playing — tap to see what\'s next</item>
-        <item>Lyrics unlocked — open the player</item>
+        <item>The background song\'s hitting the part you love.</item>
+        <item>The music still plays — this company never closes.</item>
+        <item>The melody now fits the mood of this moment.</item>
+        <item>The one now playing grows on you.</item>
+        <item>The music hasn\'t stopped — the story\'s at its key part.</item>
     </string-array>
     
-<string name="notif_event_app_background_title">Music is still playing</string>
+<string name="notif_event_app_background_title">Don\'t keep the song waiting</string>
     
-<string name="notif_event_app_background_content">Tap to return and keep listening</string>
+<string name="notif_event_app_background_content">5s backstage, chorus incoming.</string>
     
 <string-array name="notif_event_app_background_titles">
-        <item>Music is still playing</item>
-        <item>Music is waiting for you</item>
-        <item>Don\'t stay away too long</item>
-        <item>Return to the player in one tap</item>
-        <item>Offline music is ready</item>
-        <item>Hang on — don\'t go far</item>
-        <item>Back to the music world</item>
-        <item>Playlists ready for you</item>
+        <item>Don\'t keep the song waiting</item>
+        <item>Music went backstage</item>
+        <item>5s absence alert</item>
+        <item>The melody\'s looking for you</item>
+        <item>The playlist calls you back</item>
+        <item>Don\'t miss this part</item>
+        <item>The chorus is coming</item>
+        <item>Music\'s still on shift</item>
     </string-array>
     
 <string-array name="notif_event_app_background_contents">
-        <item>Tap to return and keep listening</item>
-        <item>Tap to return and browse your local playlists</item>
-        <item>Your local library is waiting for you</item>
-        <item>Tap the notification to jump back to music</item>
-        <item>Return to the app and enjoy local tracks anytime</item>
-        <item>Your personal playlist is waiting to play</item>
-        <item>One tap to continue your music journey</item>
-        <item>Tap back and start your favorite tracks</item>
+        <item>5s backstage, chorus incoming.</item>
+        <item>The song\'s still on; come back right on cue.</item>
+        <item>Your BGM\'s still rolling; come take over.</item>
+        <item>5s backstage; come for this part.</item>
+        <item>5s in, your spot\'s intact.</item>
+        <item>5s backstage, and it\'s peaking.</item>
+        <item>5s backstage; come back just in time.</item>
+        <item>5s away; resume in one move.</item>
     </string-array>
     
-<string name="notif_event_audio_download_title">Audio downloaded — listen offline anytime</string>
+<string name="notif_event_audio_download_title">New stock arrived — the offline list grew a page.</string>
     
 <string-array name="notif_event_audio_download_titles">
-        <item>Audio downloaded — listen offline anytime</item>
-        <item>High-quality audio saved — tap to preview</item>
-        <item>The audio you waited for is ready — listen now</item>
-        <item>Audio saved locally — tap to play</item>
-        <item>New track downloaded — open to listen now</item>
+        <item>New stock arrived — the offline list grew a page.</item>
+        <item>Saved offline — on standby anytime.</item>
+        <item>100% downloaded — the joy\'s archived.</item>
+        <item>Offline stash +1 — no drought on the road.</item>
+        <item>Saved — repeat-one unlocked for this one.</item>
     </string-array>
     
 <string name="notif_days_unit">day</string>
 
     
+    <string-array name="notif_event_battery_below_20_titles">
+        <item>The last few minutes before shutdown belong to that unfinished song.</item>
+        <item>Low battery hurries, but also reminds: one song still owes you an ending.</item>
+        <item>The phone\'s about to shut down; don\'t let your ears follow.</item>
+        <item>At low battery, music is the best company on the menu.</item>
+        <item>This song\'s peak is stuck right at your low battery.</item>
+    </string-array>
+    <string-array name="notif_event_battery_below_50_titles">
+        <item>Half the battery, just right for half the good songs.</item>
+        <item>50% is the midway stop — for charging and for listening.</item>
+        <item>At 50%, your ears are just warmed up.</item>
+        <item>Half the battery, and the story\'s only half-told.</item>
+        <item>Past halfway, don\'t ease up — good songs are still queued.</item>
+    </string-array>
+    <string-array name="notif_event_charging_to_80_titles">
+        <item>80% is the golden zone for listening.</item>
+        <item>80% battery, and the ears still have 20% of appetite.</item>
+        <item>The battery nears full, and the playlist hits its stride.</item>
+        <item>80% covers this song plus one bonus track.</item>
+        <item>Battery nearly full, mood nearly full, playlist on standby.</item>
+    </string-array>
+    <string-array name="notif_event_network_change_titles">
+        <item>The network\'s back, and that cloud song found you.</item>
+        <item>The network\'s fully revived, and so is the sound quality.</item>
+        <item>Blackout was the pause; WiFi is the play.</item>
+        <item>Full bars, full stock of songs — all waiting for you.</item>
+        <item>Back online — bring back the album you left unfinished.</item>
+    </string-array>
+    <string-array name="notif_event_charging_titles">
+        <item>The phone\'s recovering — your ears needn\'t idle.</item>
+        <item>The moment the cable connects, the melody arrives on time.</item>
+        <item>Charge up, and let the ears feast too.</item>
+        <item>The plug\'s in place — this song\'s stage is set.</item>
+        <item>Phone charging — a mellow one suits it well.</item>
+    </string-array>
+    <string-array name="notif_event_charging_disconnect_titles">
+        <item>Charging done — the road ahead belongs to the music.</item>
+        <item>Leaving fully charged, playlist in tow.</item>
+        <item>Charging complete — the ears\' next stop is boarding.</item>
+        <item>The instant charging ends, music takes the shift.</item>
+        <item>Unplugged, and the world has its BGM back.</item>
+    </string-array>
+    <string-array name="notif_event_user_unlock_titles">
+        <item>That unlock can carry a melody along.</item>
+        <item>Phone\'s open — music\'s door opens with it.</item>
+        <item>Unlocked — today\'s BGM is applying for the shift.</item>
+        <item>Unlock done — the playlist\'s been ready a while.</item>
+        <item>Phone\'s open — good songs are never late.</item>
+    </string-array>
+    <string-array name="notif_event_boot_completed_titles">
+        <item>The phone\'s awake — who gets to be the first song?</item>
+        <item>System ready — the playlist was ready long before.</item>
+        <item>First thing after boot — let music say good morning.</item>
+        <item>Boot done — the play button\'s been waiting.</item>
+        <item>This boot moment — send in a song to warm up.</item>
+    </string-array>
+    <string-array name="notif_event_wired_headset_connect_titles">
+        <item>That jack-click is the doorbell to your private booth.</item>
+        <item>Headphones detected — your reserved seat is kept.</item>
+        <item>The other end of this cable leads to your music cabin.</item>
+        <item>Connected — the lead has taken the seat.</item>
+        <item>Headphones detected — good songs line up on cue.</item>
+    </string-array>
+    <string-array name="notif_event_wired_headset_disconnect_titles">
+        <item>Headphones off — the good song saves your progress.</item>
+        <item>With this unplug, the music whispers goodbye.</item>
+        <item>The moment they leave, the silence is almost loud.</item>
+        <item>Unplugged — that melody still circles the ear.</item>
+        <item>The headphones leave — the music exits, not ends.</item>
+    </string-array>
+    <string-array name="notif_event_bluetooth_connect_titles">
+        <item>Bluetooth in — the room becomes your concert hall.</item>
+        <item>Bluetooth ready — sound gets a bigger stage.</item>
+        <item>Connected — let the room hear your favorites.</item>
+        <item>BT device detected — the sound journey just upgraded.</item>
+        <item>Bluetooth in — this song deserves to be louder.</item>
+    </string-array>
+    <string-array name="notif_event_bluetooth_disconnect_titles">
+        <item>Device off, song not — let it play on.</item>
+        <item>The link broke — the melody\'s warmth lingers.</item>
+        <item>BT dropped — a fine excuse to switch styles.</item>
+        <item>Bluetooth left — don\'t leave the good song midair.</item>
+        <item>BT dropped — the melody waits for a refill.</item>
+    </string-array>
+    <string-array name="notif_event_audio_focus_lost_titles">
+        <item>The interrupted song still stands there waiting.</item>
+        <item>The interlude\'s over — your main track should return.</item>
+        <item>All done? The melody\'s still circling right there.</item>
+        <item>That song\'s peak still hangs on the pause button.</item>
+        <item>Music stepped aside — now it\'s your call.</item>
+    </string-array>
+    <string-array name="notif_event_volume_above_50_titles">
+        <item>At high volume, the song shows its true face.</item>
+        <item>Past 50% — the drums knock on the heart, beat by beat.</item>
+        <item>Past half — the song\'s highlight moment has arrived.</item>
+        <item>Past 50% — the atmosphere crew is in place.</item>
+        <item>High-volume warning — the chorus impact is coming.</item>
+    </string-array>
+    <string-array name="notif_event_volume_below_20_titles">
+        <item>Under 20% hides the most delicate passage.</item>
+        <item>Under 20%, lyrics lean close to the ear.</item>
+        <item>Near-silent mode fits this one perfectly.</item>
+        <item>This soft — the details move even more.</item>
+        <item>Under 20% — hearing switches to zoom mode.</item>
+    </string-array>
+    <string-array name="notif_event_playback_paused_titles">
+        <item>Where\'d you leave off? The progress bar remembers.</item>
+        <item>Pick the melody up from where your heart last moved.</item>
+        <item>You still haven\'t heard that song\'s ending.</item>
+        <item>The queue\'s ready — resuming from the pause fits.</item>
+        <item>Come back — this song\'s down to its final chapter.</item>
+    </string-array>
 </resources>

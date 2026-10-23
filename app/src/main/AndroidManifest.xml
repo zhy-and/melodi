@@ -87,7 +87,7 @@
             android:foregroundServiceType="specialUse">
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="Persistent quick-access toolbar for local music shortcuts" />
+                android:value="User-enabled persistent notification toolbar for local music playback controls, library access, and music scanning." />
         </service>
         <service
             android:name=".runtime.FgsRecoveryJobService"
