@@ -125,8 +125,11 @@ class GlobalMusApp : BaseApplication(), AppConfig {
                     // Google Play by calling the startConnection() method.
                 }
             })
-            if (!MMKV.defaultMMKV().getBoolean("install_event", false) ||
-                TextUtils.isEmpty(MMKV.defaultMMKV().getString("ad_id", ""))) {
+            val cachedGaid = MMKV.defaultMMKV().getString("ad_id", "").orEmpty()
+            if (cachedGaid.isNotBlank() && cachedGaid != "00000000-0000-0000-0000-000000000000") {
+                runCatching { ApiStudios.onInstallGaidReadFinished(cachedGaid) }
+                    .onFailure { it.printStackTrace() }
+            } else {
                 Thread {
                     val gaid = runCatching {
                         val adInfo = AdvertisingIdClient.getAdvertisingIdInfo(this)
