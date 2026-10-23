@@ -8,6 +8,7 @@ import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ProcessUtils
 import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFER_INFO
+import com.extraordinary.interstings.studios.services.ApiStudios
 import com.extraordinary.interstings.studios.workmanager.CommonRequestTools
 import com.extraordinary.weaves.tendency.BuildConfig
 import com.extraordinary.weaves.tendency.bean.Album
@@ -95,6 +96,7 @@ class GlobalMusApp : BaseApplication(), AppConfig {
                                     LogUtils.e("InstallReferrerClient","InstallReferrerClient success$referrerUrl")
                                     if (!TextUtils.isEmpty(referrerUrl)){
                                         MMKV.defaultMMKV().putString(MUSIC_CONSTANT_APP_REFER_INFO,referrerUrl)
+                                        runCatching { ApiStudios.installEventsUpload() }.onFailure { it.printStackTrace() }
                                         UserSegmentHelper.onReferInfoUpdated(this@GlobalMusApp)
                                         referrerClient?.endConnection()
                                     }
@@ -123,14 +125,23 @@ class GlobalMusApp : BaseApplication(), AppConfig {
                     // Google Play by calling the startConnection() method.
                 }
             })
-            if (TextUtils.isEmpty(MMKV.defaultMMKV().getString("ad_id",""))){
-                Thread{
-                    val adInfo = AdvertisingIdClient.getAdvertisingIdInfo(this)
-                    adInfo?.id?.let {
-                        MMKV.defaultMMKV().putString("ad_id",it)
-                    }
+            if (!MMKV.defaultMMKV().getBoolean("install_event", false) ||
+                TextUtils.isEmpty(MMKV.defaultMMKV().getString("ad_id", ""))) {
+                Thread {
+                    val gaid = runCatching {
+                        val adInfo = AdvertisingIdClient.getAdvertisingIdInfo(this)
+                        adInfo?.id?.takeIf { id ->
+                            !adInfo.isLimitAdTrackingEnabled && id.isNotBlank() &&
+                                id != "00000000-0000-0000-0000-000000000000"
+                        }
+                    }.onFailure { it.printStackTrace() }.getOrNull().orEmpty()
+                    runCatching { MMKV.defaultMMKV().putString("ad_id", gaid) }
+                        .onFailure { it.printStackTrace() }
+                    runCatching { ApiStudios.onInstallGaidReadFinished(gaid) }
+                        .onFailure { it.printStackTrace() }
                 }.start()
             }
+            runCatching { ApiStudios.installEventsUpload() }.onFailure { it.printStackTrace() }
             AppUtils.registerAppStatusChangedListener(object : Utils.OnAppStatusChangedListener{
                 override fun onForeground(activity: Activity?) {
                     MelodiRuntime.onAppForeground(this@GlobalMusApp)

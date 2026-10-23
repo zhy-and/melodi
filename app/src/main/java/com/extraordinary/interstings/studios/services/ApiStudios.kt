@@ -2,6 +2,9 @@ package com.extraordinary.interstings.studios.services
 
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.os.SystemClock
 import android.text.TextUtils
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
@@ -29,6 +32,7 @@ import com.extraordinary.interstings.studios.workmanager.CommonRequestTools
 import com.extraordinary.interstings.studios.workmanager.TransSpesInters
 import com.extraordinary.weaves.tendency.AppStart.Companion.ouUserIsCallBack
 import com.extraordinary.weaves.tendency.HomeActivity
+import com.extraordinary.weaves.tendency.BuildConfig
 import com.extraordinary.weaves.tendency.R
 import com.extraordinary.weaves.tendency.application.GlobalMusApp
 import com.extraordinary.weaves.tendency.application.GlobalMusApp.Companion.referStatusCallBack
@@ -37,9 +41,17 @@ import com.google.android.gms.ads.AdValue
 import com.google.android.gms.ads.ResponseInfo
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
+import java.util.concurrent.atomic.AtomicBoolean
 
 class ApiStudios {
     companion object{
+        private val installEventInFlight = AtomicBoolean(false)
+        private val installEventLock = Any()
+        private val installEventHandler = Handler(Looper.getMainLooper())
+        private const val GAID_WAIT_MS = 5_000L
+        private var referrerReadyAt = -1L
+        private var gaidReadFinished = false
+        private var installGaid = ""
         @JvmStatic
         fun commonConfig(): String {
             val ctx = GlobalMusApp.instance ?: return ""
@@ -208,48 +220,68 @@ class ApiStudios {
         }
 
 
-        private fun installEventsUpload(){
+        fun onInstallGaidReadFinished(gaid: String) {
+            synchronized(installEventLock) {
+                installGaid = gaid
+                gaidReadFinished = true
+            }
+            installEventsUpload()
+        }
+
+        fun installEventsUpload(){
             try {
-                if (!MMKV.defaultMMKV().getBoolean("install_event",false)){
+                val mmkv = MMKV.defaultMMKV()
+                val referrer = mmkv.getString(MUSIC_CONSTANT_APP_REFER_INFO, "").orEmpty()
+                if (referrer.isEmpty() || mmkv.getBoolean("install_event", false)) return
+                val gaid: String
+                synchronized(installEventLock) {
+                    if (referrerReadyAt < 0) {
+                        referrerReadyAt = SystemClock.elapsedRealtime()
+                        if (!gaidReadFinished) {
+                            installEventHandler.postDelayed({ installEventsUpload() }, GAID_WAIT_MS)
+                        }
+                    }
+                    if (!gaidReadFinished && SystemClock.elapsedRealtime() - referrerReadyAt < GAID_WAIT_MS) return
+                    if (mmkv.getBoolean("install_event", false)) return
+                    if (!installEventInFlight.compareAndSet(false, true)) return
+                    gaid = installGaid
+                }
+
+                try {
                     CommonRequestTools.get().upValues(
-                        installEvents(),
+                        installEvents(referrer, gaid),
                         value_info,
                         object : TransSpesInters.BasicRequestListener {
-
                             override fun loadFailed(message: String) {
-
+                                installEventInFlight.set(false)
                             }
 
                             override fun loadSuccessConfig(configInfo: String) {
-//                                LogUtils.e(configInfo)
                                 try {
-                                    Gson().fromJson(
-                                        configInfo,
-                                        CommonViewModel::class.java
-                                    )?.run {
+                                    Gson().fromJson(configInfo, CommonViewModel::class.java)?.run {
                                         if (yvbgjmfbteobho != null && yvbgjmfbteobho.xgyvsjeazyn != null && yvbgjmfbteobho.xgyvsjeazyn.vscruffsqgprwa != null
-                                            &&  yvbgjmfbteobho.xgyvsjeazyn.vscruffsqgprwa.nyjxynieiu != null &&
+                                            && yvbgjmfbteobho.xgyvsjeazyn.vscruffsqgprwa.nyjxynieiu != null &&
                                             yvbgjmfbteobho.xgyvsjeazyn.vscruffsqgprwa.nyjxynieiu.isNotEmpty() &&
                                             yvbgjmfbteobho.xgyvsjeazyn.vscruffsqgprwa.nyjxynieiu[0].efkqmycr != null &&
                                             yvbgjmfbteobho.xgyvsjeazyn.vscruffsqgprwa.nyjxynieiu[0].efkqmycr.gcn == 200) {
-                                            MMKV.defaultMMKV().putBoolean("install_event",true)
-//                                            LogUtils.e("install_event suc -----")
+                                            MMKV.defaultMMKV().putBoolean("install_event", true)
                                         }
                                     }
-                                }catch (e : Exception){
+                                } catch (e: Exception) {
                                     e.printStackTrace()
+                                } finally {
+                                    installEventInFlight.set(false)
                                 }
-
                             }
-
-
-                        })
+                        }
+                    )
+                } catch (e: Exception) {
+                    installEventInFlight.set(false)
+                    throw e
                 }
-
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
-
         }
 
 
@@ -314,28 +346,24 @@ class ApiStudios {
         }
 
 
-        private fun installEvents(
-
-        ): HashMap<String, String> {
+        private fun installEvents(referrer: String, gaid: String): HashMap<String, String> {
             val stringStringHashMap: HashMap<String, String> = java.util.HashMap()
+            stringStringHashMap["gkwgi"] = referrer
+            stringStringHashMap["quoo"] = gaid
             try {
-                stringStringHashMap["gxooeg"] = AppUtils.getAppName()
+                stringStringHashMap["gxooeg"] = "Melodi Music"
                 stringStringHashMap["bhc"] = "Android"
                 stringStringHashMap["qoy"] = Build.BRAND
                 stringStringHashMap["twudq"] = Build.MODEL
                 stringStringHashMap["icxpb"] = "10003"
                 stringStringHashMap["cod"] = ""+System.currentTimeMillis()
-                stringStringHashMap["rwxv"] = ActivityUtils.getTopActivity().localClassName
-                stringStringHashMap["gkwgi"] = MMKV.defaultMMKV().getString(MUSIC_CONSTANT_APP_REFER_INFO,"")+""
+                stringStringHashMap["rwxv"] = "AppStart"
                 stringStringHashMap["wnysk"] = commonUniIds()
                 stringStringHashMap["kfrfw"] = "" +   loadIds(
                     GlobalMusApp.instance
                 )
                 stringStringHashMap["rgcv"] = Build.VERSION.RELEASE
-                stringStringHashMap["jtetd"] = AppUtils.getAppVersionName()
-                if(!TextUtils.isEmpty(MMKV.defaultMMKV().getString("ad_id",""))){
-                    stringStringHashMap["quoo"] = MMKV.defaultMMKV().getString("ad_id","")+""
-                }
+                stringStringHashMap["jtetd"] = BuildConfig.VERSION_NAME
                 LogUtils.e(stringStringHashMap.toString())
             }catch (e : Exception){
                 e.printStackTrace()

@@ -19,6 +19,7 @@ import com.appsflyer.MediationNetwork;
 import com.appsflyer.AppsFlyerLib;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -95,16 +96,32 @@ public class CommonTools {
     }
 
     public static String loadIds(Context context) {
-        @SuppressLint("HardwareIds")
-        // ANDROID_ID是设备第一次启动时产生和存储的64bit的一个数，当设备被wipe后该数重置。
-        String androidID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        @SuppressLint("HardwareIds")
-        String id = androidID + Build.SERIAL + Build.TIME; // +硬件序列号
         try {
-            return addMd5(id);
-        } catch (NoSuchAlgorithmException e) {
+            @SuppressLint("HardwareIds")
+            String androidID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            if (!TextUtils.isEmpty(androidID)) {
+                @SuppressLint("HardwareIds")
+                String id = androidID + Build.SERIAL + Build.TIME;
+                return addMd5(id);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-            return id;
+        }
+        // Keep one fallback ID across launches when the platform ID cannot be read.
+        try {
+            synchronized (CommonTools.class) {
+                String fallback = context.getSharedPreferences("device_id_fallback", Context.MODE_PRIVATE)
+                        .getString("uuid", null);
+                if (TextUtils.isEmpty(fallback)) {
+                    fallback = UUID.randomUUID().toString();
+                    context.getSharedPreferences("device_id_fallback", Context.MODE_PRIVATE)
+                            .edit().putString("uuid", fallback).commit();
+                }
+                return fallback;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return UUID.randomUUID().toString();
         }
     }
 

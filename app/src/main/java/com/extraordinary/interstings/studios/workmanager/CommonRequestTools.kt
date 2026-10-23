@@ -67,7 +67,10 @@ class CommonRequestTools private constructor() {
     }
 
     fun upValues(paramsOut:HashMap<String,String>, weavesMusUrls:String, netRequest: TransSpesInters.BasicRequestListener){
-        if (createOk()) return
+        if (createOk()) {
+            netRequest.loadFailed("HTTP client is not initialized")
+            return
+        }
         val jsonParams: String = Gson().toJson(paramsOut)
         val requestBody: RequestBody = jsonParams.toRequestBody("application/json".toMediaTypeOrNull())
         val builder: Headers.Builder = Headers.Builder()
@@ -91,8 +94,10 @@ class CommonRequestTools private constructor() {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                response.body?.let {
-                    netRequest.loadSuccessConfig(it.string())
+                response.use {
+                    val body = it.body?.string()
+                    if (body.isNullOrEmpty()) netRequest.loadFailed("Empty response body")
+                    else netRequest.loadSuccessConfig(body)
                 }
             }
 
