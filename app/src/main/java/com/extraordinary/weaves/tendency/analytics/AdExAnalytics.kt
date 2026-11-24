@@ -25,9 +25,8 @@ import java.util.Locale
 
 /** Advertising exposure revenue events added from krode's ad_ex integration. */
 object AdExAnalytics {
-    // TODO: Replace these event values when Melodi's final values are supplied.
-    private const val EVENT_ADMOB_AD_EX = "3zlf0w"
-    private const val EVENT_TOPON_AD_EX = "2ei3m8"
+    private const val EVENT_ADMOB_AD_EX = "vr1nyz"
+    private const val EVENT_TOPON_AD_EX = "2h6ft0"
     private const val MMKV_UA = "melodi_ad_ex_ua"
 
     fun prefetchDeviceInfo(context: Context) {

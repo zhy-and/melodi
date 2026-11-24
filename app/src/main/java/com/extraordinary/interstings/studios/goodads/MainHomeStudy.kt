@@ -121,8 +121,7 @@ class MainHomeStudy {
     }
 
 
-    // TODO: Replace with Melodi TopOn interstitial Placement ID.
-    private val topOnPlacementId = ""
+    private val topOnPlacementId = "n6b055a08a78a2"
     private var retryAttempt = 0
     var mInterstitialAd: TUInterstitial? = null
 

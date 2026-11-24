@@ -37,7 +37,6 @@ import com.appsflyer.AppsFlyerProperties
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.Utils
 import com.extraordinary.interstings.studios.utils.CommonStudyUtils.weaveLauStatus
-import com.google.ads.mediation.pangle.PangleMediationAdapter
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.mbridge.msdk.MBridgeConstans
 import com.mbridge.msdk.out.MBridgeSDKFactory
@@ -70,9 +69,8 @@ class GlobalMusApp : BaseApplication(), AppConfig {
         var referStatusCallBack = false
         var isClicked = false
         var showedInterCount = 0
-        // TODO: Replace with Melodi TopOn App ID and App Key.
-        const val TOPON_APP_ID = ""
-        const val TOPON_APP_KEY = ""
+        const val TOPON_APP_ID = "h6b0559f4e6f0c"
+        const val TOPON_APP_KEY = "a43b7c7035ca69033efeecbfb4c7a9f72"
 
     }
 

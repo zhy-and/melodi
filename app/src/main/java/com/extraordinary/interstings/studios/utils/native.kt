@@ -184,6 +184,5 @@ const val MESSAGE_MSG_CODE = 0x100
 
 
 
-// TODO: Replace with Melodi TopOn home and back scenario IDs.
-fun homeTopOnInter(): Long = 0L
-fun backTopOnInter(): Long = 0L
+fun homeTopOnInter(): Long = 2125122877613232130L
+fun backTopOnInter(): Long = 2125122877646786562L
