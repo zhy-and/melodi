@@ -67,6 +67,7 @@ import com.extraordinary.weaves.tendency.AppStart.Companion.ouUserIsCallBack
 import com.extraordinary.weaves.tendency.HomeActivity
 import com.extraordinary.weaves.tendency.R
 import com.extraordinary.weaves.tendency.application.GlobalMusApp
+import com.extraordinary.weaves.tendency.analytics.AdExAnalytics
 import com.extraordinary.weaves.tendency.baseActivity
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdListener
@@ -77,6 +78,18 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.thinkup.core.api.TUAdInfo
+import com.thinkup.core.api.TUShowConfig
+import com.thinkup.interstitial.api.TUInterstitial
+import com.thinkup.interstitial.api.TUInterstitialListener
+import com.extraordinary.interstings.studios.utils.MMKV_CHOICE_HL_COUNT
+import com.extraordinary.interstings.studios.utils.MMKV_FULL_CONTENT
+import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFER_INFO
+import android.os.Handler
+import android.os.Looper
+import java.util.concurrent.TimeUnit
+import kotlin.math.min
+import kotlin.math.pow
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
@@ -107,6 +120,74 @@ class MainHomeStudy {
         }
     }
 
+
+    // TODO: Replace with Melodi TopOn interstitial Placement ID.
+    private val topOnPlacementId = ""
+    private var retryAttempt = 0
+    var mInterstitialAd: TUInterstitial? = null
+
+    private fun requestTpInter(baseTrans: Activity?) {
+        if (baseTrans == null || baseTrans.isDestroyed || baseTrans.isFinishing) return
+        if (topOnPlacementId.isEmpty() || GlobalMusApp.TOPON_APP_ID.isEmpty() || GlobalMusApp.TOPON_APP_KEY.isEmpty()) return
+        if (mInterstitialAd == null) {
+            mInterstitialAd = TUInterstitial(baseTrans, topOnPlacementId)
+            mInterstitialAd?.setAdListener(object : TUInterstitialListener {
+                override fun onInterstitialAdLoaded() {
+                    retryAttempt = 0
+                    LogUtils.e("topon onInterstitialAdLoaded")
+                }
+                override fun onInterstitialAdLoadFail(p0: com.thinkup.core.api.AdError?) {
+                    if (retryAttempt >= 3) return
+                    retryAttempt++
+                    val delayMillis = TimeUnit.SECONDS.toMillis(2.0.pow(min(3, retryAttempt)).toLong())
+                    Handler(Looper.getMainLooper()).postDelayed({ mInterstitialAd?.load() }, delayMillis)
+                    LogUtils.e("topon onInterstitialAdLoadFail")
+                }
+                override fun onInterstitialAdShow(adInfo: TUAdInfo?) {
+                    mInterstitialAd?.load()
+                    AdExAnalytics.reportTopOn(adInfo)
+                    LogUtils.e("topon onInterstitialAdShow")
+                }
+                override fun onInterstitialAdVideoStart(adInfo: TUAdInfo?) { LogUtils.e("topon onInterstitialAdVideoStart") }
+                override fun onInterstitialAdVideoEnd(adInfo: TUAdInfo?) { LogUtils.e("topon onInterstitialAdVideoEnd") }
+                override fun onInterstitialAdVideoError(p0: com.thinkup.core.api.AdError?) {
+                    mInterstitialAd?.load()
+                    LogUtils.e("topon onInterstitialAdVideoError")
+                }
+                override fun onInterstitialAdClose(adInfo: TUAdInfo?) { LogUtils.e("topon onInterstitialAdClose") }
+                override fun onInterstitialAdClicked(adInfo: TUAdInfo?) { LogUtils.e("topon onInterstitialAdClicked") }
+            })
+        }
+        mInterstitialAd?.load()
+    }
+
+    fun checkReferNature(): Boolean {
+        val referInfo = MMKV.defaultMMKV().getString(MUSIC_CONSTANT_APP_REFER_INFO, "") ?: ""
+        return referInfo.isNotEmpty() && referInfo.contains("organic")
+    }
+
+    fun showTopOnInter(recAds: Long, context: Activity) {
+        if (CommonStudyUtils.posIsCanShow(recAds)) return
+        if (checkReferNature()) {
+            if (mInterstitialAd == null) requestTpInter(context)
+            if (mInterstitialAd?.isAdReady == true) {
+                val showConfig = TUShowConfig.Builder().scenarioId(recAds.toString()).build()
+                mInterstitialAd?.show(context, showConfig)
+            } else {
+                mInterstitialAd?.load()
+            }
+        }
+    }
+
+    private fun showTopOnOrFallback(pos: Long, context: Activity) {
+        if (mInterstitialAd?.isAdReady == true) {
+            val showConfig = TUShowConfig.Builder().scenarioId(pos.toString()).build()
+            mInterstitialAd?.show(context, showConfig)
+        } else {
+            mInterstitialAd?.load()
+            showAdmobInter(pos, context)
+        }
+    }
 
     var currentPos: Long = -1
 
@@ -140,6 +221,8 @@ class MainHomeStudy {
                 button.setBackgroundResource(R.drawable.btn_ad_shape)
             }
         }
+        val fullContent = MMKV.defaultMMKV().getString(MMKV_FULL_CONTENT, "") ?: ""
+        if (fullContent.isNotEmpty()) button.text = fullContent
     }
     private fun isUmeng() : Boolean{
         return  ouUserIsCallBack || GoogleMobileAdsConsentManager.getInstance(
@@ -349,6 +432,10 @@ class MainHomeStudy {
         }
     }
 
+    private fun preloadTopOnAtStartup(activity: Activity?) {
+        requestTpInter(activity)
+    }
+
 
     companion object {
         val homeStudy: MainHomeStudy by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -430,6 +517,7 @@ class MainHomeStudy {
 //
 //                }
                 interWeavesIsShowing = true
+                GlobalMusApp.showedInterCount++
                 CommonStudyUtils.showCountAdd(pos)
 //                ThreadUtils.runOnUiThreadDelayed({
 //                    LogUtils.e(CommonStudyUtils.basicInfoLog(pos) + "load a new cy ad")
@@ -454,6 +542,7 @@ class MainHomeStudy {
     ) {
         try {
             var dataBean : List<CommonViewModel.YvbgjmfbteobhoBean.XgyvsjeazynBean.VscruffsqgprwaBean.NyjxynieiuBean.EfkqmycrBean.UiiugudcealzBean> ?= null
+            var hasEnabledInterstitial = false
             if (TextUtils.isEmpty(
                     MMKV.defaultMMKV().getString(MUSIC_CONSTANT_APP_AD_DATA, "")
                 )
@@ -505,6 +594,7 @@ class MainHomeStudy {
                    albumListInter(),  albumDetInter(), artistListInter(), artistDetInter(), geDanListInter(),
                    geDanDetInter(),  addSongsInter(), playViewsInter(), lyricInter(), queueInter(), finishPageInterOne(), finishPageInterTwo()
                    -> {
+                       if (it.uewlmauz == "0") hasEnabledInterstitial = true
                        if (!TextUtils.isEmpty(it.fayiiebmhdhz)) {
                             interWeavesId = it.fayiiebmhdhz
 
@@ -513,6 +603,10 @@ class MainHomeStudy {
                    }
                }
            }
+
+            if (!load && hasEnabledInterstitial) {
+                ThreadUtils.runOnUiThread { preloadTopOnAtStartup(activity) }
+            }
 
             if (!load && (ouUserIsCallBack || GoogleMobileAdsConsentManager.getInstance(
                     GlobalMusApp.instance
@@ -695,6 +789,18 @@ class MainHomeStudy {
             LogUtils.e("inter flag limit ------" + CommonStudyUtils.basicInfoLog(recAds))
             return
         }
+        val configCount = MMKV.defaultMMKV().getInt(MMKV_CHOICE_HL_COUNT, 0)
+        if (mInterstitialAd == null) requestTpInter(context)
+        if (configCount != 0 && GlobalMusApp.showedInterCount >= configCount) {
+            showTopOnOrFallback(recAds, context)
+        } else if (configCount == 999) {
+            showTopOnOrFallback(recAds, context)
+        } else {
+            showAdmobInter(recAds, context)
+        }
+    }
+
+    private fun showAdmobInter(recAds: Long, context: Activity) {
         if (uniqueInter != null) {
             if (CommonStudyUtils.checkTimes(interWeavesTimes)) {
                 LogUtils.e("inter flag limit ------" + CommonStudyUtils.basicInfoLog(recAds))

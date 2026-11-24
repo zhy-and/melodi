@@ -172,6 +172,8 @@ const val MUSIC_CONSTANT_APP_AD_CACHE_TM = "weaves_mus_ads_cm"
 const val MUSIC_CONSTANT_APP_APP_CACHE_TM = "weaves_mus_app_cm"
 const val MUSIC_CONSTANT_APP_REFRESH = "weaves_mus_refresh"
 const val MUSIC_CONSTANT_APP_REFER_INFO = "weaves_mus_re_infos"
+const val MMKV_CHOICE_HL_COUNT = "mmkv_top_count"
+const val MMKV_FULL_CONTENT = "mmkv_full_content"
 const val MUSIC_CONSTANT_APP_AD_DATA = "weaves_mus_ads_data"
 const val MUSIC_CONSTANT_APP_IS_AUTO_PLAY = "weaves_mus_is_auto_play"
 const val MMKV_LINES = "lines"
@@ -181,3 +183,7 @@ const val MMKV_SYS = "sys_tm"
 const val MESSAGE_MSG_CODE = 0x100
 
 
+
+// TODO: Replace with Melodi TopOn home and back scenario IDs.
+fun homeTopOnInter(): Long = 0L
+fun backTopOnInter(): Long = 0L

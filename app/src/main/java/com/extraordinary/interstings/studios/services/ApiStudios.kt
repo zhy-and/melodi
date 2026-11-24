@@ -27,6 +27,8 @@ import com.extraordinary.interstings.studios.utils.MUSIC_CONSTANT_APP_REFRESH
 import com.extraordinary.interstings.studios.utils.MMKV_COEFS
 import com.extraordinary.interstings.studios.utils.MMKV_SYS
 import com.extraordinary.interstings.studios.utils.MMKV_LINES
+import com.extraordinary.interstings.studios.utils.MMKV_CHOICE_HL_COUNT
+import com.extraordinary.interstings.studios.utils.MMKV_FULL_CONTENT
 import com.extraordinary.interstings.studios.utils.musColdStart
 import com.extraordinary.interstings.studios.workmanager.CommonRequestTools
 import com.extraordinary.interstings.studios.workmanager.TransSpesInters
@@ -538,6 +540,12 @@ class ApiStudios {
                                                     return@apply
                                                 }
                                                 for (i in this){
+                                                    if ("inter_count" == i.lddmfgjtn) {
+                                                        MMKV.defaultMMKV().putInt(MMKV_CHOICE_HL_COUNT, i.boifrtru.toInt())
+                                                    }
+                                                    if ("full_content" == i.lddmfgjtn) {
+                                                        MMKV.defaultMMKV().putString(MMKV_FULL_CONTENT, i.boifrtru)
+                                                    }
                                                     if ("music_auto_play" == i.lddmfgjtn){
                                                         MMKV.defaultMMKV()
                                                             .putBoolean(

@@ -18,6 +18,7 @@ import com.extraordinary.weaves.tendency.bean.Music
 import com.extraordinary.weaves.tendency.global.AppConfig
 import com.extraordinary.weaves.tendency.manager.MediaManager
 import com.extraordinary.weaves.tendency.analytics.MelodiPushAnalytics
+import com.extraordinary.weaves.tendency.analytics.AdExAnalytics
 import com.extraordinary.weaves.tendency.notification.localpush.LocalEventPushBootstrap
 import com.extraordinary.weaves.tendency.notification.localpush.LocalPushTelemetry
 import com.extraordinary.weaves.tendency.notification.localpush.LocalPushUi
@@ -26,6 +27,7 @@ import com.extraordinary.weaves.tendency.runtime.RuntimeRemoteConfig
 import com.extraordinary.weaves.tendency.runtime.UserSegmentHelper
 import com.extraordinary.weaves.tendency.widget.WidgetPinHelper
 import com.google.android.gms.ads.MobileAds
+import com.thinkup.core.api.TUSDK
 import com.tencent.mmkv.MMKV
 import dora.BaseApplication
 import dora.db.Orm
@@ -34,7 +36,6 @@ import com.appsflyer.AppsFlyerLib
 import com.appsflyer.AppsFlyerProperties
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.Utils
-import com.bytedance.sdk.openadsdk.api.PAGConstant
 import com.extraordinary.interstings.studios.utils.CommonStudyUtils.weaveLauStatus
 import com.google.ads.mediation.pangle.PangleMediationAdapter
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
@@ -68,6 +69,10 @@ class GlobalMusApp : BaseApplication(), AppConfig {
 
         var referStatusCallBack = false
         var isClicked = false
+        var showedInterCount = 0
+        // TODO: Replace with Melodi TopOn App ID and App Key.
+        const val TOPON_APP_ID = ""
+        const val TOPON_APP_KEY = ""
 
     }
 
@@ -78,6 +83,8 @@ class GlobalMusApp : BaseApplication(), AppConfig {
             initDb()
             return
         }
+        showedInterCount = 0
+        TUSDK.init(this, TOPON_APP_ID, TOPON_APP_KEY)
         init()
     }
     private fun initReferInfos() {
@@ -163,6 +170,7 @@ class GlobalMusApp : BaseApplication(), AppConfig {
         weaveLauStatus = true
         initAF()
         MMKV.initialize(this)
+        AdExAnalytics.prefetchDeviceInfo(this)
         UserSegmentHelper.startGate(this)
         initDb()    // 初始化SQLite数据库的表
         initMedia() // 初始化媒体管理器
@@ -192,9 +200,6 @@ class GlobalMusApp : BaseApplication(), AppConfig {
 
     private fun initManager() {
         try {
-            PangleMediationAdapter.setGDPRConsent(PAGConstant.PAGGDPRConsentType.PAG_GDPR_CONSENT_TYPE_CONSENT)
-            MetaData(this)["gdpr.consent"] = true
-            MBridgeSDKFactory.getMBridgeSDK().setConsentStatus(this,MBridgeConstans.IS_SWITCH_ON)
             Thread{
                 MobileAds.initialize(this)
             }.start()

@@ -33,6 +33,8 @@ import com.extraordinary.interstings.studios.utils.artistDetInter
 import com.extraordinary.interstings.studios.utils.artistListInter
 import com.extraordinary.interstings.studios.utils.feedBacksInter
 import com.extraordinary.interstings.studios.utils.finishPageInterOne
+import com.extraordinary.interstings.studios.utils.homeTopOnInter
+import com.extraordinary.interstings.studios.utils.backTopOnInter
 import com.extraordinary.interstings.studios.utils.geDanDetInter
 import com.extraordinary.interstings.studios.utils.geDanListInter
 import com.extraordinary.interstings.studios.utils.homeBanner
@@ -150,6 +152,10 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
     }
     private val homeBackCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
+            if (MainHomeStudy.homeStudy.checkReferNature()) {
+                if (backTopOnInter() != 0L) MainHomeStudy.homeStudy.showTopOnInter(backTopOnInter(), this@HomeActivity)
+                return
+            }
             if (MainHomeStudy.homeStudy.uniqueInter != null) {
                 MainHomeStudy.homeStudy.showCachedInter(finishPageInterOne(), this@HomeActivity)
             } else {
@@ -180,6 +186,7 @@ class HomeActivity : baseActivity(), MusicControl.OnConnectCompletionListener {
             .init()
         binding = HomeMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        if (homeTopOnInter() != 0L) MainHomeStudy.homeStudy.showTopOnInter(homeTopOnInter(), this)
         handlePushEntry()
         if (!EventBus.getDefault().isRegistered(this)){
             EventBus.getDefault().register(this)

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+
     <application
         android:hardwareAccelerated="true"
         android:name=".application.GlobalMusApp"
@@ -17,6 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CommonTheme"
         tools:targetApi="31">
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
         <meta-data
             android:name="ScopedStorage"
             android:value="true" />

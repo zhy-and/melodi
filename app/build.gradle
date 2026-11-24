@@ -27,8 +27,8 @@ android {
         applicationId = "com.extraordinary.weaves.tendency"
         minSdk = 24
         targetSdk = 36
-        versionCode = 9
-        versionName = "1.0.8"
+        versionCode = 10
+        versionName = "1.0.9"
         buildFeatures {
             viewBinding = true
             aidl = true
@@ -106,10 +106,71 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-process:2.8.4'
 
         implementation 'com.appsflyer:af-android-sdk:6.16.2'
-    implementation  'com.google.ads.mediation:mintegral:16.9.91.1'
-    implementation  'com.google.ads.mediation:pangle:7.5.0.3.0'
-    implementation  'com.unity3d.ads:unity-ads:4.16.1'
-    implementation  'com.google.ads.mediation:unity:4.16.1.0'
+
+
+    // TopOn aggregation: versions copied from the reference patch.
+    implementation "com.thinkup.sdk:core-tpn:6.5.73.3"
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "androidx.browser:browser:1.4.0"
+    implementation "com.thinkup.sdk:adapter-tpn-moloco:4.8.1.1.0"
+    implementation "com.moloco.sdk:moloco-sdk:4.8.1"
+    implementation "com.thinkup.sdk:adapter-tpn-vungle:7.7.3.1.0"
+    implementation "com.vungle:vungle-ads:7.7.3"
+    implementation "com.google.android.gms:play-services-basement:18.1.0"
+    implementation "com.google.android.gms:play-services-ads-identifier:18.0.1"
+    implementation "com.thinkup.sdk:adapter-tpn-unityads:4.17.0.1.1"
+    implementation "com.unity3d.ads:unity-ads:4.17.0"
+    implementation "com.thinkup.sdk:adapter-tpn-ironsource:9.2.0.1.1"
+    implementation "com.unity3d.ads-mediation:mediation-sdk:9.2.0"
+    implementation "com.google.android.gms:play-services-appset:16.0.2"
+    implementation "com.google.android.gms:play-services-ads-identifier:18.0.1"
+    implementation "com.google.android.gms:play-services-basement:18.1.0"
+    implementation "com.thinkup.sdk:adapter-tpn-bigo:5.7.1.1.1"
+    implementation "com.bigossp:bigo-ads:5.7.1"
+    implementation "com.thinkup.sdk:adapter-tpn-pangle:8.1.0.3.1.0"
+    implementation "com.pangle.global:pag-sdk:8.1.0.3"
+    implementation "com.google.android.gms:play-services-ads-identifier:18.2.0"
+    implementation "com.thinkup.sdk:adapter-tpn-kwai:1.2.21.1.0"
+    implementation "io.github.kwainetwork:adApi:1.2.21"
+    implementation "io.github.kwainetwork:adImpl:1.2.21"
+    implementation "androidx.media3:media3-exoplayer:1.0.0-alpha01"
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "com.google.android.material:material:1.2.1"
+    implementation "androidx.annotation:annotation:1.2.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10"
+    implementation "com.google.android.gms:play-services-ads-identifier:18.0.1"
+    implementation "com.thinkup.sdk:adapter-tpn-inmobi:11.1.1.1.1"
+    implementation "com.inmobi.monetization:inmobi-ads-kotlin:11.1.1"
+    implementation "com.thinkup.sdk:adapter-tpn-sdm:6.5.68.1.1"
+    implementation "com.smartdigimkttech.sdk:smartdigimkttech-sdk:6.5.68"
+    implementation "com.thinkup.sdk:adapter-tpn-applovin:13.6.3.1.0"
+    implementation "com.applovin:applovin-sdk:13.6.3"
+    implementation "com.thinkup.sdk:adapter-tpn-mintegral:17.0.91.1.0"
+    implementation "com.mbridge.msdk.oversea:mbridge_android_sdk:17.0.91"
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation "com.thinkup.sdk:adapter-tpn-bidmachine:3.7.0.1.0"
+    implementation "io.bidmachine:ads:3.7.0"
+    implementation "com.thinkup.sdk:adapter-tpn-chartboost:9.12.0.1.0"
+    implementation "com.chartboost:chartboost-sdk:9.12.0"
+    implementation "com.chartboost:chartboost-mediation-sdk:5.3.0"
+    implementation "com.chartboost:chartboost-core-sdk:1.1.0"
+    implementation "com.chartboost:chartboost-mediation-adapter-chartboost:5.9.11.0.0"
+    implementation "androidx.media3:media3-exoplayer:1.4.1"
+    implementation "androidx.media3:media3-ui:1.4.1"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.11.0"
+    implementation "com.squareup.okhttp3:okhttp:4.12.0"
+    implementation "com.squareup.retrofit2:converter-scalars:2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1"
+    implementation "com.thinkup.sdk:adapter-tpn-fyber:8.4.2.1.1"
+    implementation "com.fyber:marketplace-sdk:8.4.2"
+    implementation "com.google.android.gms:play-services-basement:18.9.0"
+    implementation "com.google.android.gms:play-services-ads-identifier:18.0.1"
+    implementation "com.thinkup.sdk:adapter-tpn-ogury:5.2.0.1.0"
+    implementation "co.ogury:ogury-sdk:5.2.0"
+    implementation "com.thinkup.sdk:tramini-plugin-tpn:6.5.73"
 
 
 }

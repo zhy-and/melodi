@@ -10,6 +10,7 @@ import com.appsflyer.AdRevenueScheme;
 import com.blankj.utilcode.util.LogUtils;
 import com.extraordinary.interstings.studios.services.ApiStudios;
 import com.extraordinary.weaves.tendency.application.GlobalMusApp;
+import com.extraordinary.weaves.tendency.analytics.AdExAnalytics;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.ResponseInfo;
@@ -151,6 +152,7 @@ public class CommonTools {
             } else {
             }
             ApiStudios.Companion.handleValues(adId,adType,adValue,configValues,pos,responseInfo);
+            AdExAnalytics.reportAdmob(adValue);
 
 
         } catch (Exception e){

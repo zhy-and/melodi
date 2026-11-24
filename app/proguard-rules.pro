@@ -301,3 +301,75 @@
 
 
 -keep class com.bytedance.sdk.** { *; }
+
+# TopOn adapter rules from reference patch
+# Vungle
+-dontwarn com.vungle.ads.**
+-keepclassmembers class com.vungle.ads.** {
+  *;
+}
+-keep class com.vungle.ads.**
+
+# START OkHttp + Okio
+-dontwarn javax.annotation.**
+-adaptresourcefilenames okhttp3/internal/publicsuffix/PublicSuffixDatabase.gz
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+-dontwarn okhttp3.internal.platform.**
+-dontwarn org.conscrypt.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.openjsse.**
+# END OkHttp + Okio
+
+# START Protobuf
+-dontwarn com.google.protobuf.**
+-keepclassmembers class com.google.protobuf.** {
+ *;
+}
+-keep class * extends com.google.protobuf.GeneratedMessageLite { *; }
+# END Protobuf
+
+-keepclassmembers class com.ironsource.sdk.controller.IronSourceWebView$JSInterface {
+    public *;
+}
+-keepclassmembers class * implements android.os.Parcelable {
+    public static final android.os.Parcelable$Creator *;
+}
+-keep class com.ironsource.adapters.** { *; }
+-dontwarn com.ironsource.mediationsdk.**
+-dontwarn com.ironsource.adapters.**
+-keepattributes JavascriptInterface
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+-keep class com.bytedance.sdk.** { *; }
+-keep class com.inmobi.** { *; }
+-dontwarn com.squareup.picasso.**
+-keep class com.squareup.picasso.** {*;}
+-dontwarn com.squareup.okhttp.**
+-keep class com.moat.** {*;}
+-dontwarn com.moat.**
+-dontwarn com.iab.**
+-keepattributes Signature
+-keep class com.mbridge.** {*; }
+-keep interface com.mbridge.** {*; }
+-dontwarn com.mbridge.**
+-keepclassmembers class **.R$* { public static final int mbridge*; }
+
+-keep public class com.mbridge.* extends androidx.** { *; }
+-keep public class androidx.viewpager.widget.PagerAdapter{*;}
+-keep public class androidx.viewpager.widget.ViewPager.OnPageChangeListener{*;}
+-keep interface androidx.annotation.IntDef{*;}
+-keep interface androidx.annotation.Nullable{*;}
+-keep interface androidx.annotation.CheckResult{*;}
+-keep interface androidx.annotation.NonNull{*;}
+-keep public class androidx.fragment.app.Fragment{*;}
+-keep public class androidx.core.content.FileProvider{*;}
+-keep public class androidx.core.app.NotificationCompat{*;}
+-keep public class androidx.appcompat.widget.AppCompatImageView {*;}
+-keep public class androidx.recyclerview.*{*;}
+-keep class com.mbridge.msdk.foundation.tools.FastKV{*;}
+-keep class com.mbridge.msdk.foundation.tools.FastKV$Builder{*;}
+-keep class com.chartboost.** { *; }
+
+-keep public class io.bidmachine.** { *; }
+-keep public interface io.bidmachine.** { *; }
